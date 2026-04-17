@@ -4,24 +4,24 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    return view('login');
+    return view('equogreen-frontend.login');
 });
 Route::get('/batch_barang', function () {
-    return view('batch_barang');
+    return view('equogreen-frontend.batch_barang');
 });
 Route::get('/buat_quotation', function () {
-    return view('buat_quotation');
+    return view('equogreen-frontend.buat_quotation');
 });
 
 Route::get('/dashboard_vendor', function () {
-    return view('dashboard_vendor');
+    return view('equogreen-frontend.dashboard_vendor');
 });
 Route::get('/periksa_barang', function () {
-    return view('periksa-barang-detail');
+    return view('equogreen-frontend.periksa_barang');
 });
 Route::get('/tambah_barang', function () {
-    return view('tambah_barang');
+    return view('equogreen-frontend.tambah_barang');
 });
 Route::get('/registrasi', function () {
-    return view('registrasi');
+    return view('equogreen-frontend.registrasi');
 });
