@@ -17,7 +17,7 @@ Route::get('/dashboard_vendor', function () {
     return view('equogreen-frontend.dashboard_vendor');
 });
 Route::get('/periksa_barang', function () {
-    return view('equogreen-frontend.periksa_barang');
+    return view('equogreen-frontend.periksa-barang-detail');
 });
 Route::get('/tambah_barang', function () {
     return view('equogreen-frontend.tambah_barang');
