@@ -33,3 +33,6 @@ Route::get('/validasi-vendor', function () {
 Route::get('/registrasi', function () {
     return view('equogreen-frontend.registrasi');
 });
+Route::get('/batch-list', function () {
+    return view('equogreen-frontend.batch-list');
+});
