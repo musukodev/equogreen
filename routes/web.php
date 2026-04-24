@@ -36,3 +36,6 @@ Route::get('/registrasi', function () {
 Route::get('/batch-list', function () {
     return view('equogreen-frontend.batch-list');
 });
+Route::get('/kirim-notifikasi', function () {
+    return view('equogreen-frontend.kirim-notifikasi');
+});
