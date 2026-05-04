@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuotationFastExcelController;
+use App\Models\Quotation;
 use Illuminate\Support\Facades\Route;
 require __DIR__.'/auth.php';
 
@@ -50,11 +52,13 @@ Route::get('/registrasi', function () {
     return view('equogreen-frontend.registrasi');
 })->name('registrasi');
 Route::get('/vendor-riwayat', function () {
-    return view('equogreen-frontend.riawayat_vendor');
+    $quotations = Quotation::latest()->get();
+    return view('equogreen-frontend.riwayat_vendor', compact('quotations'));
 })->name('vendor-riwayat');
 Route::get('/batch-list', function () {
     return view('equogreen-frontend.batch-list');
 })->name('procurement-batch-list');
-
+Route::get('/fastexcel-quotation', [QuotationFastExcelController::class, 'index']);
+Route::post('/fastexcel-quotation', [QuotationFastExcelController::class, 'import'])->name('fastexcel.import');
 
 
