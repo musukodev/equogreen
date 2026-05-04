@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Route;
 require __DIR__.'/auth.php';
 
 
-// Tambahkan di atas, sebelum route lainnya
+
 Route::get('/', function () {
-    return view('equogreen-frontend.login');
-})->name('login')->middleware('guest');
+    return redirect()->route('login');
+});
 
 
 
