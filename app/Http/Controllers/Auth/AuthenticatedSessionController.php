@@ -16,27 +16,26 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('equogreen-frontend.login');
     }
 
     /**
      * Handle an incoming authentication request.
      */
 
-    public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
-        $request->session()->regenerate();
+public function store(LoginRequest $request): RedirectResponse
+{
+    $request->authenticate();
+    $request->session()->regenerate();
 
-        $user = Auth::user();
+    $user = Auth::user();
 
-        if ($user->role === 'procurement') {
-            return redirect()->route('procurement-dashboard');
-        }
-        
-    
-        return redirect()->route('vendor-dashboard');
+    if ($user->role === 'procurement') {
+        return redirect()->intended(route('procurement-dashboard'));
     }
+
+    return redirect()->intended(route('vendor-dashboard'));
+}
 
     /**
      * Destroy an authenticated session.
