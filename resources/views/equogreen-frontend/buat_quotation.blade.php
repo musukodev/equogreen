@@ -56,7 +56,7 @@
         <nav class="flex-1 px-4 py-6 flex flex-col gap-1">
             <a href="{{ route('vendor-dashboard') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 font-bold text-[17px] bg-[#eef3ff] text-primary transition-all duration-200 hover:bg-primary hover:text-white group">
-                <img src="gambar/dashboard layout.png" alt="Dashboard"
+                <img src="gambar/dashboard-layout.png" alt="Dashboard"
                     class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert" />
                 Dashboard
             </a>
@@ -99,7 +99,7 @@
                     <!-- Back Button -->
                     <a href="{{ route('vendor-dashboard') }}"
                         class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm">
-                        <img src="gambar/Back Arrow.png" alt="Back" class="w-6 h-6 object-contain brightness-0" />
+                        <img src="gambar/back-arrow.png" alt="Back" class="w-6 h-6 object-contain brightness-0" />
                     </a>
                     <div>
                         <h1 class="text-2xl md:text-[36px] font-bold text-[#111827]">Buat Quotation</h1>
@@ -117,7 +117,7 @@
                     </button>
 
                     <!-- Profile -->
-                    <img src="gambar/Profileup.png" alt="Profil"
+                    <img src="gambar/profileup.png" alt="Profil"
                         class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-all duration-200 cursor-pointer" />
                     <div class="hidden md:block w-px h-10 bg-gray-200"></div>
                     <span class="hidden md:block font-medium text-gray-700 text-[17px]">Vendor</span>

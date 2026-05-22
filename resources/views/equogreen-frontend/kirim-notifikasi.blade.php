@@ -42,21 +42,21 @@
 
       <!-- Dashboard -->
       <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 font-bold text-[17px] transition-all duration-200 hover:bg-primary hover:text-white group">
-        <img src="gambar/dashboard layout.png" alt="Dashboard" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
+        <img src="gambar/dashboard-layout.png" alt="Dashboard" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
         Dashboard
       </a>
       <div class="border-b border-gray-100 my-1"></div>
 
       <!-- Periksa Barang -->
       <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 font-bold text-[17px] transition-all duration-200 hover:bg-primary hover:text-white group">
-        <img src="gambar/search database.png" alt="Periksa Barang" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
+        <img src="gambar/search-database.png" alt="Periksa Barang" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
         Periksa Barang
       </a>
       <div class="border-b border-gray-100 my-1"></div>
 
       <!-- Kelola Notifikasi (ACTIVE) -->
       <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 font-bold text-[17px] bg-[#eef3ff] text-primary transition-all duration-200 hover:bg-primary hover:text-white group">
-        <img src="gambar/Add Reminder.png" alt="Kelola Notifikasi" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
+        <img src="gambar/add-reminder.png" alt="Kelola Notifikasi" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
         Kelola Notifikasi
       </a>
       <div class="border-b border-gray-100 my-1"></div>
@@ -70,7 +70,7 @@
 
       <!-- Pengaturan -->
       <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 font-bold text-[17px] transition-all duration-200 hover:bg-primary hover:text-white group">
-        <img src="gambar/Settings.png" alt="Pengaturan" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
+        <img src="gambar/settings.png" alt="Pengaturan" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
         Pengaturan
       </a>
 
@@ -107,7 +107,7 @@
         <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:bg-primary hover:border-primary transition-all duration-200 group">
           <img src="gambar/bell-black.png" alt="Notifikasi" class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert"/>
         </button>
-        <img src="gambar/Profileup.png" alt="Profil" class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-all duration-200 cursor-pointer"/>
+        <img src="gambar/profileup.png" alt="Profil" class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-all duration-200 cursor-pointer"/>
         <div class="hidden md:block w-px h-10 bg-gray-200"></div>
         <span class="hidden md:block font-medium text-gray-700 text-[17px]">Procurement</span>
       </div>

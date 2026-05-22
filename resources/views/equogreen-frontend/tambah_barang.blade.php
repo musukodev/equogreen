@@ -52,7 +52,7 @@
             <!-- Dashboard -->
             <a href="{{ route('procurement-dashboard') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 font-bold text-[17px] transition-all duration-200 hover:bg-primary hover:text-white group">
-                <img src="gambar/dashboard layout.png" alt="Dashboard"
+                <img src="gambar/dashboard-layout.png" alt="Dashboard"
                     class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert" />
                 Dashboard
             </a>
@@ -61,7 +61,7 @@
             <!-- Periksa Barang (ACTIVE) -->
             <a href="{{ route('procurement-batch-list') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 font-bold text-[17px] bg-[#eef3ff] text-primary transition-all duration-200 hover:bg-primary hover:text-white group">
-                <img src="gambar/search database.png" alt="Periksa Barang"
+                <img src="gambar/search-database.png" alt="Periksa Barang"
                     class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert" />
                 Batch Barang
             </a>
@@ -70,7 +70,7 @@
             <!-- Kelola Notifikasi -->
             <a href="{{ route('procurement-notifikasi') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 font-bold text-[17px] transition-all duration-200 hover:bg-primary hover:text-white group">
-                <img src="gambar/Add Reminder.png" alt="Kelola Notifikasi"
+                <img src="gambar/add-reminder.png" alt="Kelola Notifikasi"
                     class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert" />
                 Kelola Notifikasi
             </a>
@@ -118,7 +118,7 @@
                     <!-- Back Button -->
                     <a href="{{ route('procurement-batch_barang') }}"
                         class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm">
-                        <img src="gambar/Back Arrow.png" alt="Back" class="w-6 h-6 object-contain brightness-0" />
+                        <img src="gambar/back-arrow.png" alt="Back" class="w-6 h-6 object-contain brightness-0" />
                     </a>
                     <div>
                         <h1 class="text-2xl md:text-[36px] font-bold text-[#111827]">Batch 1</h1>
@@ -132,7 +132,7 @@
                         <img src="gambar/bell-black.png" alt="Notifikasi"
                             class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
                     </button>
-                    <img src="gambar/Profileup.png" alt="Profil"
+                    <img src="gambar/profileup.png" alt="Profil"
                         class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-all duration-200 cursor-pointer" />
                     <div class="hidden md:block w-px h-10 bg-gray-200"></div>
                     <span class="hidden md:block font-medium text-gray-700 text-[17px]">Procurement</span>
