@@ -8,8 +8,15 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/auth.php';
 
-// Root → login
+// Root
 Route::get('/', function () {
+    if (Illuminate\Support\Facades\Auth::check()) {
+        $user = Illuminate\Support\Facades\Auth::user();
+        if (strtolower($user->role) === 'procurement') {
+            return redirect()->route('procurement-dashboard');
+        }
+        return redirect()->route('vendor-dashboard');
+    }
     return redirect()->route('login');
 });
 
@@ -35,9 +42,7 @@ Route::middleware('auth')->group(function () {
     })->name('vendor-dashboard');
 
     // Procurement pages
-    Route::get('/batch_barang', function () {
-        return view('equogreen-frontend.batch_barang');
-    })->name('procurement-batch_barang');
+    // (Digantikan dengan route /batch_barang/{year} di bawah)
 
     Route::get('/notifikasi', function () {
         return view('equogreen-frontend.notifikasi');
@@ -55,9 +60,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/approve-vendor/{id}', [App\Http\Controllers\ValidateVendor::class, 'approveVendor'])->name('approve.vendor');
     Route::post('/reject-vendor/{id}', [App\Http\Controllers\ValidateVendor::class, 'rejectVendor'])->name('reject.vendor');
 
-    Route::get('/batch-list', function () {
-        return view('equogreen-frontend.batch-list');
-    })->name('procurement-batch-list');
+    Route::get('/batch-list', [\App\Http\Controllers\BatchController::class, 'indexGroups'])->name('procurement-batch-list');
+    Route::get('/batch_barang/{year}', [\App\Http\Controllers\BatchController::class, 'index'])->name('procurement-batch_barang_by_year');
+    Route::post('/batch/store', [\App\Http\Controllers\BatchController::class, 'store'])->name('batch.store');
+    Route::delete('/batch/{id}', [\App\Http\Controllers\BatchController::class, 'destroy'])->name('batch.destroy');
 
     Route::get('/buat_quotation', function () {
         return view('equogreen-frontend.buat_quotation');

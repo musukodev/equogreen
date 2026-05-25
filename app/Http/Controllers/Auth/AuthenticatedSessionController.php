@@ -30,7 +30,7 @@ public function store(LoginRequest $request): RedirectResponse
 
     $user = Auth::user();
 
-    if ($user->role === 'procurement') {
+    if (strtolower($user->role) === 'procurement') {
         return redirect()->intended(route('procurement-dashboard'));
     }
 

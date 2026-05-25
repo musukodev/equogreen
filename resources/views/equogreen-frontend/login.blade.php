@@ -49,15 +49,15 @@
 
                         <!-- Email Field -->
                         <div class="mb-5">
-                            <label class="block text-base font-normal mb-2 text-slate-900">Email</label>
+                            <label class="block text-base font-normal mb-2 text-slate-900">Username</label>
                             <input
-                                type="email"
-                                name="email"
-                                value="{{ old('email') }}"
-                                class="w-full h-11 border border-slate-400 rounded-md px-3.5 font-normal text-sm placeholder-slate-400 focus:outline-none focus:border-blue-600 transition-colors @error('email') border-red-500 @enderror"
-                                placeholder="Masukkan alamat email Anda"
+                                type="text"
+                                name="username"
+                                value="{{ old('username') }}"
+                                class="w-full h-11 border border-slate-400 rounded-md px-3.5 font-normal text-sm placeholder-slate-400 focus:outline-none focus:border-blue-600 transition-colors @error('username') border-red-500 @enderror"
+                                placeholder="Masukkan username Anda"
                                 required autofocus>
-                            @error('email')
+                            @error('username')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
@@ -97,7 +97,7 @@
 
         <!-- Right Side: Image cover -->
        <div class="flex-1 basis-1/2 max-w-1/2 h-full flex bg-indigo-50">
-    <img src="gambar/login.png" alt="Login Banner" class="w-full h-full object-cover">
+    <img src="/gambar/login.png" alt="Login Banner" class="w-full h-full object-cover">
 </div>
     </div>
 </body>

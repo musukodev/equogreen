@@ -41,7 +41,7 @@
     <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out z-50 w-[280px] min-h-screen bg-white flex-shrink-0 flex flex-col shadow-md">
         <!-- Logo -->
         <div class="flex items-center gap-3 px-6 pt-8 pb-6 border-b border-gray-100">
-            <img src="gambar/logo.png" alt="Logo Equogreen" class="w-14 h-14 rounded-full object-cover"/>
+            <img src="/gambar/logo.png" alt="Logo Equogreen" class="w-14 h-14 rounded-full object-cover"/>
             <span class="text-2xl font-bold text-gray-800">Equogreen</span>
         </div>
 
@@ -50,28 +50,28 @@
 
             <!-- Dashboard -->
             <a href="{{ route('procurement-dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 font-bold text-[17px] transition-all duration-200 hover:bg-primary hover:text-white group">
-                <img src="gambar/dashboard-layout.png" alt="Dashboard" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
+                <img src="/gambar/dashboard-layout.png" alt="Dashboard" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
                 Dashboard
             </a>
             <div class="border-b border-gray-100 my-1"></div>
 
             <!-- Periksa Barang (ACTIVE) -->
             <a href="{{ route('procurement-batch-list') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 font-bold text-[17px] bg-[#eef3ff] text-primary transition-all duration-200 hover:bg-primary hover:text-white group">
-                <img src="gambar/search-database.png" alt="Periksa Barang" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
+                <img src="/gambar/search-database.png" alt="Periksa Barang" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
                 Batch Barang
             </a>
             <div class="border-b border-gray-100 my-1"></div>
 
             <!-- Kelola Notifikasi -->
             <a href="{{ route('procurement-notifikasi') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 font-bold text-[17px] transition-all duration-200 hover:bg-primary hover:text-white group">
-                <img src="gambar/add-reminder.png" alt="Kelola Notifikasi" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
+                <img src="/gambar/add-reminder.png" alt="Kelola Notifikasi" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
                 Kelola Notifikasi
             </a>
             <div class="border-b border-gray-100 my-1"></div>
 
             <!-- Validasi Vendor -->
             <a href="{{ route('procurement-validasi-vendor') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 font-bold text-[17px] transition-all duration-200 hover:bg-primary hover:text-white group">
-                <img src="gambar/validasi.png" alt="Validasi Vendor" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
+                <img src="/gambar/validasi.png" alt="Validasi Vendor" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
                 Validasi Vendor
             </a>
             <div class="border-b border-gray-100 my-1"></div>
@@ -84,7 +84,7 @@
         <!-- Logout -->
         <div class="px-4 pb-8 border-t border-gray-100 pt-4">
             <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 font-bold text-[17px] transition-all duration-200 hover:bg-red-50 group">
-                <img src="gambar/logout.png" alt="Logout" class="w-7 h-7 object-contain"/>
+                <img src="/gambar/logout.png" alt="Logout" class="w-7 h-7 object-contain"/>
                 Logout
             </a>
         </div>
@@ -104,19 +104,19 @@
                             <!-- Mobile Hamburger -->
                             <button onclick="toggleSidebar()"
                                 class="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary transition-all duration-200 shadow-sm flex-shrink-0 group">
-                                <img src="gambar/garis3.png" alt="Menu" class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
+                                <img src="/gambar/garis3.png" alt="Menu" class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
                             </button>
                             <!-- Back Button -->
                             <a href="{{ route('procurement-batch-list') }}"
                                 class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white transition-all duration-200 shadow-sm">
-                                <img src="gambar/back-arrow.png" alt="Back" class="w-6 h-6 object-contain brightness-0" />
+                                <img src="/gambar/back-arrow.png" alt="Back" class="w-6 h-6 object-contain brightness-0" />
                             </a>
-                            <h1 class="text-2xl md:text-[36px] font-bold text-[#111827] leading-none">2026</h1>
+                            <h1 class="text-2xl md:text-[36px] font-bold text-[#111827] leading-none">{{ $year }}</h1>
                         </div>
 
                         <!-- Tabs Section (Desktop) -->
                         <div class="hidden md:flex items-center gap-8 ml-2">
-                            <a href="{{ route('procurement-batch_barang') }}"
+                            <a href="{{ route('procurement-batch_barang_by_year', ['year' => $year]) }}"
                                 class="text-[17px] font-bold text-black border-b-[3px] border-primary pb-1 whitespace-nowrap">
                                 Buat Batch
                             </a>
@@ -130,15 +130,15 @@
                     <!-- Right: Profile Section (Mobile Only) -->
                     <div class="flex md:hidden items-center gap-3">
                         <button class="w-10 h-10 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200">
-                            <img src="gambar/bell-black.png" alt="Notifikasi" class="w-5 h-5 object-contain" />
+                            <img src="/gambar/bell-black.png" alt="Notifikasi" class="w-5 h-5 object-contain" />
                         </button>
-                        <img src="gambar/profileup.png" alt="Profil" class="w-10 h-10 rounded-full object-cover border border-gray-200" />
+                        <img src="/gambar/profileup.png" alt="Profil" class="w-10 h-10 rounded-full object-cover border border-gray-200" />
                     </div>
                 </div>
 
                 <!-- Tabs Section (Mobile Only) -->
                 <div class="flex md:hidden items-center gap-6 px-1">
-                    <a href="{{ route('procurement-batch_barang') }}"
+                    <a href="{{ route('procurement-batch_barang_by_year', ['year' => $year]) }}"
                         class="text-[15px] font-bold text-black border-b-2 border-primary pb-1 whitespace-nowrap">
                         Buat Batch
                     </a>
@@ -152,10 +152,10 @@
                 <div class="hidden md:flex items-center gap-3">
                     <button
                         class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:bg-primary hover:border-primary transition-all duration-200 group shadow-sm">
-                        <img src="gambar/bell-black.png" alt="Notifikasi"
+                        <img src="/gambar/bell-black.png" alt="Notifikasi"
                             class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
                     </button>
-                    <img src="gambar/profileup.png" alt="Profil"
+                    <img src="/gambar/profileup.png" alt="Profil"
                         class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-all duration-200 cursor-pointer" />
                     <div class="w-px h-10 bg-gray-200"></div>
                     <span class="font-medium text-gray-700 text-[17px]">Procurement</span>
@@ -197,43 +197,34 @@
                                 </tr>
                             </thead>
                             <tbody id="batchTable">
+                                @forelse($batches as $index => $batch)
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-4 py-3 whitespace-nowrap">1</td>
-                                    <td class="px-4 py-3 whitespace-nowrap">12 April 2026, 09:00</td>
-                                    <td class="px-4 py-3 whitespace-nowrap">12 April 2026, 17:00</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">{{ $index + 1 }}</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($batch->waktu_mulai)->translatedFormat('d F Y, H:i') }}</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($batch->waktu_selesai)->translatedFormat('d F Y, H:i') }}</td>
                                     <td class="px-6 py-3 text-center flex justify-center items-center gap-4">
                                         <a href="{{ route('procurement-tambah_barang') }}"
                                             class="flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white text-[13px] font-bold rounded-md hover:bg-blue-700 transition shadow-sm">
                                             <i class="fa-solid fa-arrow-up-right-from-square text-[12px]"></i>
                                             Buka
                                         </a>
-                                        <button class="text-yellow-600 hover:text-yellow-800 edit-btn transition-transform hover:scale-110">
-                                            <i class="fa-regular fa-pen-to-square text-[22px]"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800 delete-btn transition-transform hover:scale-110">
-                                            <i class="fa-regular fa-trash-can text-[22px]"></i>
-                                        </button>
+                                        <!-- Delete Form -->
+                                        <form action="{{ route('batch.destroy', $batch->id_batch) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus batch ini secara permanen?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-800 transition-transform hover:scale-110">
+                                                <i class="fa-regular fa-trash-can text-[22px]"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
-
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-4 py-3 whitespace-nowrap">2</td>
-                                    <td class="px-4 py-3 whitespace-nowrap">13 Mei 2026, 08:00</td>
-                                    <td class="px-4 py-3 whitespace-nowrap">13 Mei 2026, 12:30</td>
-                                    <td class="px-6 py-3 text-center flex justify-center items-center gap-4">
-                                        <a href="/tambah_barang"
-                                            class="flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white text-[13px] font-bold rounded-md hover:bg-blue-700 transition shadow-sm">
-                                            <i class="fa-solid fa-arrow-up-right-from-square text-[12px]"></i>
-                                            Buka
-                                        </a>
-                                        <button class="text-yellow-600 hover:text-yellow-800 edit-btn transition-transform hover:scale-110">
-                                            <i class="fa-regular fa-pen-to-square text-[22px]"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800 delete-btn transition-transform hover:scale-110">
-                                            <i class="fa-regular fa-trash-can text-[22px]"></i>
-                                        </button>
+                                @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-6 text-center text-gray-500">
+                                        Belum ada batch pada tahun {{ $year }}.
                                     </td>
                                 </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -263,46 +254,19 @@
             </div>
 
             <!-- Modal Body -->
-            <div class="p-6 pb-8 border-t border-gray-400">
-
+            <form action="{{ route('batch.store') }}" method="POST" class="p-6 pb-8 border-t border-gray-400">
+                @csrf
                 <!-- Badge -->
                 <div class="mb-5">
                     <span
                         class="inline-block px-4 py-1.5 bg-white border border-black rounded text-[15px] font-bold text-black leading-none">
-                        Batch 10
+                        Batch {{ $year }}
                     </span>
                 </div>
 
-                <!-- Time Input Card 1 -->
+                <!-- Time Input Card 2 (Dates) -->
                 <div
                     class="bg-[#4142cf] rounded flex flex-col md:flex-row mb-4 shadow-sm w-full border border-[#4142cf]">
-                    <!-- Icon Side -->
-                    <div
-                        class="w-[80px] h-full min-h-[80px] flex items-center justify-center border-r border-[#696ce6] flex-shrink-0 relative">
-                        <i class="fa-regular fa-clock text-white text-[32px] font-light"></i>
-                        <i
-                            class="fa-solid fa-clock text-white text-[12px] bg-[#4142cf] rounded-full absolute bottom-[22px] right-[20px] border border-[#4142cf]"></i>
-                    </div>
-                    <!-- Input Side -->
-                    <div class="flex-1 p-4 px-5">
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <div class="flex-1">
-                                <label class="block text-white text-[13px] mb-1.5">Start</label>
-                                <input type="time"
-                                    class="w-full bg-white rounded-md px-3 py-1.5 text-black outline-none h-[34px] shadow-sm">
-                            </div>
-                            <div class="flex-1">
-                                <label class="block text-white text-[13px] mb-1.5">End</label>
-                                <input type="time"
-                                    class="w-full bg-white rounded-md px-3 py-1.5 text-black outline-none h-[34px] shadow-sm">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Time Input Card 2 -->
-                <div
-                    class="bg-[#4142cf] rounded flex flex-col md:flex-row mb-6 shadow-sm w-full border border-[#4142cf]">
                     <!-- Icon Side -->
                     <div
                         class="w-[80px] h-full min-h-[80px] flex items-center justify-center border-r border-[#696ce6] flex-shrink-0 relative">
@@ -314,26 +278,53 @@
                     <div class="flex-1 p-4 px-5">
                         <div class="flex flex-col sm:flex-row gap-4">
                             <div class="flex-1">
-                                <label class="block text-white text-[13px] mb-1.5">Start</label>
-                                <input type="date"
+                                <label class="block text-white text-[13px] mb-1.5">Start Date</label>
+                                <input type="date" name="start_date" required
                                     class="w-full bg-white rounded-md px-3 py-1.5 text-black outline-none h-[34px] shadow-sm text-[13px]">
                             </div>
                             <div class="flex-1">
-                                <label class="block text-white text-[13px] mb-1.5">End</label>
-                                <input type="date"
+                                <label class="block text-white text-[13px] mb-1.5">End Date</label>
+                                <input type="date" name="end_date" required
                                     class="w-full bg-white rounded-md px-3 py-1.5 text-black outline-none h-[34px] shadow-sm text-[13px]">
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Time Input Card 1 (Times) -->
+                <div
+                    class="bg-[#4142cf] rounded flex flex-col md:flex-row mb-6 shadow-sm w-full border border-[#4142cf]">
+                    <!-- Icon Side -->
+                    <div
+                        class="w-[80px] h-full min-h-[80px] flex items-center justify-center border-r border-[#696ce6] flex-shrink-0 relative">
+                        <i class="fa-regular fa-clock text-white text-[32px] font-light"></i>
+                        <i
+                            class="fa-solid fa-clock text-white text-[12px] bg-[#4142cf] rounded-full absolute bottom-[22px] right-[20px] border border-[#4142cf]"></i>
+                    </div>
+                    <!-- Input Side -->
+                    <div class="flex-1 p-4 px-5">
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <div class="flex-1">
+                                <label class="block text-white text-[13px] mb-1.5">Start Time</label>
+                                <input type="time" name="start_time" required
+                                    class="w-full bg-white rounded-md px-3 py-1.5 text-black outline-none h-[34px] shadow-sm">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-white text-[13px] mb-1.5">End Time</label>
+                                <input type="time" name="end_time" required
+                                    class="w-full bg-white rounded-md px-3 py-1.5 text-black outline-none h-[34px] shadow-sm">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Submit Button -->
-                <button onclick="simpanBatch()"
+                <button type="submit"
                     class="w-full bg-[#1e40ff] hover:bg-blue-700 text-white font-normal text-[15px] py-2.5 rounded shadow transition">
                     Simpan
                 </button>
 
-            </div>
+            </form>
         </div>
     </div>
 

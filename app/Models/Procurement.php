@@ -11,9 +11,13 @@ class Procurement extends Model
 {
       /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+    protected $table = 'procurement';
+    protected $primaryKey = 'id_procurement';
+    public $timestamps = false;
+
     protected $fillable = [
         'nama_procurement',
-        'email_procurement',
+        'email',
         'no_hp'
     ];
 }

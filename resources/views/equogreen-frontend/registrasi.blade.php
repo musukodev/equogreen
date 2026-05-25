@@ -21,7 +21,7 @@
 
       <div class="flex flex-col items-center justify-center h-full">
         <div class="flex items-center gap-2">
-          <img src="gambar/logo-putih.png" alt="Logo" class="w-12 h-12">
+          <img src="/gambar/logo-putih.png" alt="Logo" class="w-12 h-12">
           <h1 class="text-[16px] font-bold leading-none">Equogreen</h1>
         </div>
 

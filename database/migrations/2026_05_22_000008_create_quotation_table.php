@@ -7,15 +7,12 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('quotation', function (Blueprint $table) {
-            
-            // Kolom Lainnya
-            $table->string('vendor', 100)->nullable();
+            $table->increments('id_quotation');
+            $table->integer('id_vendor')->unsigned()->nullable();
+            $table->integer('id_penawaran')->unsigned()->nullable();
             $table->string('no_item', 100)->nullable();
             $table->string('coll_no', 100)->nullable();
             $table->string('rfq_no', 100)->nullable();
@@ -33,24 +30,15 @@ return new class extends Migration
             $table->integer('lead_time_weeks')->nullable();
             $table->date('quotation_date');
             
-            // Timestamps bawaan Laravel (created_at & updated_at)
-            $table->timestamps();
-
-            // Mendefinisikan relasi Foreign Key dengan ON DELETE CASCADE
-            // $table->foreign('id_vendor')->references('id_vendor')->on('vendor')->onDelete('cascade');
-            // $table->foreign('id_penawaran')->references('id_penawaran')->on('penawaran')->onDelete('cascade');
+            $table->foreign('id_vendor', 'fk_quotation_vendor')->references('id_vendor')->on('vendor')->onDelete('cascade');
+            $table->foreign('id_penawaran', 'fk_quotation_penawaran')->references('id_penawaran')->on('penawaran')->onDelete('cascade');
         });
-
-        // Menambahkan CONSTRAINT CHECK menggunakan Raw SQL
-        // Karena Schema Builder bawaan Laravel belum memiliki method khusus untuk CHECK
-        DB::statement('ALTER TABLE quotation ADD CONSTRAINT chk_quotation_qty CHECK (qty > 0)');
-        DB::statement('ALTER TABLE quotation ADD CONSTRAINT chk_quotation_net_price CHECK (net_price >= 0)');
-        DB::statement('ALTER TABLE quotation ADD CONSTRAINT chk_quotation_lead_time CHECK (lead_time_weeks >= 0)');
+        
+        DB::statement("ALTER TABLE quotation ADD CONSTRAINT chk_quotation_qty CHECK (qty > 0)");
+        DB::statement("ALTER TABLE quotation ADD CONSTRAINT chk_quotation_net_price CHECK (net_price >= 0)");
+        DB::statement("ALTER TABLE quotation ADD CONSTRAINT chk_quotation_lead_time CHECK (lead_time_weeks >= 0)");
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('quotation');

@@ -48,21 +48,21 @@
         class="fixed inset-y-0 left-0 transform -translate-x-full lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out z-50 w-[280px] min-h-screen bg-white flex-shrink-0 flex flex-col shadow-md">
         <!-- Logo -->
         <div class="flex items-center gap-3 px-6 pt-8 pb-6 border-b border-gray-100">
-            <img src="gambar/logo.png" alt="Logo Equogreen" class="w-14 h-14 rounded-full object-cover" />
+            <img src="/gambar/logo.png" alt="Logo Equogreen" class="w-14 h-14 rounded-full object-cover" />
             <span class="text-2xl font-bold text-gray-800">Equogreen</span>
         </div>
 
         <nav class="flex-1 px-4 py-6 flex flex-col gap-1">
             <a href="{{ route('vendor-dashboard') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 font-bold text-[17px] bg-[#eef3ff] text-primary transition-all duration-200 hover:bg-primary hover:text-white group">
-                <img src="gambar/dashboard-layout.png" alt="Dashboard"
+                <img src="/gambar/dashboard-layout.png" alt="Dashboard"
                     class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert" />
                 Dashboard
             </a>
             <div class="border-b border-gray-100 my-1"></div>
             <a href="{{ route('vendor-riwayat') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 font-bold text-[17px] transition-all duration-200 hover:bg-primary hover:text-white group">
-                <img src="gambar/riwayat.png" alt="Riwayat"
+                <img src="/gambar/riwayat.png" alt="Riwayat"
                     class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert" />
                 Riwayat
             </a>
@@ -75,7 +75,7 @@
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 font-bold text-[17px] transition-all duration-200 hover:bg-red-50 group">
-                    <img src="gambar/logout.png" alt="Logout" class="w-7 h-7 object-contain" />
+                    <img src="/gambar/logout.png" alt="Logout" class="w-7 h-7 object-contain" />
                     Logout
                 </button>
             </form>
@@ -91,7 +91,7 @@
                 <!-- Mobile Hamburger (Circle Style like Back Button) -->
                 <button onclick="toggleSidebar()"
                     class="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm flex-shrink-0 group">
-                    <img src="gambar/garis3.png" alt="Menu"
+                    <img src="/gambar/garis3.png" alt="Menu"
                         class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
                 </button>
                 <div>
@@ -106,12 +106,12 @@
                 <!-- Notification Bell -->
                 <button
                     class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:bg-primary hover:border-primary transition-all duration-200 group">
-                    <img src="gambar/bell-black.png" alt="Notifikasi"
+                    <img src="/gambar/bell-black.png" alt="Notifikasi"
                         class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
                 </button>
 
                 <!-- Profile -->
-                <img src="gambar/profileup.png" alt="Profil"
+                <img src="/gambar/profileup.png" alt="Profil"
                     class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-all duration-200 cursor-pointer" />
                 <div class="hidden md:block w-px h-10 bg-gray-200"></div>
                 <span class="hidden md:block font-medium text-gray-700 text-[17px]">Vendor</span>
@@ -182,7 +182,7 @@
                 <!-- Banner Icon Area -->
                 <div
                     class="hidden md:flex absolute right-12 lg:right-20 top-1/2 transform -translate-y-1/2 w-24 h-24 lg:w-32 lg:h-32 bg-[#2d4ddd]/65 rounded-full items-center justify-center">
-                    <img src="gambar/pengumuman.png" alt="Banner Icon" class="w-16 h-16 object-contain" />
+                    <img src="/gambar/pengumuman.png" alt="Banner Icon" class="w-16 h-16 object-contain" />
                 </div>
             </div>
 
