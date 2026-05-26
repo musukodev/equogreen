@@ -16,4 +16,9 @@ class Penawaran extends Model
         'spesifikasi',
         'jumlah'
     ];
+
+    public function penawaranVendors()
+    {
+        return $this->hasMany(PenawaranVendor::class, 'id_penawaran', 'id_penawaran');
+    }
 }

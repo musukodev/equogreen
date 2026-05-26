@@ -23,4 +23,9 @@ class Batch extends Model
     {
         return $this->belongsTo(Procurement::class, 'id_procurement', 'id_procurement');
     }
+
+    public function penawaran()
+    {
+        return $this->hasMany(Penawaran::class, 'id_batch', 'id_batch');
+    }
 }

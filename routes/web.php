@@ -37,9 +37,7 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard_procurement', \App\Livewire\Procurement\Dashboard::class)->name('procurement-dashboard');
 
-    Route::get('/dashboard_vendor', function () {
-        return view('equogreen-frontend.dashboard_vendor');
-    })->name('vendor-dashboard');
+    Route::get('/dashboard_vendor', \App\Livewire\Vendor\Dashboard::class)->name('vendor-dashboard');
 
     // Procurement pages
     // (Digantikan dengan route /batch_barang/{year} di bawah)
@@ -62,9 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/batch_barang', \App\Livewire\Procurement\BatchBarang::class)->name('procurement-batch_barang_empty');
     Route::get('/batch_barang/{year}', \App\Livewire\Procurement\BatchBarang::class)->name('procurement-batch_barang_by_year');
 
-    Route::get('/buat_quotation', function () {
-        return view('equogreen-frontend.buat_quotation');
-    })->name('vendor-buat_quotation');
+    Route::get('/buat_quotation', \App\Livewire\Vendor\BuatQuotation::class)->name('vendor-buat_quotation');
 
     Route::get('/vendor-riwayat', function () {
         $quotations = Quotation::latest()->get();
