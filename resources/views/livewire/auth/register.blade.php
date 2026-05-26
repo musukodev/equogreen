@@ -67,10 +67,11 @@
                     <label class="block text-[12px] text-black mb-1">Kategori Vendor</label>
                     <select wire:model="kategori_vendor" class="w-full h-[28px] border border-gray-400 rounded-[4px] px-2 text-[12px] text-gray-600 bg-white focus:outline-none appearance-none bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22gray%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><polyline points=%226 9 12 15 18 9%22/></svg>')] bg-no-repeat bg-[right_8px_center] @error('kategori_vendor') border-red-500 @enderror" required>
                         <option value="" disabled selected>Pilih Kategori Vendor</option>
-                        <option value="supplier">Supplier</option>
-                        <option value="kontraktor">Kontraktor</option>
-                        <option value="distributor">Distributor</option>
-                        <option value="jasa">Jasa</option>
+                        <option value="atk">ATK</option>
+                        <option value="elektronik">Elektronik</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="cleaning">Cleaning Supply</option>
+                        <option value="supplier">Supplier Umum</option>
                     </select>
                     @error('kategori_vendor') <span class="text-red-500 text-[10px]">{{ $message }}</span> @enderror
                 </div>

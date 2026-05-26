@@ -102,8 +102,8 @@
                             <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($batch->waktu_mulai)->translatedFormat('d F Y, H:i') }}</td>
                             <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($batch->waktu_selesai)->translatedFormat('d F Y, H:i') }}</td>
                             <td class="px-6 py-3 text-center flex justify-center items-center gap-4">
-                                <a href="{{ route('procurement-tambah_barang', ['batch_id' => $batch->id_batch]) }}"
-                                    class="flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white text-[13px] font-bold rounded-md hover:bg-blue-700 transition shadow-sm" wire:navigate>
+                                <a href="#"
+                                    class="flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white text-[13px] font-bold rounded-md hover:bg-blue-700 transition shadow-sm">
                                     <i class="fa-solid fa-arrow-up-right-from-square text-[12px]"></i>
                                     Buka
                                 </a>
@@ -116,7 +116,7 @@
                         @empty
                         <tr>
                             <td colspan="4" class="px-4 py-6 text-center text-gray-500">
-                                Belum ada batch pada tahun {{ $year }}.
+                                Belum ada batch
                             </td>
                         </tr>
                         @endforelse

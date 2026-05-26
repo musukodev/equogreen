@@ -14,25 +14,33 @@ class VendorSeeder extends Seeder
      */
     public function run(): void
     {
-        $vendor = Vendor::create([
-            'nama_perusahaan'  => 'PT Karya Vendor Nusantara',
-            'email_perusahaan' => 'vendor1@gmail.com',
-            'no_hp'            => '081234567891',
-            'alamat'           => 'Jl. Industri No. 1, Jakarta',
-            'kategori_vendor'  => 'supplier',
-            'penanggung_jawab' => 'Budi Santoso',
-            'deskripsi'        => 'Menyediakan berbagai kebutuhan ATK dan kantor',
-            'provinsi'         => '31',
-            'kota'             => '3173',
-            'kecamatan'        => '3173010',
-            'kode_pos'         => '11410',
-        ]);
+        $faker = \Faker\Factory::create('id_ID');
+        $categories = ['atk', 'elektronik', 'furniture', 'cleaning', 'supplier'];
 
-        User::create([
-            'username' => 'admin_vendor1',
-            'password' => bcrypt('password'),
-            'role'     => 'Vendor',
-            'id_vendor'=> $vendor->id_vendor ?? $vendor->id,
-        ]);
+        for ($i = 0; $i < 20; $i++) {
+            $kategori = $categories[array_rand($categories)];
+            
+            $vendor = Vendor::create([
+                'nama_perusahaan'  => $faker->company,
+                'email_perusahaan' => $faker->unique()->companyEmail,
+                'no_hp'            => $faker->numerify('08##########'),
+                'alamat'           => $faker->address,
+                'kategori_vendor'  => $kategori,
+                'penanggung_jawab' => $faker->name,
+                'deskripsi'        => $faker->paragraph,
+                'provinsi'         => '21',
+                'kota'             => '2171',
+                'kecamatan'        => '2171061',
+                'kode_pos'         => '29424',
+                'status'           => 'approved',
+            ]);
+
+            User::create([
+                'username' => \Illuminate\Support\Str::slug($vendor->nama_perusahaan, '-'),
+                'password' => bcrypt('password'),
+                'role'     => 'vendor',
+                'id_vendor'=> $vendor->id_vendor,
+            ]);
+        }
     }
 }

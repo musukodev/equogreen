@@ -21,9 +21,9 @@ class BatchBarang extends Component
     public $end_date;
     public $end_time;
 
-    public function mount($year)
+    public function mount($year = null)
     {
-        $this->year = $year;
+        $this->year = $year ?? date('Y');
     }
 
     public function store()
@@ -71,6 +71,12 @@ class BatchBarang extends Component
 
     public function render()
     {
+        if (Batch::count() == 0) {
+            return view('livewire.procurement.batch-barang-item-kosong', [
+                'batches' => []
+            ]);
+        }
+
         $batches = Batch::whereYear('waktu_mulai', $this->year)
             ->orderBy('waktu_mulai', 'asc')
             ->get();

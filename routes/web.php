@@ -52,15 +52,14 @@ Route::middleware('auth')->group(function () {
         return view('equogreen-frontend.periksa_barang');
     })->name('procurement-periksa_barang');
 
-    Route::get('/tambah_barang', function () {
-        return view('equogreen-frontend.tambah_barang');
-    })->name('procurement-tambah_barang');
+    Route::get('/tambah_barang/{batch_id}', \App\Livewire\Procurement\TambahBarang::class)->name('procurement-tambah_barang');
 
     Route::get('/validasi-vendor', [VendorController::class, 'index'])->name('procurement-validasi-vendor');
     Route::post('/approve-vendor/{id}', [App\Http\Controllers\ValidateVendor::class, 'approveVendor'])->name('approve.vendor');
     Route::post('/reject-vendor/{id}', [App\Http\Controllers\ValidateVendor::class, 'rejectVendor'])->name('reject.vendor');
 
     Route::get('/batch-list', \App\Livewire\Procurement\BatchList::class)->name('procurement-batch-list');
+    Route::get('/batch_barang', \App\Livewire\Procurement\BatchBarang::class)->name('procurement-batch_barang_empty');
     Route::get('/batch_barang/{year}', \App\Livewire\Procurement\BatchBarang::class)->name('procurement-batch_barang_by_year');
 
     Route::get('/buat_quotation', function () {

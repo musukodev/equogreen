@@ -16,6 +16,13 @@ class BatchList extends Component
     public $newYear = '';
     public $search = '';
 
+    public function mount()
+    {
+        if (Batch::count() == 0) {
+            return redirect()->route('procurement-batch_barang_empty');
+        }
+    }
+
     public function addFolder()
     {
         $this->validate([

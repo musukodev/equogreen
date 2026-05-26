@@ -74,11 +74,13 @@
         </nav>
 
         <div class="px-4 pb-8 border-t border-gray-100 pt-4">
-            <a href="#"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 font-bold text-[17px] transition-all duration-200 hover:bg-red-50 group">
-                <img src="/gambar/logout.png" alt="Logout" class="w-7 h-7 object-contain" />
-                Logout
-            </a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 font-bold text-[17px] transition-all duration-200 hover:bg-red-50 group">
+                    <img src="/gambar/logout.png" alt="Logout" class="w-7 h-7 object-contain" />
+                    Logout
+                </button>
+            </form>
         </div>
     </aside>
 
