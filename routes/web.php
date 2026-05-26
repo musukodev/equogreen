@@ -21,8 +21,10 @@ Route::get('/', function () {
 });
 
 // ── Registrasi vendor (tidak perlu login) ──────────────
-Route::get('/registrasi', [VendorController::class, 'create'])->name('registrasi');
-Route::post('/registrasi', [VendorController::class, 'store'])->name('registrasi-store');
+Route::get('/registrasi', \App\Livewire\Auth\Register::class)->name('registrasi');
+
+
+Route::post('/registrasi-store', \App\Livewire\Auth\Register::class)->name('registrasi-store');
 
 // ── Semua route yang butuh login ───────────────────────
 Route::middleware('auth')->group(function () {
@@ -33,9 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Dashboard
-    Route::get('/dashboard_procurement', function () {
-        return view('equogreen-frontend.dashboard_procurement');
-    })->name('procurement-dashboard');
+    Route::get('/dashboard_procurement', \App\Livewire\Procurement\Dashboard::class)->name('procurement-dashboard');
 
     Route::get('/dashboard_vendor', function () {
         return view('equogreen-frontend.dashboard_vendor');
@@ -60,10 +60,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/approve-vendor/{id}', [App\Http\Controllers\ValidateVendor::class, 'approveVendor'])->name('approve.vendor');
     Route::post('/reject-vendor/{id}', [App\Http\Controllers\ValidateVendor::class, 'rejectVendor'])->name('reject.vendor');
 
-    Route::get('/batch-list', [\App\Http\Controllers\BatchController::class, 'indexGroups'])->name('procurement-batch-list');
-    Route::get('/batch_barang/{year}', [\App\Http\Controllers\BatchController::class, 'index'])->name('procurement-batch_barang_by_year');
-    Route::post('/batch/store', [\App\Http\Controllers\BatchController::class, 'store'])->name('batch.store');
-    Route::delete('/batch/{id}', [\App\Http\Controllers\BatchController::class, 'destroy'])->name('batch.destroy');
+    Route::get('/batch-list', \App\Livewire\Procurement\BatchList::class)->name('procurement-batch-list');
+    Route::get('/batch_barang/{year}', \App\Livewire\Procurement\BatchBarang::class)->name('procurement-batch_barang_by_year');
 
     Route::get('/buat_quotation', function () {
         return view('equogreen-frontend.buat_quotation');

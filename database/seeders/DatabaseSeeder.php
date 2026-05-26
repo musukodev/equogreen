@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Procurement;
+use App\Models\Vendor;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -23,7 +24,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'username'       => 'admin_procurement',
             'password'       => bcrypt('password'),
-            'role'           => 'procurement',
+            'role'           => 'Procurement',
             'id_procurement' => $procurement->id_procurement,
         ]);
     }

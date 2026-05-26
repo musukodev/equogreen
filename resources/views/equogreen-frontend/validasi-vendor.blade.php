@@ -147,6 +147,12 @@
       </div>
     </header>
 
+    @if(session('success'))
+        <div class="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 text-[14px] rounded-xl shadow-sm">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <!-- Vendor Table -->
     <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
       <table class="w-full border-collapse" id="vendor-table">
@@ -172,7 +178,7 @@
     </td>
 
     <td class="px-5 py-4 text-sm text-gray-600 text-center border-r border-gray-100">
-        {{ $vendor->created_at->format('d M Y') }}
+        {{ \Carbon\Carbon::parse($vendor->created_at)->format('d M Y') }}
     </td>
 
 <td class="px-5 py-4 text-center border-r border-gray-100">
@@ -187,7 +193,7 @@
     <td class="px-5 py-4">
         <div class="flex items-center justify-center gap-3">
 
-            <form action="{{ route('approve.vendor', $vendor->id) }}" method="POST" class="inline">
+            <form action="{{ route('approve.vendor', $vendor->id_vendor) }}" method="POST" class="inline">
                 @csrf
                 <button type="submit"
                     class="btn-approve w-9 h-9 rounded-lg bg-green-50 hover:bg-green-100 text-green-500 hover:text-green-600 flex items-center justify-center transition-all duration-200"
@@ -207,7 +213,7 @@
                 </button>
             </form>
 
-            <form action="{{ route('reject.vendor', $vendor->id) }}" method="POST" class="inline">
+            <form action="{{ route('reject.vendor', $vendor->id_vendor) }}" method="POST" class="inline">
                 @csrf
 
                 <button type="submit"

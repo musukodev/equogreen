@@ -28,7 +28,7 @@ class VendorController extends Controller
          $request->validate([
 
             'nama_perusahaan' => 'required|string|max:255',
-            'email_perusahaan' => 'required|email|max:255|unique:vendors',
+            'email_perusahaan' => 'required|email|max:255|unique:vendor',
             'no_hp' => 'required|string|max:20',
             'alamat' => 'required|string|max:500',
             'kategori_vendor' => 'required|string|max:255',

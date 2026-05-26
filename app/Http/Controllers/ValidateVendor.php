@@ -19,23 +19,20 @@ class ValidateVendor extends Controller
         $vendor->status = 'approved';
         $vendor->save();
 
-        $existingUser = User::where('email', $vendor->email_perusahaan)->first();
+        $username = Str::slug($vendor->nama_perusahaan, '-');
+        $existingUser = User::where('username', $username)->first();
 
         if (!$existingUser) {
 
             User::create([
-                'name' => $vendor->nama_perusahaan, 
-                'vendor_id' => $vendor->id, 
-                'email' => $vendor->email_perusahaan, 
-                'email_verified_at' => now(),
+                'username' => $username,
+                'id_vendor' => $vendor->id_vendor,
                 'password' => Hash::make('123'),
                 'role' => 'vendor',
-                'remember_token' => Str::random(10),
 
 
             ]);
         }
-        Mail::to($vendor->email_perusahaan)->send(new VendorApprovedMail($vendor));
 
         return redirect()
             ->route('procurement-validasi-vendor')
@@ -46,8 +43,7 @@ class ValidateVendor extends Controller
     {
         $vendor = Vendor::findOrFail($id);
 
-        $vendor->status = 'rejected';
-        $vendor->save();
+        $vendor->delete();
 
         return redirect()
             ->route('procurement-validasi-vendor')

@@ -11,16 +11,22 @@ return new class extends Migration
     {
         Schema::create('vendor', function (Blueprint $table) {
             $table->increments('id_vendor');
-            $table->string('nama_vendor', 255);
-            $table->string('kategori', 100)->nullable();
+            $table->string('nama_perusahaan', 255);
+            $table->string('email_perusahaan', 255)->unique();
+            $table->string('no_hp', 20);
             $table->text('alamat');
-            $table->string('email', 255)->unique();
-            $table->string('no_telp', 20)->nullable();
-            $table->string('kota', 100)->nullable();
+            $table->string('kategori_vendor', 100);
+            $table->string('penanggung_jawab', 255);
+            $table->text('deskripsi');
+            $table->string('provinsi', 100);
+            $table->string('kota', 100);
+            $table->string('kecamatan', 100);
+            $table->string('kode_pos', 20);
+            $table->string('portofolio', 255)->nullable();
             $table->string('status', 50)->default('Pending');
         });
         
-        DB::statement("ALTER TABLE vendor ADD CONSTRAINT chk_vendor_status CHECK (status in ('Pending','Aktif','Suspend'))");
+        DB::statement("ALTER TABLE vendor ADD CONSTRAINT chk_vendor_status CHECK (status in ('Pending','Aktif','Suspend','approved','rejected'))");
     }
 
     public function down(): void

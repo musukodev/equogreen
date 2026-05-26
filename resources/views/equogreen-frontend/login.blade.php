@@ -97,8 +97,8 @@
 
         <!-- Right Side: Image cover -->
        <div class="flex-1 basis-1/2 max-w-1/2 h-full flex bg-indigo-50">
-    <img src="/gambar/login.png" alt="Login Banner" class="w-full h-full object-cover">
-</div>
+            <img src="/gambar/login.png" alt="Login Banner" class="w-full h-full object-cover">
+        </div>
     </div>
 </body>
 
