@@ -6,7 +6,7 @@ use App\Http\Controllers\VendorController;
 use App\Models\Quotation;
 use Illuminate\Support\Facades\Route;
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 // Root
 Route::get('/', function () {
@@ -39,16 +39,19 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard_vendor', \App\Livewire\Vendor\Dashboard::class)->name('vendor-dashboard');
 
-    // Procurement pages
-    // (Digantikan dengan route /batch_barang/{year} di bawah)
 
-    Route::get('/notifikasi', function () {
-        return view('equogreen-frontend.notifikasi');
-    })->name('procurement-notifikasi');
 
-    Route::get('/periksa_barang', function () {
-        return view('equogreen-frontend.periksa_barang');
-    })->name('procurement-periksa_barang');
+    Route::get('/notifikasi', [App\Http\Controllers\NotifikasiController::class, 'index'])->name('procurement-notifikasi');
+
+    Route::get('/vendor-profile', function () {
+        return view('equogreen-frontend.profile_vendor');
+    })->name('vendor_profile');
+    Route::get('/procurement-profile', function () {
+        return view('equogreen-frontend.profile_procurement');
+    })->name('profile_procurement');
+
+    Route::get('/periksa_barang', \App\Livewire\Procurement\PeriksaBarang::class)->name('procurement-periksa_barang');
+
 
     Route::get('/tambah_barang/{batch_id}', \App\Livewire\Procurement\TambahBarang::class)->name('procurement-tambah_barang');
 
@@ -60,8 +63,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/batch_barang', \App\Livewire\Procurement\BatchBarang::class)->name('procurement-batch_barang_empty');
     Route::get('/batch_barang/{year}', \App\Livewire\Procurement\BatchBarang::class)->name('procurement-batch_barang_by_year');
 
-    Route::get('/buat_quotation', \App\Livewire\Vendor\BuatQuotation::class)->name('vendor-buat_quotation');
-
+    Route::get('/buat_quotation/{id_batch}', \App\Livewire\Vendor\BuatQuotation::class)
+        ->name('vendor-buat_quotation');
     Route::get('/vendor-riwayat', function () {
         $quotations = Quotation::latest()->get();
         return view('equogreen-frontend.riwayat_vendor', compact('quotations'));
@@ -69,4 +72,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/fastexcel-quotation', [QuotationFastExcelController::class, 'index']);
     Route::post('/fastexcel-quotation', [QuotationFastExcelController::class, 'import'])->name('fastexcel.import');
+    Route::get('/download-template', function () {
+        return response()->download(
+            public_path('templates/template_quotation.xlsx')
+        );
+    })->name('download-template');
 });

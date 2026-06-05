@@ -89,7 +89,7 @@
       <div class="border-b border-gray-100 my-1"></div>
 
       <!-- Pengaturan -->
-      
+
 
     </nav>
 
@@ -180,8 +180,30 @@
             <th class="px-3 md:px-5 py-3.5 text-center text-xs md:text-sm font-semibold text-white">Kirim Email</th>
           </tr>
         </thead>
-        <tbody id="table-body">
-          <!-- Diisi oleh JavaScript -->
+        <tbody>
+          @foreach($vendors as $vendor)
+          <tr class="border-b border-gray-200 hover:bg-gray-100">
+            <td class="px-3 md:px-5 py-3.5 text-sm text-gray-700">{{ $vendor->nama_perusahaan }}</td>
+            <td class="px-3 md:px-5 py-3.5 text-sm text-gray-700">{{ $vendor->kategori_vendor }}</td>
+            <td class="px-3 md:px-5 py-3.5 text-center">
+              <button class="btn-profile text-accent font-semibold text-sm underline underline-offset-2 hover:text-primary transition-colors"
+                data-nama="{{ $vendor->nama_perusahaan }}"
+                data-kategori="{{ $vendor->kategori_vendor }}"
+                data-email="{{ $vendor->email }}"
+                data-phone="{{ $vendor->no_hp }}"
+                data-alamat="{{ $vendor->alamat }}">
+                Profil
+              </button>
+            </td>
+            <td class="px-3 md:px-5 py-3.5 text-center">
+              <button class="btn-email w-10 h-10 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary flex items-center justify-center mx-auto transition-all duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          @endforeach
         </tbody>
       </table>
     </div>
@@ -215,15 +237,15 @@
         <div class="grid grid-cols-2 gap-3 mt-2">
           <div class="bg-gray-50 rounded-lg p-3">
             <p class="text-xs text-gray-400 mb-0.5">Email</p>
-            <p class="text-sm font-semibold text-gray-700" id="modal-vendor-email">—</p>
+            <p class="text-sm font-semibold text-gray-700" id="modal-vendor-email"></p>
           </div>
           <div class="bg-gray-50 rounded-lg p-3">
             <p class="text-xs text-gray-400 mb-0.5">Telepon</p>
-            <p class="text-sm font-semibold text-gray-700" id="modal-vendor-phone">—</p>
+            <p class="text-sm font-semibold text-gray-700" id="modal-vendor-phone"></p>
           </div>
           <div class="bg-gray-50 rounded-lg p-3 col-span-2">
             <p class="text-xs text-gray-400 mb-0.5">Alamat</p>
-            <p class="text-sm font-semibold text-gray-700" id="modal-vendor-alamat">—</p>
+            <p class="text-sm font-semibold text-gray-700" id="modal-vendor-alamat"></p>
           </div>
         </div>
       </div>
@@ -276,254 +298,37 @@
   </div>
 
   <script>
-    // ============================================================
-    // DATA DUMMY VENDOR
-    // ============================================================
-    const VENDORS = [{
-      nama: 'Elektro Site',
-      kategori: 'Elektronik',
-      email: 'info@elektrosite.co.id',
-      phone: '021-5551234',
-      alamat: 'Jl. Raya Elektronik No.12, Jakarta Barat'
-    },
-    {
-      nama: 'ATK Corp.',
-      kategori: 'ATK',
-      email: 'order@atkcorp.com',
-      phone: '021-5559876',
-      alamat: 'Jl. Stationery Blok A No.5, Tangerang'
-    },
-    {
-      nama: 'FurNiture',
-      kategori: 'Furniture',
-      email: 'sales@furnitureindo.com',
-      phone: '021-5558888',
-      alamat: 'Jl. Mebel Indah No.8, Bekasi'
-    },
-    {
-      nama: 'TokoTech',
-      kategori: 'Elektronik',
-      email: 'cs@tokotech.id',
-      phone: '021-5552222',
-      alamat: 'Jl. Gadget Corner No.3, Jakarta Selatan'
-    },
-    {
-      nama: 'ATKKita',
-      kategori: 'ATK',
-      email: 'hello@atkkita.com',
-      phone: '021-5553333',
-      alamat: 'Jl. Alat Tulis No.17, Depok'
-    },
-    {
-      nama: 'BersihMart',
-      kategori: 'Cleaning Supply',
-      email: 'order@bersihmart.co.id',
-      phone: '021-5554444',
-      alamat: 'Jl. Hygiene No.21, Bogor'
-    },
-    {
-      nama: 'MebelKita',
-      kategori: 'Furniture',
-      email: 'info@mebelkita.com',
-      phone: '021-5555555',
-      alamat: 'Jl. Kayu Jati No.9, Cirebon'
-    },
-    {
-      nama: 'CleanPro',
-      kategori: 'Cleaning Supply',
-      email: 'sales@cleanpro.id',
-      phone: '021-5556666',
-      alamat: 'Jl. Sanitasi No.14, Bandung'
-    },
-    {
-      nama: 'GadgetPro',
-      kategori: 'Elektronik',
-      email: 'support@gadgetpro.id',
-      phone: '021-5557777',
-      alamat: 'Jl. Digital No.6, Jakarta Utara'
-    },
-    {
-      nama: 'Nusa ATK',
-      kategori: 'ATK',
-      email: 'order@nusaatk.com',
-      phone: '021-5558888',
-      alamat: 'Jl. Paper Mart No.11, Surabaya'
-    },
-    ];
+    document.querySelectorAll('.btn-profile').forEach(button => {
+      button.addEventListener('click', function() {
 
-    // ---- Elements ----
-    const filterKategori = document.getElementById('filter-kategori');
-    const searchInput = document.getElementById('search-input');
-    const tableBody = document.getElementById('table-body');
+        document.getElementById('modal-avatar').textContent =
+          this.dataset.nama.charAt(0);
 
-    // Profile modal
-    const profileModal = document.getElementById('profile-modal');
-    const closeProfileModal = document.getElementById('close-profile-modal');
+        document.getElementById('modal-vendor-name').textContent =
+          this.dataset.nama;
 
-    // Email modal
-    const emailModal = document.getElementById('email-modal');
-    const closeEmailModal = document.getElementById('close-email-modal');
-    const btnSendEmail = document.getElementById('btn-send-email');
+        document.getElementById('modal-vendor-kategori').textContent =
+          this.dataset.kategori;
 
-    let currentEmailVendor = null;
+        document.getElementById('modal-vendor-email').textContent =
+          this.dataset.email;
 
-    // =============================================
-    // RENDER TABLE
-    // =============================================
-    function renderTable() {
-      const kategori = filterKategori.value;
-      const query = searchInput.value.trim().toLowerCase();
+        document.getElementById('modal-vendor-phone').textContent =
+          this.dataset.phone;
 
-      // Filter vendors
-      let filtered = VENDORS.filter(v => {
-        const matchKategori = kategori === 'semua' || v.kategori.toLowerCase().replace(' ', '') === kategori.replace(' ', '');
-        const matchSearch = v.nama.toLowerCase().includes(query) || v.kategori.toLowerCase().includes(query);
-        return matchKategori && matchSearch;
+        document.getElementById('modal-vendor-alamat').textContent =
+          this.dataset.alamat;
+
+        profileModal.classList.remove('hidden');
+        profileModal.classList.add('flex');
       });
-
-      tableBody.innerHTML = '';
-
-      if (filtered.length === 0) {
-        tableBody.innerHTML = `
-          <tr>
-            <td colspan="4" class="px-5 py-10 text-center text-gray-300 text-sm italic">Tidak ada vendor ditemukan</td>
-          </tr>
-        `;
-        return;
-      }
-
-      filtered.forEach((vendor, idx) => {
-        const row = document.createElement('tr');
-        row.className = 'border-b border-gray-100 hover:bg-[#f8f9ff] transition-colors duration-150';
-        row.innerHTML = `
-          <td class="px-5 py-4 text-sm font-medium text-gray-800">${vendor.nama}</td>
-          <td class="px-5 py-4 text-sm text-gray-600">${vendor.kategori}</td>
-          <td class="px-5 py-4 text-center">
-            <button class="btn-profile text-accent font-semibold text-sm underline underline-offset-2 hover:text-primary transition-colors" data-index="${VENDORS.indexOf(vendor)}">
-              Profile
-            </button>
-          </td>
-          <td class="px-5 py-4 text-center">
-            <button class="btn-email w-10 h-10 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary flex items-center justify-center mx-auto transition-all duration-200" data-index="${VENDORS.indexOf(vendor)}" title="Kirim email ke ${vendor.nama}">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-              </svg>
-            </button>
-          </td>
-        `;
-
-        // Animate row
-        row.style.opacity = '0';
-        row.style.transform = 'translateY(-4px)';
-        tableBody.appendChild(row);
-        setTimeout(() => {
-          row.style.transition = 'opacity 0.2s, transform 0.2s';
-          row.style.opacity = '1';
-          row.style.transform = 'translateY(0)';
-        }, idx * 30);
-      });
-
-      // Attach event listeners
-      document.querySelectorAll('.btn-profile').forEach(btn => {
-        btn.addEventListener('click', () => openProfileModal(parseInt(btn.dataset.index)));
-      });
-      document.querySelectorAll('.btn-email').forEach(btn => {
-        btn.addEventListener('click', () => openEmailModal(parseInt(btn.dataset.index)));
-      });
-    }
-
-    // ---- Filter & Search ----
-    filterKategori.addEventListener('change', renderTable);
-    searchInput.addEventListener('input', renderTable);
-
-    // ---- Init ----
-    renderTable();
-
-    // =============================================
-    // PROFILE MODAL
-    // =============================================
-    function openProfileModal(index) {
-      const v = VENDORS[index];
-      document.getElementById('modal-avatar').textContent = v.nama.charAt(0);
-      document.getElementById('modal-vendor-name').textContent = v.nama;
-      document.getElementById('modal-vendor-kategori').textContent = v.kategori;
-      document.getElementById('modal-vendor-email').textContent = v.email;
-      document.getElementById('modal-vendor-phone').textContent = v.phone;
-      document.getElementById('modal-vendor-alamat').textContent = v.alamat;
-      profileModal.classList.remove('hidden');
-      profileModal.classList.add('flex');
-    }
-
-    closeProfileModal.addEventListener('click', () => {
-      profileModal.classList.add('hidden');
-      profileModal.classList.remove('flex');
     });
-    profileModal.addEventListener('click', (e) => {
-      if (e.target === profileModal) {
+    document.getElementById('close-profile-modal')
+      .addEventListener('click', function() {
         profileModal.classList.add('hidden');
         profileModal.classList.remove('flex');
-      }
-    });
-
-    // =============================================
-    // EMAIL MODAL
-    // =============================================
-    function openEmailModal(index) {
-      const v = VENDORS[index];
-      currentEmailVendor = v;
-      document.getElementById('email-avatar').textContent = v.nama.charAt(0);
-      document.getElementById('email-vendor-name').textContent = v.nama;
-      document.getElementById('email-vendor-email').textContent = v.email;
-      document.getElementById('email-subject').value = '';
-      document.getElementById('email-body').value = '';
-      emailModal.style.display = 'flex';
-    }
-
-    closeEmailModal.addEventListener('click', () => emailModal.style.display = 'none');
-    emailModal.addEventListener('click', (e) => {
-      if (e.target === emailModal) emailModal.style.display = 'none';
-    });
-
-    btnSendEmail.addEventListener('click', () => {
-      const subject = document.getElementById('email-subject').value.trim();
-      const body = document.getElementById('email-body').value.trim();
-      if (!subject || !body) {
-        showToast('Harap isi subjek dan pesan!', true);
-        return;
-      }
-      emailModal.style.display = 'none';
-      showToast(`Email berhasil dikirim ke ${currentEmailVendor.nama}!`);
-    });
-
-    // ---- Toast Helper ----
-    function showToast(msg, isError = false) {
-      const toast = document.getElementById('toast');
-      const toastMsg = document.getElementById('toast-msg');
-      const toastIcon = document.getElementById('toast-icon');
-      toastMsg.textContent = msg;
-      toast.style.background = isError ? '#e53e3e' : '#4039c9';
-      toastIcon.textContent = isError ? '!' : '✓';
-      toast.style.opacity = '1';
-      toast.style.pointerEvents = 'auto';
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.pointerEvents = 'none';
-      }, 2800);
-    }
-
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebarOverlay');
-      if (sidebar.classList.contains('-translate-x-full')) {
-        sidebar.classList.remove('-translate-x-full');
-        overlay.classList.remove('hidden');
-      } else {
-        sidebar.classList.add('-translate-x-full');
-        overlay.classList.add('hidden');
-      }
-    }
+      });
   </script>
-
 </body>
 
 </html>

@@ -115,15 +115,15 @@
             <!-- Quotation Item -->
             <div
                 class="bg-white rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col transition-all duration-300 ease-in-out hover:-translate-y-1 hover:scale-[1.01] hover:shadow-xl hover:border-gray-300 cursor-pointer">
-                
+
                 @php
-                    $colors = [
-                        ['bg' => '#e4e9e5', 'icon' => '#609966', 'iconClass' => 'fa-pen-nib'],
-                        ['bg' => '#fbf0dc', 'icon' => '#e5b83b', 'iconClass' => 'fa-couch'],
-                        ['bg' => '#fbd4d4', 'icon' => '#ce3030', 'iconClass' => 'fa-mobile-screen'],
-                        ['bg' => '#e0e7ff', 'icon' => '#4338ca', 'iconClass' => 'fa-box-open']
-                    ];
-                    $theme = $colors[$loop->index % count($colors)];
+                $colors = [
+                ['bg' => '#e4e9e5', 'icon' => '#609966', 'iconClass' => 'fa-pen-nib'],
+                ['bg' => '#fbf0dc', 'icon' => '#e5b83b', 'iconClass' => 'fa-couch'],
+                ['bg' => '#fbd4d4', 'icon' => '#ce3030', 'iconClass' => 'fa-mobile-screen'],
+                ['bg' => '#e0e7ff', 'icon' => '#4338ca', 'iconClass' => 'fa-box-open']
+                ];
+                $theme = $colors[$loop->index % count($colors)];
                 @endphp
 
                 <div class="h-[120px] bg-[{{ $theme['bg'] }}] flex items-center justify-center relative overflow-hidden" style="background-color: {{ $theme['bg'] }};">
@@ -131,7 +131,7 @@
                 </div>
                 <div class="p-5 flex flex-col flex-grow">
                     <h3 class="text-[15px] font-bold text-black mb-3 leading-tight tracking-tight mt-1">
-                        Pengadaan Barang (Batch {{ $batch->id_batch }})
+                        Pengadaan Barang
                     </h3>
 
                     <div class="bg-[#faebca] border border-[#ecd5a0] rounded-md p-2.5 mb-4 shadow-sm w-full">
@@ -140,9 +140,8 @@
                     </div>
 
                     <p id="timer_{{ $batch->id_batch }}" class="text-[#d71919] font-extrabold text-[11px] mb-5"></p>
-                    
-                    <a href="{{ route('vendor-buat_quotation') }}"
-                        class="mt-auto block w-full bg-[#1e40ff] text-white text-center font-bold text-sm py-3 rounded-lg hover:bg-blue-700 transition" wire:navigate>
+
+                    <a href="{{ route('vendor-buat_quotation', $batch->id_batch) }}" class="mt-auto block w-full bg-[#1e40ff] text-white text-center font-bold text-sm py-3 rounded-lg hover:bg-blue-700 transition" wire:navigate>
                         Buka Quotation
                     </a>
                 </div>
@@ -160,15 +159,20 @@
     @if(count($batches) > 0)
     <script>
         const timers = [
-            @foreach($batches as $batch)
-            { id: 'timer_{{ $batch->id_batch }}', deadline: '{{ \Carbon\Carbon::parse($batch->waktu_selesai)->format("Y-m-d\TH:i:s") }}' },
+            @foreach($batches as $batch) {
+                id: 'timer_{{ $batch->id_batch }}',
+                deadline: '{{ \Carbon\Carbon::parse($batch->waktu_selesai)->format("Y-m-d\TH:i:s") }}'
+            },
             @endforeach
         ];
 
         function updateTimers() {
             const now = new Date();
 
-            timers.forEach(({ id, deadline }) => {
+            timers.forEach(({
+                id,
+                deadline
+            }) => {
                 const el = document.getElementById(id);
                 if (!el) return;
 

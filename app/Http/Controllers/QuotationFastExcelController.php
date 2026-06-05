@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Quotation;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Illuminate\Support\Facades\Auth;
+
 
 class QuotationFastExcelController extends Controller
 {
+
     // Menampilkan form upload
     public function index()
     {
@@ -17,21 +20,30 @@ class QuotationFastExcelController extends Controller
     // Memproses file excel yang diupload
     public function import(Request $request)
     {
+
+
         // 1. Validasi file
         $request->validate([
             'file' => 'required|mimes:xlsx,xls,csv'
         ]);
+        $idVendor = Auth::user()->vendor->id_vendor;
+
+        $idPenawaran = $request->id_penawaran;
 
         // 2. Ambil path sementara (temporary path) dari file yang diupload
         $path = $request->file('file')->getRealPath();
 
         // 3. Proses import menggunakan FastExcel
-        (new FastExcel)->import($path, function ($line) {
+(new FastExcel)->import($path, function ($line) use ($idVendor, $idPenawaran) {
             // $line adalah array asosiatif per baris dari file Excel.
             // Key-nya (seperti 'nama', 'email') SANGAT bergantung pada 
             // teks di baris pertama (header) file Excel Anda.
 
             return Quotation::create([
+                'id_vendor'       => $idVendor,
+                'id_penawaran'    => $idPenawaran,
+
+                'no_item'         => $line['no_item'],
                 'coll_no'         => $line['coll_no'],
                 'rfq_no'          => $line['rfq_no'],
                 'material_no'     => $line['material_no'],

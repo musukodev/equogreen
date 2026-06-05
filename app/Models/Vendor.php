@@ -24,4 +24,12 @@ class Vendor extends Model
         'portofolio',
         'status'
     ];
+    public function users()
+{
+    return $this->hasMany(User::class, 'id_vendor');
+}
+public function quotations()
+{
+    return $this->hasMany(Quotation::class, 'id_vendor');
+}
 }

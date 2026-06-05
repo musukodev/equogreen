@@ -208,4 +208,54 @@
         </div>
     </div>
     @endif
+    <!-- Success Modal -->
+    @if($showSuccessModal)
+    <div x-data="{
+            init() {
+                setTimeout(() => {
+                    $wire.set('showSuccessModal', false);
+                }, 2500);
+            }
+         }"
+         class="fixed inset-0 z-[100] bg-black bg-opacity-50 flex items-center justify-center p-4 transition-all duration-300 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-gray-200 flex flex-col items-center gap-5 animate-modal-slide-up">
+            
+            <!-- Checkmark Animation -->
+            <div class="flex items-center justify-center">
+                <div class="relative w-20 h-20">
+                    <div class="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-25"></div>
+                    <div class="relative w-20 h-20 bg-green-50 rounded-full flex items-center justify-center border-4 border-green-500 animate-circle">
+                        <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" stroke-width="4" viewBox="0 0 24 24">
+                            <path class="animate-check" stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" style="stroke-dasharray: 50; stroke-dashoffset: 50; animation: checkmark 0.8s ease-in-out 0.3s forwards;"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Title & Message -->
+            <div>
+                <h3 class="text-xl font-bold text-gray-900">Berhasil!</h3>
+                <p class="text-gray-500 text-sm mt-2 font-medium">{{ $successMessage }}</p>
+            </div>
+
+            <!-- OK Button -->
+            <button wire:click="$set('showSuccessModal', false)"
+                class="w-full bg-[#1e40ff] hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl transition duration-200 shadow-lg active:scale-95">
+                OK
+            </button>
+        </div>
+    </div>
+    <style>
+    @keyframes checkmark {
+        to { stroke-dashoffset: 0; }
+    }
+    @keyframes scaleCircle {
+        0% { transform: scale(0); }
+        100% { transform: scale(1); }
+    }
+    .animate-circle {
+        animation: scaleCircle 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    </style>
+    @endif
 </main>

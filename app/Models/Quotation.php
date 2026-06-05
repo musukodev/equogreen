@@ -14,9 +14,13 @@ class Quotation extends Model
 
     // Mendefinisikan Primary Key karena kita tidak memakai 'id'
     protected $primaryKey = 'id_quotation';
+    public $timestamps = true; 
 
     // Mengizinkan mass assignment (untuk proses bulk insert F-10)
     protected $fillable = [
+        'id_vendor',
+        'id_penawaran',
+        'no_item',
         'coll_no',
         'rfq_no',
         'material_no',
@@ -34,19 +38,19 @@ class Quotation extends Model
         'quotation_date',
     ];
 
-    /**
-     * Relasi ke Model Vendor (M:1)
-     */
-    // public function vendor()
-    // {
-    //     return $this->belongsTo(Vendor::class, 'id_vendor', 'id_vendor');
-    // }
+    
+      //** Relasi ke Model Vendor (M:1)
+     
+     public function vendor()
+     {
+        return $this->belongsTo(Vendor::class, 'id_vendor', 'id_vendor');
+     }
 
     // /**
     //  * Relasi ke Model Penawaran (M:1)
     //  */
-    // public function penawaran()
-    // {
-    //     return $this->belongsTo(Penawaran::class, 'id_penawaran', 'id_penawaran');
-    // }
+     public function penawaran()
+    {
+         return $this->belongsTo(Penawaran::class, 'id_penawaran', 'id_penawaran');
+     }
 }

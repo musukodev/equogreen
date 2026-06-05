@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Vendor;
 
 #[Fillable(['username', 'password', 'role', 'id_procurement', 'id_vendor'])]
 #[Hidden(['password'])]
@@ -32,4 +33,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function vendor()
+{
+    return $this->belongsTo(Vendor::class, 'id_vendor');
+}
+public function procurement()
+{
+    return $this->belongsTo(Procurement::class, 'id_procurement');
+}
+
 }

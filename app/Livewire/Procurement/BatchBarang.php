@@ -14,6 +14,8 @@ class BatchBarang extends Component
 {
     public $year;
     public $showModal = false;
+    public $showSuccessModal = false;
+    public $successMessage = '';
 
     // Form inputs
     public $start_date;
@@ -51,14 +53,15 @@ class BatchBarang extends Component
         ]);
 
         $this->showModal = false;
-        
+
         // Reset form
         $this->start_date = null;
         $this->start_time = null;
         $this->end_date = null;
         $this->end_time = null;
 
-        session()->flash('success', 'Batch berhasil ditambahkan.');
+        $this->successMessage = 'Batch berhasil ditambahkan.';
+        $this->showSuccessModal = true;
     }
 
     public function deleteBatch($id)
@@ -66,7 +69,8 @@ class BatchBarang extends Component
         $batch = Batch::findOrFail($id);
         $batch->delete();
 
-        session()->flash('success', 'Batch berhasil dihapus.');
+        $this->successMessage = 'Batch berhasil dihapus.';
+        $this->showSuccessModal = true;
     }
 
     public function render()
@@ -77,7 +81,8 @@ class BatchBarang extends Component
             ]);
         }
 
-        $batches = Batch::whereYear('waktu_mulai', $this->year)
+        $batches = Batch::with('penawaran')
+            ->whereYear('waktu_mulai', $this->year)
             ->orderBy('waktu_mulai', 'asc')
             ->get();
 

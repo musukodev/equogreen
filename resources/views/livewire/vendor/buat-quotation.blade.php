@@ -42,7 +42,7 @@
         <!-- Form Workspace -->
         <div class="w-full pb-10">
 
-            @forelse($batches as $batch)
+            @if($batch)
             <!-- Topic Card -->
             <div class="bg-white rounded-xl border border-gray-400 shadow-sm p-4 mb-2 flex items-center gap-3 md:gap-4 transition-all duration-300 hover:scale-[1.01] hover:shadow-md cursor-pointer group mt-6">
                 <div class="w-[42px] h-[42px] md:w-[50px] md:h-[50px] rounded-full bg-[#4a40ce] flex items-center justify-center flex-shrink-0">
@@ -57,12 +57,18 @@
             <!-- Form Card -->
             <form action="{{ route('fastexcel.import') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-xl border border-gray-400 p-6 shadow-sm flex flex-col transition-all duration-300 hover:scale-[1.005] hover:shadow-md mb-8">
                 @csrf
-                <input type="hidden" name="id_batch" value="{{ $batch->id_batch }}">
-                
+                <input type="hidden" name="id_vendor" value="{{ Auth::user()->vendor->id_vendor }}">
+                @forelse($batch->penawaran as $item)
+                <input type="hidden"
+                    name="id_penawaran"
+                    value="{{ $item->id_penawaran }}">
+                @empty
+                @endforelse
                 <!-- Deadline Box -->
                 <div class="bg-[#ebeaef] rounded-md px-4 pt-3 pb-1 mb-6">
                     <p class="text-black text-[13px] md:text-[15px]"><span class="font-bold">Tenggat Waktu:</span>
-                        {{ \Carbon\Carbon::parse($batch->waktu_selesai)->translatedFormat('l, d F Y, H:i') }}</p>
+                        {{ \Carbon\Carbon::parse($batch->waktu_selesai)->translatedFormat('l, d F Y, H:i') }}
+                    </p>
                     <div class="h-px bg-gray-500 w-full mt-2.5"></div>
                 </div>
 
@@ -104,22 +110,35 @@
 
                 <!-- Action Buttons -->
                 <div class="space-y-3 w-full">
-                    <button type="button" class="w-full bg-black text-white text-center text-[15px] py-3.5 rounded-lg hover:bg-gray-800 transition">
+                    <a href="{{ route('download-template') }}"
+                        class="block w-full bg-black text-white text-center text-[15px] py-3.5 rounded-lg hover:bg-gray-800 transition">
                         Download Template
-                    </button>
-                    
+                    </a>
+
                     <!-- MODIFIKASI UPLOAD BOX DISINI -->
                     <div class="w-full pt-1 pb-1">
-                        <!-- Mengubah div menjadi label agar clickable, 'for' harus sama dengan 'id' pada input -->
-                        <label for="file-upload-{{ $batch->id_batch }}" class="border-[1.5px] border-gray-400 rounded-lg py-7 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition w-full">
-                            <i class="fa-solid fa-arrow-up-from-bracket text-[#a0a0a0] mb-2 text-lg"></i>
-                            <span class="text-[#a0a0a0] text-[15px]">Upload File</span>
-                            <!-- Input file disembunyikan menggunakan class 'hidden' -->
-                            <input id="file-upload-{{ $batch->id_batch }}" name="file" type="file" class="hidden" />
-                        </label>
-                        <p class="text-[#a0a0a0] text-[13px] mt-1.5 ml-1">Accepted files: All file types</p>
-                    </div>
+                        <label for="file-upload-{{ $batch->id_batch }}"
+                            class="border-[1.5px] border-gray-400 rounded-lg py-7 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition w-full">
 
+                            <i class="fa-solid fa-arrow-up-from-bracket text-[#a0a0a0] mb-2 text-lg"></i>
+
+                            <span id="upload-text-{{ $batch->id_batch }}"
+                                class="text-[#a0a0a0] text-[15px]">
+                                Upload File
+                            </span>
+
+                            <input
+                                id="file-upload-{{ $batch->id_batch }}"
+                                name="file"
+                                type="file"
+                                class="hidden"
+                                onchange="showFileName(this, '{{ $batch->id_batch }}')" />
+                        </label>
+
+                        <p class="text-[#a0a0a0] text-[13px] mt-1.5 ml-1">
+                            Accepted files: xlsx, xls, csv
+                        </p>
+                    </div>
                     <!-- Tombol submit -->
                     <button type="submit" class="w-full bg-[#1e40ff] text-white text-center text-[15px] py-3.5 rounded-lg hover:bg-blue-700 transition relative">
                         Kirim
@@ -131,15 +150,26 @@
                     Tata cara quotation <a href="#" class="text-[#1e40ff]">Unduh</a>
                 </div>
             </form>
-            @empty
+            @else
             <div class="bg-white rounded-xl border border-gray-400 p-10 shadow-sm flex flex-col items-center justify-center text-center">
                 <i class="fa-regular fa-folder-open text-[48px] text-gray-300 mb-4"></i>
                 <h2 class="text-xl font-bold text-gray-800 mb-2">Belum Ada Pengadaan</h2>
                 <p class="text-gray-500">Saat ini belum ada penawaran pengadaan barang yang ditujukan untuk perusahaan Anda.</p>
             </div>
-            @endforelse
+            @endif
 
         </div>
 
     </main>
 </div>
+<script>
+    function showFileName(input, batchId) {
+    if (input.files.length > 0) {
+        let file = input.files[0];
+        let size = (file.size / 1024).toFixed(2);
+
+        document.getElementById('upload-text-' + batchId)
+            .textContent = `${file.name} (${size} KB)`;
+    }
+}
+</script>
