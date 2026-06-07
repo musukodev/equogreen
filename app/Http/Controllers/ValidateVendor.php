@@ -23,17 +23,18 @@ class ValidateVendor extends Controller
         $existingUser = User::where('username', $username)->first();
 
         if (!$existingUser) {
+            $temporaryPassword = Str::random(8); // Generate a random temporary password
 
             User::create([
                 'username' => $username,
                 'id_vendor' => $vendor->id_vendor,
-                'password' => Hash::make('123'),
+                'password' => Hash::make($temporaryPassword), // Use the generated temporary password
                 'role' => 'vendor',
 
 
             ]);
         }
-
+        Mail::to($vendor->email)->send(new VendorApprovedMail($vendor, $temporaryPassword));
         return redirect()
             ->route('procurement-validasi-vendor')
             ->with('success', 'Vendor berhasil divalidasi dan akun berhasil dibuat.');

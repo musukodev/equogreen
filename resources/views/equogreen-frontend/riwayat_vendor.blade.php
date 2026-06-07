@@ -147,26 +147,21 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        @php
-                        $history = [
-                        ['21-02-2024', '#'],
-                        ['13-03-2024', '#'],
-                        ['26-12-2024', '#'],
-                        ['05-01-2025', '#'],
-                        ['10-01-2025', '#'],
-                        ['25-02-2025', '#'],
-                        ];
-                        @endphp
-                        @foreach($history as $item)
+                        @forelse($history as $key => $data)
                         <tr class="hover:bg-gray-50 transition-colors duration-150">
                             <td class="px-8 py-6 text-gray-700 font-semibold text-center border-r border-gray-100">
-                                {{ $item[0] }}
+                                {{ $data['waktu'] }} <br>
+                                <span class="text-sm text-gray-400 font-normal">Batch: {{ $data['batch_id'] }}</span>
                             </td>
                             <td class="px-8 py-6 text-center">
-                                <a href="javascript:void(0)" onclick="openModal()" class="text-blue-500 font-bold hover:underline underline-offset-4 decoration-2">Lihat</a>
+                                <a href="javascript:void(0)" onclick="openModal('{{ $key }}')" class="text-blue-500 font-bold hover:underline underline-offset-4 decoration-2">Lihat Rincian</a>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="2" class="px-8 py-6 text-center text-gray-500">Belum ada riwayat quotation.</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -175,22 +170,26 @@
     </div>
 
     <script>
-        function openModal() {
-            const modal = document.getElementById('modal-rincian');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+        function openModal(key) {
+            const modal = document.getElementById('modal-rincian-' + key);
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
         }
 
-        function closeModal() {
-            const modal = document.getElementById('modal-rincian');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+        function closeModal(key) {
+            const modal = document.getElementById('modal-rincian-' + key);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
         }
 
         window.onclick = function(event) {
-            const modal = document.getElementById('modal-rincian');
-            if (event.target == modal) {
-                closeModal();
+            if (event.target.classList.contains('modal-container')) {
+                event.target.classList.add('hidden');
+                event.target.classList.remove('flex');
             }
         }
 
@@ -208,12 +207,16 @@
     </script>
 
     <!-- ========== MODAL: Rincian Item ========== -->
-    <div id="modal-rincian" class="hidden fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm items-center justify-center p-4">
+    @foreach($history as $key => $data)
+    <div id="modal-rincian-{{ $key }}" class="modal-container hidden fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm items-center justify-center p-4">
         <div class="animate-[modalSlideUp_0.25s_ease-out] bg-white rounded-2xl shadow-2xl w-full max-w-7xl mx-auto overflow-hidden">
             <!-- Header -->
             <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
-                <h2 class="text-sm font-bold text-gray-400 uppercase tracking-widest">RINCIAN LENGKAP QUOTATION</h2>
-                <button onclick="closeModal()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
+                <div>
+                    <h2 class="text-sm font-bold text-gray-400 uppercase tracking-widest">RINCIAN LENGKAP QUOTATION</h2>
+                    <p class="text-xs text-gray-500 mt-1">Upload: {{ $data['waktu'] }} | Batch: {{ $data['batch_id'] }}</p>
+                </div>
+                <button onclick="closeModal('{{ $key }}')" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
                     <i class="ph-bold ph-x text-2xl text-gray-400"></i>
                 </button>
             </div>
@@ -245,7 +248,7 @@
                         </thead>
                         <tbody class="divide-y divide-gray-50">
 
-                            @foreach($quotations as $index => $item)
+                            @foreach($data['items'] as $index => $item)
                             <tr class="text-xs md:text-sm text-gray-700 hover:bg-gray-50 transition-colors whitespace-nowrap">
                                 <td class="px-4 py-4 text-center text-gray-300 font-medium border-r border-gray-50">{{ $index + 1 }}</td>
                                 <td class="px-4 py-4 text-gray-500 border-r border-gray-50">{{ $item['coll_no'] }}</td>
@@ -255,15 +258,15 @@
                                 <td class="px-4 py-4 text-center font-medium border-r border-gray-50">{{ $item['qty'] }}</td>
                                 <td class="px-4 py-4 text-center text-gray-500 border-r border-gray-50">{{ $item['uom'] }}</td>
                                 <td class="px-4 py-4 text-center text-gray-500 border-r border-gray-50">{{ $item['currency'] }}</td>
-                                <td class="px-4 py-4 text-right text-gray-500 border-r border-gray-50">{{ number_format($item['net_price'], 0, ',', '.') }}</td>
-                                <td class="px-4 py-4 text-right font-extrabold text-black border-r border-gray-50">{{ number_format($item['qty'] * $item['net_price'], 0, ',', '.') }}</td>
+                                <td class="px-4 py-4 text-right text-gray-500 border-r border-gray-50">{{ number_format((float)$item['net_price'], 0, ',', '.') }}</td>
+                                <td class="px-4 py-4 text-right font-extrabold text-black border-r border-gray-50">{{ number_format((float)($item['qty'] * $item['net_price']), 0, ',', '.') }}</td>
                                 <td class="px-4 py-4 text-gray-500 border-r border-gray-50">{{ $item['incoterm'] }}</td>
                                 <td class="px-4 py-4 text-gray-500 border-r border-gray-50">{{ $item['destination'] }}</td>
                                 <td class="px-4 py-4 text-gray-500 border-r border-gray-50 truncate max-w-[150px]" title="{{ $item['remark_1'] }}">{{ $item['remark_1'] }}</td>
                                 <td class="px-4 py-4 text-gray-500 border-r border-gray-50 truncate max-w-[150px]" title="{{ $item['remark_2'] }}">{{ $item['remark_2'] }}</td>
                                 <td class="px-4 py-4 text-gray-500 border-r border-gray-50">{{ $item['payment_term'] }}</td>
                                 <td class="px-4 py-4 text-center text-gray-500 border-r border-gray-50">{{ $item['lead_time_weeks'] }}</td>
-                                <td class="px-4 py-4 text-gray-500">{{ date('d M Y', strtotime($item['quotation_date'])) }}</td>
+                                <td class="px-4 py-4 text-gray-500">{{ $item['quotation_date'] ? date('d M Y', strtotime($item['quotation_date'])) : '-' }}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -272,7 +275,7 @@
             </div>
         </div>
     </div>
-
+    @endforeach
 </body>
 
 </html>

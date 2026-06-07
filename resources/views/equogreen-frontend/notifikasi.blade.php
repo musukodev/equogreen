@@ -189,14 +189,16 @@
               <button class="btn-profile text-accent font-semibold text-sm underline underline-offset-2 hover:text-primary transition-colors"
                 data-nama="{{ $vendor->nama_perusahaan }}"
                 data-kategori="{{ $vendor->kategori_vendor }}"
-                data-email="{{ $vendor->email }}"
+                data-email="{{ $vendor->email_perusahaan }}"
                 data-phone="{{ $vendor->no_hp }}"
                 data-alamat="{{ $vendor->alamat }}">
                 Profil
               </button>
             </td>
             <td class="px-3 md:px-5 py-3.5 text-center">
-              <button class="btn-email w-10 h-10 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary flex items-center justify-center mx-auto transition-all duration-200">
+              <button class="btn-email w-10 h-10 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary flex items-center justify-center mx-auto transition-all duration-200"
+                data-nama="{{ $vendor->nama_perusahaan }}"
+                data-email="{{ $vendor->email_perusahaan }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
@@ -237,7 +239,7 @@
         <div class="grid grid-cols-2 gap-3 mt-2">
           <div class="bg-gray-50 rounded-lg p-3">
             <p class="text-xs text-gray-400 mb-0.5">Email</p>
-            <p class="text-sm font-semibold text-gray-700" id="modal-vendor-email"></p>
+            <p class="text-sm font-semibold text-gray-700 break-all" id="modal-vendor-email"></p>
           </div>
           <div class="bg-gray-50 rounded-lg p-3">
             <p class="text-xs text-gray-400 mb-0.5">Telepon</p>
@@ -269,7 +271,7 @@
           id="email-avatar">E</div>
         <div>
           <p class="font-bold text-gray-800 text-sm" id="email-vendor-name">—</p>
-          <p class="text-xs text-gray-400" id="email-vendor-email">—</p>
+          <p class="text-xs text-gray-400 break-all" id="email-vendor-email">—</p>
         </div>
       </div>
       <div class="flex flex-col gap-1.5">
@@ -298,36 +300,85 @@
   </div>
 
   <script>
+    const profileModal = document.getElementById('profile-modal');
+    const emailModal = document.getElementById('email-modal');
+
+    // Logic Modal Profile
     document.querySelectorAll('.btn-profile').forEach(button => {
       button.addEventListener('click', function() {
-
-        document.getElementById('modal-avatar').textContent =
-          this.dataset.nama.charAt(0);
-
-        document.getElementById('modal-vendor-name').textContent =
-          this.dataset.nama;
-
-        document.getElementById('modal-vendor-kategori').textContent =
-          this.dataset.kategori;
-
-        document.getElementById('modal-vendor-email').textContent =
-          this.dataset.email;
-
-        document.getElementById('modal-vendor-phone').textContent =
-          this.dataset.phone;
-
-        document.getElementById('modal-vendor-alamat').textContent =
-          this.dataset.alamat;
+        document.getElementById('modal-avatar').textContent = this.dataset.nama ? this.dataset.nama.charAt(0) : 'V';
+        document.getElementById('modal-vendor-name').textContent = this.dataset.nama || '-';
+        document.getElementById('modal-vendor-kategori').textContent = this.dataset.kategori || '-';
+        document.getElementById('modal-vendor-email').textContent = this.dataset.email || '-';
+        document.getElementById('modal-vendor-phone').textContent = this.dataset.phone || '-';
+        document.getElementById('modal-vendor-alamat').textContent = this.dataset.alamat || '-';
 
         profileModal.classList.remove('hidden');
         profileModal.classList.add('flex');
       });
     });
-    document.getElementById('close-profile-modal')
-      .addEventListener('click', function() {
+
+    document.getElementById('close-profile-modal').addEventListener('click', function() {
+      profileModal.classList.add('hidden');
+      profileModal.classList.remove('flex');
+    });
+
+    // Logic Modal Email
+    document.querySelectorAll('.btn-email').forEach(button => {
+      button.addEventListener('click', function() {
+        document.getElementById('email-avatar').textContent = this.dataset.nama ? this.dataset.nama.charAt(0) : 'V';
+        document.getElementById('email-vendor-name').textContent = this.dataset.nama || '-';
+        document.getElementById('email-vendor-email').textContent = this.dataset.email || '-';
+        
+        // Reset inputs
+        document.getElementById('email-subject').value = '';
+        document.getElementById('email-body').value = '';
+
+        emailModal.classList.remove('hidden');
+        emailModal.classList.add('flex');
+      });
+    });
+
+    document.getElementById('close-email-modal').addEventListener('click', function() {
+      emailModal.classList.add('hidden');
+      emailModal.classList.remove('flex');
+    });
+
+    // Close Modals when clicking outside
+    window.addEventListener('click', function(e) {
+      if (e.target === profileModal) {
         profileModal.classList.add('hidden');
         profileModal.classList.remove('flex');
-      });
+      }
+      if (e.target === emailModal) {
+        emailModal.classList.add('hidden');
+        emailModal.classList.remove('flex');
+      }
+    });
+
+    // Simulate sending email
+    document.getElementById('btn-send-email').addEventListener('click', function() {
+      const btn = this;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = 'Mengirim...';
+      btn.disabled = true;
+
+      // Simulate a network request
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        
+        emailModal.classList.add('hidden');
+        emailModal.classList.remove('flex');
+
+        const toast = document.getElementById('toast');
+        toast.classList.remove('opacity-0', 'pointer-events-none');
+        
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'pointer-events-none');
+        }, 3000);
+      }, 1500);
+    });
   </script>
 </body>
 

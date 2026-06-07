@@ -21,4 +21,9 @@ class Penawaran extends Model
     {
         return $this->hasMany(PenawaranVendor::class, 'id_penawaran', 'id_penawaran');
     }
+
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class, 'id_batch', 'id_batch');
+    }
 }

@@ -127,9 +127,11 @@
                                         @error('items.'.$index.'.jumlah') <div class="text-red-500 text-xs px-2">{{ $message }}</div> @enderror
                                     </td>
                                     <td class="border border-gray-400 p-0 text-center">
+                                        @if(!$edit_id)
                                         <button type="button" wire:click="hapusBaris({{ $index }})" class="text-red-500 hover:text-red-700 w-full h-[45px]">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -138,24 +140,91 @@
                     </div>
 
                     <!-- Floating Plus Button -->
+                    @if(!$edit_id)
                     <div class="flex-shrink-0 flex items-center justify-center mb-1">
                         <button type="button" wire:click="addBaris"
                             class="w-8 h-8 rounded-full bg-black text-white hover:bg-gray-800 transition flex items-center justify-center">
                             <i class="fa-solid fa-plus text-[14px]"></i>
                         </button>
                     </div>
+                    @endif
                 </div>
 
                 <!-- Action Buttons Menu -->
                 <div class="flex flex-col sm:flex-row justify-end items-center gap-3">
                     <button type="submit"
                         class="w-full sm:w-[150px] py-2.5 bg-[#1e40ff] text-white font-bold rounded-lg hover:bg-blue-500 transition disabled:opacity-50" wire:loading.attr="disabled">
-                        <span wire:loading.remove wire:target="store">Kirim</span>
+                        <span wire:loading.remove wire:target="store">{{ $edit_id ? 'Update Barang' : 'Tambah Barang' }}</span>
                         <span wire:loading wire:target="store">Loading...</span>
                     </button>
+                    @if($edit_id)
+                    <button type="button" wire:click="cancelEdit"
+                        class="w-full sm:w-[150px] py-2.5 bg-gray-500 text-white font-bold rounded-lg hover:bg-gray-600 transition">
+                        Batal Edit
+                    </button>
+                    @endif
                 </div>
 
             </form>
+
+            @if(count($savedPenawaran) > 0)
+            <div class="bg-white rounded-xl border border-gray-400 p-6 md:p-8 shadow-sm flex flex-col relative w-full mt-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <i class="fa-solid fa-list-check text-[24px] text-black"></i>
+                    <div>
+                        <h3 class="text-[16px] font-bold text-black leading-tight">Barang yang Sudah Ditambahkan</h3>
+                        <p class="text-[14px] text-gray-400 font-medium mt-0.5">Daftar barang pada batch ini</p>
+                    </div>
+                </div>
+
+                <div class="w-full overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-400 min-w-[600px]">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-800">
+                                <th class="border border-gray-400 py-3 text-[14px] font-bold w-1/4 text-left px-4">Nama Barang</th>
+                                <th class="border border-gray-400 py-3 text-[14px] font-bold w-1/3 text-left px-4">Spesifikasi detail</th>
+                                <th class="border border-gray-400 py-3 text-[14px] font-bold w-1/6 text-center px-4">Vendor Tujuan</th>
+                                <th class="border border-gray-400 py-3 text-[14px] font-bold w-1/12 text-center px-4">Jumlah</th>
+                                <th class="border border-gray-400 py-3 text-[14px] font-bold w-1/6 text-center px-4">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($savedPenawaran as $penawaran)
+                            <tr class="hover:bg-gray-50">
+                                <td class="border border-gray-400 p-3 text-sm">{{ $penawaran->nama_barang }}</td>
+                                <td class="border border-gray-400 p-3 text-sm">{{ $penawaran->spesifikasi }}</td>
+                                <td class="border border-gray-400 p-3 text-sm text-center">
+                                    <div class="flex flex-col gap-1">
+                                        @foreach($penawaran->penawaranVendors as $pv)
+                                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-md whitespace-nowrap">{{ $pv->vendor->nama_perusahaan ?? 'Unknown' }}</span>
+                                        @endforeach
+                                    </div>
+                                </td>
+                                <td class="border border-gray-400 p-3 text-sm text-center font-bold">{{ $penawaran->jumlah }}</td>
+                                <td class="border border-gray-400 p-3 text-center">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <button wire:click="editPenawaran({{ $penawaran->id_penawaran }})" class="text-blue-600 hover:text-blue-800 transition" title="Edit">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <button wire:click="deletePenawaran({{ $penawaran->id_penawaran }})" onclick="confirm('Yakin ingin menghapus barang ini?') || event.stopImmediatePropagation()" class="text-red-500 hover:text-red-700 transition" title="Hapus">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @endif
+
+            <!-- Tombol Selesai (Kembali ke batch list) -->
+            <div class="mt-8 flex justify-end">
+                <a href="{{ route('procurement-batch_barang_empty') }}" class="w-full sm:w-auto px-8 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-500 transition shadow-md text-center">
+                    Selesai & Kembali
+                </a>
+            </div>
 
         </div>
 

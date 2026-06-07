@@ -138,7 +138,9 @@
                             </td>
                             <td class="py-4 px-4 text-center">
                                 <div class="flex items-center justify-center gap-5">
-                                    <i class="ph ph-check text-[#4adb49] text-xl font-bold"></i>
+                                    <a href="{{ route('po.show', ['id_vendor' => $quotation->id_vendor, 'id_penawaran' => $quotation->id_penawaran]) }}" wire:navigate class="hover:scale-110 transition-transform">
+                                        <i class="ph ph-check text-[#4adb49] text-xl font-bold"></i>
+                                    </a>
                                     <i class="ph ph-x text-[#f52b2b] text-xl font-bold"></i>
                                 </div>
                             </td>

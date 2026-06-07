@@ -65,9 +65,44 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/buat_quotation/{id_batch}', \App\Livewire\Vendor\BuatQuotation::class)
         ->name('vendor-buat_quotation');
+
+    Route::get('/po-document/{id_vendor}/{id_penawaran}', [App\Http\Controllers\POController::class, 'show'])->name('po.show');
+    Route::get('/po-document/{id_vendor}/{id_penawaran}/pdf', [App\Http\Controllers\POController::class, 'downloadPdf'])->name('po.pdf');
+    Route::post('/po-document/{id_vendor}/{id_penawaran}/email', [App\Http\Controllers\POController::class, 'sendEmail'])->name('po.email');
+
     Route::get('/vendor-riwayat', function () {
-        $quotations = Quotation::latest()->get();
-        return view('equogreen-frontend.riwayat_vendor', compact('quotations'));
+        $vendor_id = \Illuminate\Support\Facades\Auth::user()->vendor->id_vendor ?? null;
+        
+        if (!$vendor_id) {
+            return redirect()->route('vendor-dashboard')->with('error', 'Vendor tidak ditemukan.');
+        }
+
+        // Ambil semua quotation milik vendor ini
+        $allQuotations = \App\Models\Quotation::with('penawaran.batch')
+            ->where('id_vendor', $vendor_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Kelompokkan berdasarkan waktu upload (created_at) dan id_batch
+        // Mengingat import excel dilakukan dalam waktu yang sama
+        $history = [];
+        foreach ($allQuotations as $q) {
+            // Gunakan format waktu hingga menit untuk grouping
+            $timeKey = $q->created_at ? $q->created_at->format('Y-m-d H:i') : 'Unknown Time';
+            $batchId = $q->penawaran && $q->penawaran->batch ? $q->penawaran->batch->id_batch : 'Unknown';
+            $groupKey = $timeKey . '_' . $batchId;
+
+            if (!isset($history[$groupKey])) {
+                $history[$groupKey] = [
+                    'waktu' => $q->created_at ? $q->created_at->format('d-m-Y H:i') : '-',
+                    'batch_id' => $batchId,
+                    'items' => []
+                ];
+            }
+            $history[$groupKey]['items'][] = $q;
+        }
+
+        return view('equogreen-frontend.riwayat_vendor', compact('history'));
     })->name('vendor-riwayat');
 
     Route::get('/fastexcel-quotation', [QuotationFastExcelController::class, 'index']);

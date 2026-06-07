@@ -58,12 +58,11 @@
             <form action="{{ route('fastexcel.import') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-xl border border-gray-400 p-6 shadow-sm flex flex-col transition-all duration-300 hover:scale-[1.005] hover:shadow-md mb-8">
                 @csrf
                 <input type="hidden" name="id_vendor" value="{{ Auth::user()->vendor->id_vendor }}">
-                @forelse($batch->penawaran as $item)
+                @if($batch->penawaran->isNotEmpty())
                 <input type="hidden"
                     name="id_penawaran"
-                    value="{{ $item->id_penawaran }}">
-                @empty
-                @endforelse
+                    value="{{ $batch->penawaran->first()->id_penawaran }}">
+                @endif
                 <!-- Deadline Box -->
                 <div class="bg-[#ebeaef] rounded-md px-4 pt-3 pb-1 mb-6">
                     <p class="text-black text-[13px] md:text-[15px]"><span class="font-bold">Tenggat Waktu:</span>

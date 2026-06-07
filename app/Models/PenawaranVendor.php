@@ -14,4 +14,9 @@ class PenawaranVendor extends Model
         'id_penawaran',
         'id_vendor'
     ];
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class, 'id_vendor', 'id_vendor');
+    }
 }

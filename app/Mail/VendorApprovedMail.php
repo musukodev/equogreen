@@ -15,28 +15,20 @@ class VendorApprovedMail extends Mailable
     use Queueable, SerializesModels;
 
     public $vendor;
-    public function __construct($vendor)
+    public $temporaryPassword;
+
+    public function __construct($vendor, $temporaryPassword)
     {
         $this->vendor = $vendor;
+        $this->temporaryPassword = $temporaryPassword;
     }
 
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Vendor Approved Mail',
-        );
-    }
     public function build()
     {
         return $this->view('emails.vendor-approved')
                     ->with([
-                        'vendorName' => $this->vendor->nama_perusahaan,
+                        'vendor' => $this->vendor,
+                        'temporaryPassword' => $this->temporaryPassword,
                     ]);
     }
-    
-
-    
 }
