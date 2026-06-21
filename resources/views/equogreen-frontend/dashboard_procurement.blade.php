@@ -80,12 +80,12 @@
         </a>
         <div class="border-b border-gray-100 my-1"></div>
 
-        <!-- Kelola Notifikasi -->
+        <!-- Daftar Vendor -->
         <a href="{{ route('procurement-notifikasi') }}"
           class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 font-bold text-[17px] transition-all duration-200 hover:bg-primary hover:text-white group">
           <img src="/gambar/add-reminder.png" alt="Periksa Barang"
             class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert" />
-          Kelola Notifikasi
+          Daftar Vendor
         </a>
         <div class="border-b border-gray-100 my-1"></div>
         <!-- Validasi Vendor -->

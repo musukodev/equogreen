@@ -54,10 +54,10 @@
       </a>
       <div class="border-b border-gray-100 my-1"></div>
 
-      <!-- Kelola Notifikasi (ACTIVE) -->
+      <!-- Daftar Vendor (ACTIVE) -->
       <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 font-bold text-[17px] bg-[#eef3ff] text-primary transition-all duration-200 hover:bg-primary hover:text-white group">
-        <img src="/gambar/add-reminder.png" alt="Kelola Notifikasi" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
-        Kelola Notifikasi
+        <img src="/gambar/add-reminder.png" alt="Daftar Vendor" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
+        Daftar Vendor
       </a>
       <div class="border-b border-gray-100 my-1"></div>
 
@@ -98,7 +98,7 @@
           </svg>
         </a>
         <div>
-          <h1 class="text-3xl lg:text-4xl font-black text-gray-800 tracking-tight" style="font-family:'Futura-Bold',Helvetica,sans-serif;">Kelola Notifikasi</h1>
+          <h1 class="text-3xl lg:text-4xl font-black text-gray-800 tracking-tight" style="font-family:'Futura-Bold',Helvetica,sans-serif;">Daftar Vendor</h1>
         </div>
       </div>
 

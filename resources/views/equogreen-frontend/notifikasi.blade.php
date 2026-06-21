@@ -4,7 +4,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta charset="utf-8" />
-  <title>Kelola Notifikasi - Equogreen</title>
+  <title>Daftar Vendor - Equogreen</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -20,6 +20,20 @@
           },
           fontFamily: {
             sans: ['Inter', 'sans-serif'],
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            modalSlideUp: {
+              'from': { opacity: '0', transform: 'translateY(24px) scale(0.96)' },
+              'to': { opacity: '1', transform: 'translateY(0) scale(1)' },
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.25s ease-out forwards',
+            'modal-slide-up': 'modalSlideUp 0.3s ease-out forwards',
           }
         }
       }
@@ -70,12 +84,12 @@
       </a>
       <div class="border-b border-gray-100 my-1"></div>
 
-      <!-- Kelola Notifikasi (ACTIVE) -->
+      <!-- Daftar Vendor (ACTIVE) -->
       <a href="{{ route('procurement-notifikasi') }}"
         class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 font-bold text-[17px] bg-[#eef3ff] text-primary transition-all duration-200 hover:bg-primary hover:text-white group">
-        <img src="/gambar/add-reminder.png" alt="Kelola Notifikasi"
+        <img src="/gambar/add-reminder.png" alt="Daftar Vendor"
           class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert" />
-        Kelola Notifikasi
+        Daftar Vendor
       </a>
       <div class="border-b border-gray-100 my-1"></div>
 
@@ -121,7 +135,7 @@
           <img src="/gambar/back-arrow.png" alt="Back" class="w-6 h-6 object-contain brightness-0" />
         </a>
         <div>
-          <h1 class="text-2xl md:text-[36px] font-bold text-[#111827]">Kelola Notifikasi</h1>
+          <h1 class="text-2xl md:text-[36px] font-bold text-[#111827]">Daftar Vendor</h1>
         </div>
       </div>
 
@@ -177,7 +191,6 @@
             <th class="px-3 md:px-5 py-3.5 text-left text-xs md:text-sm font-semibold text-white">Nama Vendor</th>
             <th class="px-3 md:px-5 py-3.5 text-left text-xs md:text-sm font-semibold text-white">Kategori</th>
             <th class="px-3 md:px-5 py-3.5 text-center text-xs md:text-sm font-semibold text-white">Profile</th>
-            <th class="px-3 md:px-5 py-3.5 text-center text-xs md:text-sm font-semibold text-white">Kirim Email</th>
           </tr>
         </thead>
         <tbody>
@@ -195,15 +208,6 @@
                 Profil
               </button>
             </td>
-            <td class="px-3 md:px-5 py-3.5 text-center">
-              <button class="btn-email w-10 h-10 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary flex items-center justify-center mx-auto transition-all duration-200"
-                data-nama="{{ $vendor->nama_perusahaan }}"
-                data-email="{{ $vendor->email_perusahaan }}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </button>
-            </td>
           </tr>
           @endforeach
         </tbody>
@@ -213,8 +217,8 @@
   </main>
 
   <!-- ========== MODAL: Profile Vendor ========== -->
-  <div id="profile-modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/40 backdrop-blur-sm">
-    <div class="modal-animate bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-7 flex flex-col gap-4">
+  <div id="profile-modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in">
+    <div class="animate-modal-slide-up bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-7 flex flex-col gap-4">
       <!-- Header -->
       <div class="flex items-center justify-between">
         <h2 class="text-xl font-bold text-gray-900">Profil Vendor</h2>
@@ -254,42 +258,7 @@
     </div>
   </div>
 
-  <!-- ========== MODAL: Kirim Email ========== -->
-  <div id="email-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-    <div class="modal-animate bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-7 flex flex-col gap-4">
-      <div class="flex items-center justify-between">
-        <h2 class="text-xl font-bold text-gray-900">Kirim Notifikasi Email</h2>
-        <button id="close-email-modal"
-          class="w-9 h-9 rounded-lg bg-red-500 text-white flex items-center justify-center hover:bg-red-600 active:scale-90 transition-all duration-200 text-lg font-bold">
-          ✕
-        </button>
-      </div>
-      <hr class="border-gray-100" />
-      <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
-        <div
-          class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm"
-          id="email-avatar">E</div>
-        <div>
-          <p class="font-bold text-gray-800 text-sm" id="email-vendor-name">—</p>
-          <p class="text-xs text-gray-400 break-all" id="email-vendor-email">—</p>
-        </div>
-      </div>
-      <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-semibold text-gray-700" for="email-subject">Subjek</label>
-        <input type="text" id="email-subject" placeholder="Masukkan subjek email..."
-          class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200" />
-      </div>
-      <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-semibold text-gray-700" for="email-body">Isi Pesan</label>
-        <textarea id="email-body" rows="5" placeholder="Tulis pesan notifikasi untuk vendor..."
-          class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm outline-none resize-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"></textarea>
-      </div>
-      <button id="btn-send-email"
-        class="w-full py-3 rounded-xl bg-[#4039c9] text-white font-bold text-sm hover:bg-[#0023cc] active:scale-95 transition-all duration-200 shadow hover:shadow-lg">
-        Kirim Email
-      </button>
-    </div>
-  </div>
+
 
 
   <!-- ========== TOAST ========== -->
@@ -323,61 +292,12 @@
       profileModal.classList.remove('flex');
     });
 
-    // Logic Modal Email
-    document.querySelectorAll('.btn-email').forEach(button => {
-      button.addEventListener('click', function() {
-        document.getElementById('email-avatar').textContent = this.dataset.nama ? this.dataset.nama.charAt(0) : 'V';
-        document.getElementById('email-vendor-name').textContent = this.dataset.nama || '-';
-        document.getElementById('email-vendor-email').textContent = this.dataset.email || '-';
-        
-        // Reset inputs
-        document.getElementById('email-subject').value = '';
-        document.getElementById('email-body').value = '';
-
-        emailModal.classList.remove('hidden');
-        emailModal.classList.add('flex');
-      });
-    });
-
-    document.getElementById('close-email-modal').addEventListener('click', function() {
-      emailModal.classList.add('hidden');
-      emailModal.classList.remove('flex');
-    });
-
     // Close Modals when clicking outside
     window.addEventListener('click', function(e) {
       if (e.target === profileModal) {
         profileModal.classList.add('hidden');
         profileModal.classList.remove('flex');
       }
-      if (e.target === emailModal) {
-        emailModal.classList.add('hidden');
-        emailModal.classList.remove('flex');
-      }
-    });
-
-    // Simulate sending email
-    document.getElementById('btn-send-email').addEventListener('click', function() {
-      const btn = this;
-      const originalText = btn.innerHTML;
-      btn.innerHTML = 'Mengirim...';
-      btn.disabled = true;
-
-      // Simulate a network request
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-        
-        emailModal.classList.add('hidden');
-        emailModal.classList.remove('flex');
-
-        const toast = document.getElementById('toast');
-        toast.classList.remove('opacity-0', 'pointer-events-none');
-        
-        setTimeout(() => {
-          toast.classList.add('opacity-0', 'pointer-events-none');
-        }, 3000);
-      }, 1500);
     });
   </script>
 </body>

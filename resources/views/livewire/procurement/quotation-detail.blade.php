@@ -1,11 +1,11 @@
 <div>
     @if($showModal)
     <!-- Backdrop -->
-    <div class="fixed inset-0 bg-black/50 z-[60]" wire:click="closeModal"></div>
+    <div class="fixed inset-0 bg-black/50 z-[60] animate-fade-in" wire:click="closeModal"></div>
 
     <!-- Modal -->
     <div class="fixed inset-0 z-[70] flex items-center justify-center px-4 py-6 sm:py-10">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-[1200px] max-h-full flex flex-col overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-[1200px] max-h-full flex flex-col overflow-hidden animate-modal-slide-up">
 
             <!-- Header Modal -->
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center px-6 sm:px-8 py-5 border-b border-gray-100 gap-4">

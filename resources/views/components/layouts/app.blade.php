@@ -21,13 +21,18 @@
                         sans: ['Inter', 'sans-serif'],
                     },
                     keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
                         modalSlideUp: {
                             'from': { opacity: '0', transform: 'translateY(24px) scale(0.96)' },
                             'to': { opacity: '1', transform: 'translateY(0) scale(1)' },
                         }
                     },
                     animation: {
-                        'modal-slide-up': 'modalSlideUp 0.25s ease-out',
+                        'fade-in': 'fadeIn 0.25s ease-out forwards',
+                        'modal-slide-up': 'modalSlideUp 0.3s ease-out forwards',
                     }
                 }
             }
@@ -78,9 +83,9 @@
 
                 <a href="{{ route('procurement-notifikasi') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-[17px] transition-all duration-200 group {{ request()->routeIs('procurement-notifikasi') ? 'bg-[#eef3ff] text-primary' : 'text-gray-700 hover:bg-primary hover:text-white' }}">
-                    <img src="/gambar/add-reminder.png" alt="Kelola Notifikasi"
+                    <img src="/gambar/add-reminder.png" alt="Daftar Vendor"
                         class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert {{ request()->routeIs('procurement-notifikasi') ? '' : 'brightness-0 opacity-60' }}" />
-                    Kelola Notifikasi
+                    Daftar Vendor
                 </a>
                 <div class="border-b border-gray-100 my-1"></div>
 
