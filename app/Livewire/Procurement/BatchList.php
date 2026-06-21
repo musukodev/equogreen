@@ -19,7 +19,7 @@ class BatchList extends Component
     public function mount()
     {
         if (Batch::count() == 0) {
-            return redirect()->route('procurement-batch_barang_empty');
+            return redirect()->route('procurement-batch_barang');
         }
     }
 
@@ -29,7 +29,7 @@ class BatchList extends Component
             'newYear' => 'required|numeric|min:2000|max:2100'
         ]);
 
-        return redirect()->route('procurement-batch_barang_by_year', ['year' => $this->newYear]);
+        return redirect()->route('procurement-batch_barang');
     }
 
     public function render()

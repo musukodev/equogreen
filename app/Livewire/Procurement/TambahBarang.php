@@ -7,6 +7,7 @@ use App\Models\Penawaran;
 use App\Models\PenawaranVendor;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -47,9 +48,26 @@ class TambahBarang extends Component
 
     public function loadPenawaran()
     {
-        $this->savedPenawaran = Penawaran::with('penawaranVendors.vendor')
+        $allPenawaran = Penawaran::with('penawaranVendors.vendor')
             ->where('id_batch', $this->batch_id)
             ->get();
+
+        $grouped = [];
+        foreach ($allPenawaran as $penawaran) {
+            $key = $penawaran->group_id ?: 'old-'.$penawaran->id_penawaran; 
+            if (!isset($grouped[$key])) {
+                $grouped[$key] = [
+                    'group_id' => $key,
+                    'items' => [],
+                    'vendors' => $penawaran->penawaranVendors->map(function($pv) {
+                        return $pv->vendor->nama_perusahaan ?? 'Unknown';
+                    })->unique()->values()->all()
+                ];
+            }
+            $grouped[$key]['items'][] = $penawaran;
+        }
+
+        $this->savedPenawaran = array_values($grouped);
     }
 
     public function addBaris()
@@ -83,30 +101,44 @@ class TambahBarang extends Component
         DB::beginTransaction();
         try {
             if ($this->edit_id) {
-                $penawaran = Penawaran::findOrFail($this->edit_id);
-                $penawaran->update([
-                    'nama_barang' => $this->items[0]['nama_barang'],
-                    'spesifikasi' => $this->items[0]['spesifikasi'],
-                    'jumlah' => $this->items[0]['jumlah'],
-                ]);
+                // Hapus vendor lama dan penawaran lama
+                $oldPenawarans = Penawaran::where('group_id', $this->edit_id)->get();
+                if ($oldPenawarans->isEmpty()) {
+                    // Fallback for old data without group_id
+                    $oldPenawarans = Penawaran::where('id_penawaran', str_replace('old-', '', $this->edit_id))->get();
+                }
 
-                // Hapus vendor lama
-                PenawaranVendor::where('id_penawaran', $this->edit_id)->delete();
+                foreach($oldPenawarans as $p) {
+                    PenawaranVendor::where('id_penawaran', $p->id_penawaran)->delete();
+                    $p->delete();
+                }
 
-                foreach ($this->selected_vendors as $vendorId) {
-                    PenawaranVendor::create([
-                        'id_penawaran' => $penawaran->id_penawaran,
-                        'id_vendor' => $vendorId
+                foreach ($this->items as $item) {
+                    $penawaran = Penawaran::create([
+                        'id_batch' => $this->batch_id,
+                        'group_id' => $this->edit_id, // Reuse the same group_id
+                        'nama_barang' => $item['nama_barang'],
+                        'spesifikasi' => $item['spesifikasi'],
+                        'jumlah' => $item['jumlah'],
                     ]);
+
+                    foreach ($this->selected_vendors as $vendorId) {
+                        PenawaranVendor::create([
+                            'id_penawaran' => $penawaran->id_penawaran,
+                            'id_vendor' => $vendorId
+                        ]);
+                    }
                 }
 
                 session()->flash('success', 'Barang berhasil diupdate!');
                 $this->edit_id = null;
             } else {
                 // Insert mode
+                $groupId = Str::uuid()->toString();
                 foreach ($this->items as $item) {
                     $penawaran = Penawaran::create([
                         'id_batch' => $this->batch_id,
+                        'group_id' => $groupId,
                         'nama_barang' => $item['nama_barang'],
                         'spesifikasi' => $item['spesifikasi'],
                         'jumlah' => $item['jumlah'],
@@ -135,21 +167,29 @@ class TambahBarang extends Component
         }
     }
 
-    public function editPenawaran($id)
+    public function editPenawaran($groupId)
     {
-        $penawaran = Penawaran::with('penawaranVendors')->findOrFail($id);
-        $this->edit_id = $id;
+        $penawarans = Penawaran::with('penawaranVendors')->where('group_id', $groupId)->get();
+        if ($penawarans->isEmpty()) {
+            // Fallback for old data
+            $penawarans = Penawaran::with('penawaranVendors')->where('id_penawaran', str_replace('old-', '', $groupId))->get();
+        }
+        
+        if ($penawarans->isEmpty()) return;
 
-        $this->items = [
-            [
-                'nama_barang' => $penawaran->nama_barang,
-                'spesifikasi' => $penawaran->spesifikasi,
-                'jumlah' => $penawaran->jumlah
-            ]
-        ];
+        $this->edit_id = $groupId;
+        $this->items = [];
+        
+        foreach ($penawarans as $p) {
+            $this->items[] = [
+                'nama_barang' => $p->nama_barang,
+                'spesifikasi' => $p->spesifikasi,
+                'jumlah' => $p->jumlah
+            ];
+        }
 
         // Ambil vendor terpilih
-        $this->selected_vendors = $penawaran->penawaranVendors->pluck('id_vendor')->toArray();
+        $this->selected_vendors = $penawarans->first()->penawaranVendors->pluck('id_vendor')->toArray();
 
         // Coba setel kategori dropdown berdasarkan salah satu vendor, asumsikan vendor dalam satu kategori yg sama
         if (count($this->selected_vendors) > 0) {
@@ -161,12 +201,19 @@ class TambahBarang extends Component
         }
     }
 
-    public function deletePenawaran($id)
+    public function deletePenawaran($groupId)
     {
         DB::beginTransaction();
         try {
-            PenawaranVendor::where('id_penawaran', $id)->delete();
-            Penawaran::findOrFail($id)->delete();
+            $penawarans = Penawaran::where('group_id', $groupId)->get();
+            if ($penawarans->isEmpty()) {
+                $penawarans = Penawaran::where('id_penawaran', str_replace('old-', '', $groupId))->get();
+            }
+
+            foreach ($penawarans as $p) {
+                PenawaranVendor::where('id_penawaran', $p->id_penawaran)->delete();
+                $p->delete();
+            }
             DB::commit();
 
             session()->flash('success', 'Barang berhasil dihapus!');

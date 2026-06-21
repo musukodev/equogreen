@@ -23,9 +23,9 @@ class BatchBarang extends Component
     public $end_date;
     public $end_time;
 
-    public function mount($year = null)
+    public function mount()
     {
-        $this->year = $year ?? date('Y');
+        // No year filter needed
     }
 
     public function store()
@@ -82,7 +82,6 @@ class BatchBarang extends Component
         }
 
         $batches = Batch::with('penawaran')
-            ->whereYear('waktu_mulai', $this->year)
             ->orderBy('waktu_mulai', 'asc')
             ->get();
 

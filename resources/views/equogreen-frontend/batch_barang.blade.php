@@ -56,7 +56,7 @@
             <div class="border-b border-gray-100 my-1"></div>
 
             <!-- Periksa Barang (ACTIVE) -->
-            <a href="{{ route('procurement-batch-list') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 font-bold text-[17px] bg-[#eef3ff] text-primary transition-all duration-200 hover:bg-primary hover:text-white group">
+            <a href="{{ route('procurement-batch_barang') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 font-bold text-[17px] bg-[#eef3ff] text-primary transition-all duration-200 hover:bg-primary hover:text-white group">
                 <img src="/gambar/search-database.png" alt="Periksa Barang" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert"/>
                 Batch Barang
             </a>
@@ -107,7 +107,7 @@
                                 <img src="/gambar/garis3.png" alt="Menu" class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
                             </button>
                             <!-- Back Button -->
-                            <a href="{{ route('procurement-batch-list') }}"
+                            <a href="{{ route('procurement-batch_barang') }}"
                                 class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white transition-all duration-200 shadow-sm">
                                 <img src="/gambar/back-arrow.png" alt="Back" class="w-6 h-6 object-contain brightness-0" />
                             </a>
@@ -116,7 +116,7 @@
 
                         <!-- Tabs Section (Desktop) -->
                         <div class="hidden md:flex items-center gap-8 ml-2">
-                            <a href="{{ route('procurement-batch_barang_by_year', ['year' => $year]) }}"
+                            <a href="{{ route('procurement-batch_barang', ['year' => $year]) }}"
                                 class="text-[17px] font-bold text-black border-b-[3px] border-primary pb-1 whitespace-nowrap">
                                 Buat Batch
                             </a>
@@ -138,7 +138,7 @@
 
                 <!-- Tabs Section (Mobile Only) -->
                 <div class="flex md:hidden items-center gap-6 px-1">
-                    <a href="{{ route('procurement-batch_barang_by_year', ['year' => $year]) }}"
+                    <a href="{{ route('procurement-batch_barang', ['year' => $year]) }}"
                         class="text-[15px] font-bold text-black border-b-2 border-primary pb-1 whitespace-nowrap">
                         Buat Batch
                     </a>

@@ -59,9 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/approve-vendor/{id}', [App\Http\Controllers\ValidateVendor::class, 'approveVendor'])->name('approve.vendor');
     Route::post('/reject-vendor/{id}', [App\Http\Controllers\ValidateVendor::class, 'rejectVendor'])->name('reject.vendor');
 
-    Route::get('/batch-list', \App\Livewire\Procurement\BatchList::class)->name('procurement-batch-list');
-    Route::get('/batch_barang', \App\Livewire\Procurement\BatchBarang::class)->name('procurement-batch_barang_empty');
-    Route::get('/batch_barang/{year}', \App\Livewire\Procurement\BatchBarang::class)->name('procurement-batch_barang_by_year');
+    Route::get('/batch_barang', \App\Livewire\Procurement\BatchBarang::class)->name('procurement-batch_barang');
 
     Route::get('/buat_quotation/{id_batch}', \App\Livewire\Vendor\BuatQuotation::class)
         ->name('vendor-buat_quotation');

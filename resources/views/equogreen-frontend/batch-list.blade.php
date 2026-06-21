@@ -83,7 +83,7 @@
       <div class="border-b border-gray-100 my-1"></div>
 
       <!-- Periksa Barang (ACTIVE) -->
-      <a href="{{ route('procurement-batch-list') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 font-bold text-[17px] bg-[#eef3ff] text-primary transition-all duration-200 hover:bg-primary hover:text-white group">
+      <a href="{{ route('procurement-batch_barang') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 font-bold text-[17px] bg-[#eef3ff] text-primary transition-all duration-200 hover:bg-primary hover:text-white group">
         <img src="/gambar/search-database.png" alt="Periksa Barang" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert" />
         Batch Barang
       </a>
@@ -176,7 +176,7 @@
     <section id="folder-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
       @forelse($years as $year)
-      <a href="{{ route('procurement-batch_barang_by_year', ['year' => $year]) }}" class="folder-card group bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg hover:border-primary/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 overflow-hidden cursor-pointer" data-year="{{ $year }}">
+      <a href="{{ route('procurement-batch_barang', ['year' => $year]) }}" class="folder-card group bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg hover:border-primary/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 overflow-hidden cursor-pointer" data-year="{{ $year }}">
         <div class="h-32 bg-[#e8e8e0] group-hover:bg-primary/10 transition-colors duration-200 flex items-center justify-center">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-gray-300 group-hover:text-primary/40 transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />

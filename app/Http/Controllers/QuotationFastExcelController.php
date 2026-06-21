@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Quotation;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
 
 class QuotationFastExcelController extends Controller
 {
@@ -33,8 +33,20 @@ class QuotationFastExcelController extends Controller
         // 2. Ambil path sementara (temporary path) dari file yang diupload
         $path = $request->file('file')->getRealPath();
 
-        // 3. Proses import menggunakan FastExcel
-(new FastExcel)->import($path, function ($line) use ($idVendor, $idPenawaran) {
+        // 3. Hapus data quotation lama untuk vendor dan penawaran ini (agar replace/ubah file berfungsi)
+        Quotation::where('id_vendor', $idVendor)
+            ->where('id_penawaran', $idPenawaran)
+            ->delete();
+
+        // 3.5 Simpan file secara fisik untuk keperluan riwayat/tampilan
+        $directory = "public/quotations/{$idPenawaran}_{$idVendor}";
+        Storage::deleteDirectory($directory); // hapus file lama jika ada
+        
+        $fileName = $request->file('file')->getClientOriginalName();
+        $request->file('file')->storeAs($directory, $fileName);
+
+        // 4. Proses import menggunakan FastExcel
+        (new FastExcel)->import($path, function ($line) use ($idVendor, $idPenawaran) {
             // $line adalah array asosiatif per baris dari file Excel.
             // Key-nya (seperti 'nama', 'email') SANGAT bergantung pada 
             // teks di baris pertama (header) file Excel Anda.
@@ -62,6 +74,6 @@ class QuotationFastExcelController extends Controller
             ]);
         });
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Quotation berhasil terkirim');
     }
 }

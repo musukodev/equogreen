@@ -12,6 +12,7 @@ class Penawaran extends Model
 
     protected $fillable = [
         'id_batch',
+        'group_id',
         'nama_barang',
         'spesifikasi',
         'jumlah'

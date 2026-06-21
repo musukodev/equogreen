@@ -68,10 +68,10 @@
                 </a>
                 <div class="border-b border-gray-100 my-1"></div>
 
-                <a href="{{ route('procurement-batch-list') }}"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-[17px] transition-all duration-200 group {{ request()->routeIs('procurement-batch-list') || request()->routeIs('procurement-batch_barang_by_year') ? 'bg-[#eef3ff] text-primary' : 'text-gray-700 hover:bg-primary hover:text-white' }}">
+                <a href="{{ route('procurement-batch_barang') }}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-[17px] transition-all duration-200 group {{ request()->routeIs('procurement-batch_barang') || request()->routeIs('procurement-batch_barang') ? 'bg-[#eef3ff] text-primary' : 'text-gray-700 hover:bg-primary hover:text-white' }}">
                     <img src="/gambar/search-database.png" alt="Periksa Barang"
-                        class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert {{ request()->routeIs('procurement-batch-list') || request()->routeIs('procurement-batch_barang_by_year') ? '' : 'brightness-0 opacity-60' }}" />
+                        class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert {{ request()->routeIs('procurement-batch_barang') || request()->routeIs('procurement-batch_barang') ? '' : 'brightness-0 opacity-60' }}" />
                     Batch Barang
                 </a>
                 <div class="border-b border-gray-100 my-1"></div>
