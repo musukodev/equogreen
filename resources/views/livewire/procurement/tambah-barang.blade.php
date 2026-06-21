@@ -225,9 +225,9 @@
                                         <button wire:click="editPenawaran('{{ $group['group_id'] }}')" class="text-gray-600 hover:text-black transition" title="Edit">
                                             <i class="fa-solid fa-pen-to-square text-lg"></i>
                                         </button>
-                                        <button type="button" class="bg-blue-100 text-blue-700 hover:bg-blue-200 transition px-3 py-1 rounded text-xs font-bold">
+                                        <a href="{{ route('procurement-periksa_barang', ['batch_id' => $batch_id, 'group_id' => $group['group_id']]) }}" class="bg-blue-100 text-blue-700 hover:bg-blue-200 transition px-3 py-1.5 rounded text-xs font-bold inline-block" wire:navigate>
                                             Cek
-                                        </button>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>

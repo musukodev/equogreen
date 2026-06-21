@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
         return view('equogreen-frontend.profile_procurement');
     })->name('profile_procurement');
 
-    Route::get('/periksa_barang', \App\Livewire\Procurement\PeriksaBarang::class)->name('procurement-periksa_barang');
+    Route::get('/periksa_barang/{batch_id}/{group_id}', \App\Livewire\Procurement\PeriksaBarang::class)->name('procurement-periksa_barang');
 
 
     Route::get('/tambah_barang/{batch_id}', \App\Livewire\Procurement\TambahBarang::class)->name('procurement-tambah_barang');

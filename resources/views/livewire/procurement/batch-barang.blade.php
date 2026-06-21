@@ -25,10 +25,6 @@
                         class="text-[17px] font-bold text-black border-b-[3px] border-primary pb-1 whitespace-nowrap" wire:navigate>
                         Buat Batch
                     </a>
-                    <a href="{{ route('procurement-periksa_barang') }}"
-                        class="text-[17px] font-medium text-gray-400 hover:text-primary transition-colors pb-1 whitespace-nowrap">
-                        Periksa Barang
-                    </a>
                 </div>
             </div>
 
@@ -37,10 +33,6 @@
                 <a href="{{ route('procurement-batch_barang') }}"
                     class="text-[15px] font-bold text-black border-b-2 border-primary pb-1 whitespace-nowrap" wire:navigate>
                     Buat Batch
-                </a>
-                <a href="#"
-                    class="text-[15px] font-medium text-gray-400 hover:text-primary transition-colors pb-1 whitespace-nowrap">
-                    Periksa Barang
                 </a>
             </div>
         </div>

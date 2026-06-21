@@ -2,53 +2,80 @@
 
 namespace App\Livewire\Procurement;
 
+use App\Models\Batch;
+use App\Models\Penawaran;
+use App\Models\PenawaranVendor;
+use App\Models\Vendor;
 use App\Models\Quotation;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VendorReminderMail;
 
 #[Layout('components.layouts.app')]
-#[Title('Periksa Barang - Equogreen')]  
+#[Title('Detail Penawaran - Equogreen')]  
 class PeriksaBarang extends Component
 {
+    public $batch_id;
+    public $group_id;
     public $search = '';
-    public $selectedBatch = '';
-    public $selectedCategory = '';
+    public $status_pengajuan = '';
+
+    public function mount($batch_id, $group_id)
+    {
+        $this->batch_id = $batch_id;
+        $this->group_id = $group_id;
+    }
+
+    public function kirimReminder($id_vendor)
+    {
+        $vendor = Vendor::find($id_vendor);
+        if ($vendor && $vendor->email_perusahaan) {
+            Mail::to($vendor->email_perusahaan)->send(new VendorReminderMail($vendor, $this->batch_id));
+            $this->dispatch('alert', ['type' => 'success', 'message' => 'Reminder sent to ' . $vendor->nama_perusahaan]);
+        }
+    }
 
     public function render()
     {
-        $query = Quotation::with(['vendor', 'penawaran'])
-            ->select('id_penawaran', 'id_vendor')
-            ->groupBy('id_penawaran', 'id_vendor');
-
-        if ($this->selectedBatch) {
-            $query->whereHas('penawaran', function ($q) {
-                $q->where('id_batch', $this->selectedBatch);
-            });
+        $batch = Batch::findOrFail($this->batch_id);
+        
+        $penawarans = Penawaran::where('group_id', $this->group_id)->get();
+        if ($penawarans->isEmpty()) {
+            abort(404, 'Grup Penawaran tidak ditemukan.');
         }
 
-        if ($this->selectedCategory) {
-            $query->whereHas('vendor', function ($q) {
-                $q->where('kategori_vendor', $this->selectedCategory);
-            });
-        }
+        $penawaranIds = $penawarans->pluck('id_penawaran');
+        
+        $vendorIds = PenawaranVendor::whereIn('id_penawaran', $penawaranIds)->pluck('id_vendor')->unique();
+        
+        $query = Vendor::whereIn('id_vendor', $vendorIds)
+            ->withCount(['quotations as sudah_mengajukan' => function($q) use ($penawaranIds) {
+                $q->whereIn('id_penawaran', $penawaranIds);
+            }]);
 
         if ($this->search) {
-            $query->whereHas('vendor', function ($q) {
-                $q->where('nama_perusahaan', 'like', '%' . $this->search . '%');
-            });
+            $query->where('nama_perusahaan', 'like', '%' . $this->search . '%');
         }
 
-        $quotations = $query->get();
+        if ($this->status_pengajuan === 'sudah') {
+            $query->having('sudah_mengajukan', '>', 0);
+        } elseif ($this->status_pengajuan === 'belum') {
+            $query->having('sudah_mengajukan', '=', 0);
+        }
 
-        $batches = \App\Models\Batch::orderBy('id_batch', 'asc')->get();
-        
-        $categories = \App\Models\Vendor::select('kategori_vendor')
-            ->whereNotNull('kategori_vendor')
-            ->where('kategori_vendor', '<>', '')
-            ->distinct()
-            ->pluck('kategori_vendor');
+        $vendors = $query->get();
 
-        return view('livewire.procurement.periksa-barang', compact('quotations', 'batches', 'categories'));
+        foreach ($vendors as $vendor) {
+            if ($vendor->sudah_mengajukan > 0) {
+                $q = Quotation::where('id_vendor', $vendor->id_vendor)
+                    ->whereIn('id_penawaran', $penawaranIds)
+                    ->first();
+                $vendor->first_penawaran_id = $q ? $q->id_penawaran : null;
+            }
+        }
+
+        return view('livewire.procurement.periksa-barang', compact('batch', 'penawarans', 'vendors'));
     }
 }
