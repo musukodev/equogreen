@@ -32,6 +32,12 @@
         </div>
     @endif
 
+    @if(session('error'))
+        <div class="p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg shadow-sm">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <!-- Announcement Banner -->
     <section wire:click="$set('showPengumumanModal', true)"
         class="bg-[#4039c9] rounded-2xl border border-black px-6 py-5 md:px-8 md:py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-md cursor-pointer hover:shadow-lg hover:scale-[1.01] active:scale-[0.995] transition-all duration-200">

@@ -43,7 +43,8 @@ class TambahBarang extends Component
     {
         $this->vendors = Vendor::where('status', 'approved')
             ->where('kategori_vendor', $this->kategori_terpilih)
-            ->get();
+            ->get()
+            ->toArray();
     }
 
     public function loadPenawaran()
@@ -56,9 +57,14 @@ class TambahBarang extends Component
         foreach ($allPenawaran as $penawaran) {
             $key = $penawaran->group_id ?: 'old-'.$penawaran->id_penawaran; 
             if (!isset($grouped[$key])) {
+                // Ambil kategori dari salah satu vendor
+                $firstVendor = $penawaran->penawaranVendors->first()->vendor ?? null;
+                $kategori = $firstVendor ? $firstVendor->kategori_vendor : 'Umum';
+
                 $grouped[$key] = [
                     'group_id' => $key,
                     'items' => [],
+                    'kategori' => strtoupper($kategori),
                     'vendors' => $penawaran->penawaranVendors->map(function($pv) {
                         return $pv->vendor->nama_perusahaan ?? 'Unknown';
                     })->unique()->values()->all()

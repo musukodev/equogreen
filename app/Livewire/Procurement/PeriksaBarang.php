@@ -33,7 +33,7 @@ class PeriksaBarang extends Component
         $vendor = Vendor::find($id_vendor);
         if ($vendor && $vendor->email_perusahaan) {
             Mail::to($vendor->email_perusahaan)->send(new VendorReminderMail($vendor, $this->batch_id));
-            $this->dispatch('alert', ['type' => 'success', 'message' => 'Reminder sent to ' . $vendor->nama_perusahaan]);
+            $this->dispatch('reminder-sent', nama_vendor: $vendor->nama_perusahaan);
         }
     }
 

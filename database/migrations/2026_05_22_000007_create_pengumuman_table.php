@@ -11,9 +11,8 @@ return new class extends Migration
         Schema::create('pengumuman', function (Blueprint $table) {
             $table->increments('id_pengumuman');
             $table->integer('id_vendor')->unsigned()->nullable();
-            $table->string('judul', 255);
             $table->text('isi')->nullable();
-            $table->dateTime('waktu');
+            $table->timestamps();
             
             $table->foreign('id_vendor', 'fk_pengumuman_vendor')->references('id_vendor')->on('vendor')->onDelete('cascade');
         });

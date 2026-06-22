@@ -18,10 +18,19 @@
                         <p class="text-[14px] text-gray-400 mt-1">{{ $vendor->email ?? '-' }}</p>
                     </div>
                 </div>
-                <button wire:click="closeModal"
-                    class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition">
-                    <i class="ph ph-x text-lg"></i>
-                </button>
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+                    @if($downloadUrl)
+                    <a href="{{ $downloadUrl }}" download="{{ $fileName }}"
+                       class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition shadow-md">
+                        <i class="ph ph-download-simple text-lg font-bold"></i>
+                        <span>Download Excel</span>
+                    </a>
+                    @endif
+                    <button wire:click="closeModal"
+                        class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition flex-shrink-0">
+                        <i class="ph ph-x text-lg"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Modal Content scrollable -->

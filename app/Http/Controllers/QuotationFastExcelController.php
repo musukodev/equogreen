@@ -76,4 +76,20 @@ class QuotationFastExcelController extends Controller
 
         return redirect()->back()->with('success', 'Quotation berhasil terkirim');
     }
+
+    // Mendownload file original quotation
+    public function downloadOriginal($idPenawaran, $idVendor)
+    {
+        $directory = "public/quotations/{$idPenawaran}_{$idVendor}";
+        $files = Storage::files($directory);
+
+        if (empty($files)) {
+            abort(404, 'File quotation tidak ditemukan.');
+        }
+
+        $filePath = $files[0];
+        $fileName = basename($filePath);
+
+        return Storage::download($filePath, $fileName);
+    }
 }

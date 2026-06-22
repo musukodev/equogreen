@@ -10,14 +10,7 @@ require __DIR__ . '/auth.php';
 
 // Root
 Route::get('/', function () {
-    if (Illuminate\Support\Facades\Auth::check()) {
-        $user = Illuminate\Support\Facades\Auth::user();
-        if (strtolower($user->role) === 'procurement') {
-            return redirect()->route('procurement-dashboard');
-        }
-        return redirect()->route('vendor-dashboard');
-    }
-    return redirect()->route('login');
+    return view('equogreen-frontend.landing');
 });
 
 // ── Registrasi vendor (tidak perlu login) ──────────────
@@ -105,6 +98,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/fastexcel-quotation', [QuotationFastExcelController::class, 'index']);
     Route::post('/fastexcel-quotation', [QuotationFastExcelController::class, 'import'])->name('fastexcel.import');
+    Route::get('/download-quotation/{id_penawaran}/{id_vendor}', [QuotationFastExcelController::class, 'downloadOriginal'])
+        ->name('quotation.download');
     Route::get('/download-template', function () {
         return response()->download(
             public_path('templates/template_quotation.xlsx')

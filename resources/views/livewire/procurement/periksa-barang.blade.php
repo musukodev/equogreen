@@ -1,82 +1,100 @@
-<main x-data="{ showApproveModal: false, showSuccessCheck: false, approveUrl: '' }" class="flex-1 flex flex-col min-w-0 p-6 lg:p-8 gap-6 overflow-y-auto relative h-full">
+<main x-data="{
+    showApproveModal: false,
+    showSuccessCheck: false,
+    approveUrl: '',
+    showReminderModal: false,
+    reminderVendorId: null,
+    showReminderLoading: false,
+    showReminderSuccess: false,
+    reminderVendorName: ''
+}"
+    @reminder-sent.window="
+    showReminderLoading = false; 
+    reminderVendorName = $event.detail.nama_vendor;
+    showReminderSuccess = true; 
+    setTimeout(() => { showReminderSuccess = false; }, 2000);
+"
+    class="relative flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-auto p-6 lg:p-8">
 
     <!-- Top Header -->
-    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div class="flex items-center justify-between md:justify-start w-full md:w-auto gap-4">
+    <header class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+        <div class="flex w-full items-center justify-between gap-4 md:w-auto md:justify-start">
             <div class="flex items-center gap-3 md:gap-6">
                 <div class="flex items-center gap-2 md:gap-4">
                     <!-- Mobile Hamburger -->
                     <button onclick="toggleSidebar()"
-                        class="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary transition-all duration-200 shadow-sm flex-shrink-0 group">
+                        class="hover:bg-primary group flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 lg:hidden">
                         <img src="/gambar/garis3.png" alt="Menu"
-                            class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
+                            class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
                     </button>
                     <!-- Back Button -->
-                    <a href="{{ route('procurement-batch_barang') }}"
-                        class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-black text-black hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm" wire:navigate>
+                    <a href="{{ url()->previous() }}"
+                        class="hover:bg-primary hover:border-primary flex h-10 w-10 items-center justify-center rounded-full border border-black bg-white text-black shadow-sm transition-all duration-200 hover:text-white"
+                        wire:navigate>
                         <i class="ph ph-arrow-left text-xl"></i>
                     </a>
-                    <h1 class="text-2xl md:text-[32px] font-bold text-[#111827] leading-none">Batch {{ $batch->id_batch }}</h1>
+                    <h1 class="text-2xl font-bold leading-none text-[#111827] md:text-[32px]">Batch
+                        {{ $batch->id_batch }}</h1>
                 </div>
             </div>
 
             <!-- Right: Profile Section (Mobile Only) -->
-            <div class="flex md:hidden items-center gap-3">
+            <div class="flex items-center gap-3 md:hidden">
                 <button
-                    class="w-10 h-10 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200">
-                    <img src="/gambar/bell-black.png" alt="Notifikasi" class="w-5 h-5 object-contain" />
+                    class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff]">
+                    <img src="/gambar/bell-black.png" alt="Notifikasi" class="h-5 w-5 object-contain" />
                 </button>
                 <img src="/gambar/profileup.png" alt="Profil"
-                    class="w-10 h-10 rounded-full object-cover border border-gray-200" />
+                    class="h-10 w-10 rounded-full border border-gray-200 object-cover" />
             </div>
         </div>
 
         <!-- Right: Profile Section (Desktop Only) -->
-        <div class="hidden md:flex items-center gap-3">
+        <div class="hidden items-center gap-3 md:flex">
             <button
-                class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:bg-primary hover:border-primary transition-all duration-200 group shadow-sm">
+                class="hover:bg-primary hover:border-primary group flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] shadow-sm transition-all duration-200">
                 <img src="/gambar/bell-black.png" alt="Notifikasi"
-                    class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
+                    class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
             </button>
             <img src="/gambar/profileup.png" alt="Profil"
-                class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-all duration-200 cursor-pointer" />
-            <div class="w-px h-10 bg-gray-200"></div>
-            <span class="font-medium text-gray-700 text-[17px]">Procurement</span>
+                class="hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" />
+            <div class="h-10 w-px bg-gray-200"></div>
+            <span class="text-[17px] font-medium text-gray-700">Procurement</span>
         </div>
     </header>
 
     @if (session()->has('message'))
-        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50" role="alert">
+        <div class="mb-4 rounded-lg bg-green-50 p-4 text-sm text-green-800" role="alert">
             {{ session('message') }}
         </div>
     @endif
 
     <!-- Card 1: Spesifikasi Barang -->
-    <div class="w-full mt-2">
-        <div class="bg-white rounded-lg border border-gray-200 p-6 md:p-8 shadow-sm w-full">
-            <h2 class="text-xl font-bold text-gray-900 mb-1">Spesifikasi Barang</h2>
-            <p class="text-gray-500 mb-6 text-sm">Deskripsikan spesifikasi barang yang dibutuhkan</p>
-            
-            <div class="mb-4">
-                <button class="px-4 py-1.5 border border-black rounded-md text-sm font-medium">1</button>
-            </div>
+    <div class="mt-2 w-full">
+        <div class="w-full rounded-lg border border-gray-200 bg-white p-6 shadow-sm md:p-8">
+            <h2 class="mb-1 text-xl font-bold text-gray-900">Spesifikasi Barang</h2>
+            <p class="mb-6 text-sm text-gray-500">Deskripsikan spesifikasi barang yang dibutuhkan</p>
 
-            <div class="overflow-x-auto border border-black rounded-sm">
-                <table class="w-full border-collapse min-w-[600px] text-center">
+            <div class="overflow-x-auto rounded-sm border border-black">
+                <table class="w-full min-w-[600px] border-collapse text-center">
                     <thead>
                         <tr class="bg-[#423ec7] text-white">
-                            <th class="py-4 px-4 font-normal text-[14px] border-r border-[#26245f] border-b border-black w-1/3">Nama Barang</th>
-                            <th class="py-4 px-4 font-normal text-[14px] border-r border-[#26245f] border-b border-black w-1/3">Spesifikasi detail</th>
-                            <th class="py-4 px-4 font-normal text-[14px] border-b border-black w-1/3">Jumlah</th>
+                            <th
+                                class="w-1/3 border-b border-r border-[#26245f] border-black px-4 py-4 text-[14px] font-normal">
+                                Nama Barang</th>
+                            <th
+                                class="w-1/3 border-b border-r border-[#26245f] border-black px-4 py-4 text-[14px] font-normal">
+                                Spesifikasi detail</th>
+                            <th class="w-1/3 border-b border-black px-4 py-4 text-[14px] font-normal">Jumlah</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($penawarans as $item)
-                        <tr class="border-b border-black hover:bg-gray-50 transition text-[14px]">
-                            <td class="py-4 px-4 text-black border-r border-black">{{ $item->nama_barang }}</td>
-                            <td class="py-4 px-4 text-black border-r border-black">{{ $item->spesifikasi }}</td>
-                            <td class="py-4 px-4 text-black">{{ $item->jumlah }}</td>
-                        </tr>
+                        @foreach ($penawarans as $item)
+                            <tr class="border-b border-black text-[14px] transition hover:bg-gray-50">
+                                <td class="border-r border-black px-4 py-4 text-black">{{ $item->nama_barang }}</td>
+                                <td class="border-r border-black px-4 py-4 text-black">{{ $item->spesifikasi }}</td>
+                                <td class="px-4 py-4 text-black">{{ $item->jumlah }}</td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -86,13 +104,13 @@
 
     <!-- Card 2: Vendor List -->
     <div class="w-full">
-        <div class="bg-white rounded-lg border border-gray-200 p-6 md:p-8 shadow-sm w-full">
-            
+        <div class="w-full rounded-lg border border-gray-200 bg-white p-6 shadow-sm md:p-8">
+
             <!-- Filters -->
-            <div class="flex flex-col md:flex-row items-center gap-4 mb-6">
+            <div class="mb-6 flex flex-col items-center gap-4 md:flex-row">
                 <div class="relative w-full md:w-[250px]">
                     <select wire:model.live="status_pengajuan"
-                        class="w-full appearance-none px-4 py-2.5 pr-10 border border-black rounded-md outline-none focus:border-black focus:ring-1 focus:ring-black bg-white shadow-sm cursor-pointer text-[14px]">
+                        class="w-full cursor-pointer appearance-none rounded-md border border-black bg-white px-4 py-2.5 pr-10 text-[14px] shadow-sm outline-none focus:border-black focus:ring-1 focus:ring-black">
                         <option value="">Status Pengajuan</option>
                         <option value="sudah">Sudah Mengajukan</option>
                         <option value="belum">Belum Mengajukan</option>
@@ -101,76 +119,92 @@
                         <i class="ph ph-caret-down"></i>
                     </div>
                 </div>
-                            
-                <div class="w-full md:flex-1 relative">
+
+                <div class="relative w-full md:flex-1">
                     <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search"
-                        class="w-full px-4 py-2.5 border border-black rounded-md outline-none focus:ring-1 focus:ring-black transition text-[14px]">
+                        class="w-full rounded-md border border-black px-4 py-2.5 text-[14px] outline-none transition focus:ring-1 focus:ring-black">
                 </div>
             </div>
 
             <!-- Table -->
-            <div class="overflow-x-auto border border-black rounded-sm">
-                <table class="w-full border-collapse min-w-[800px] text-center">
+            <div class="overflow-x-auto rounded-sm border border-black">
+                <table class="w-full min-w-[800px] border-collapse text-center">
                     <thead>
                         <tr class="bg-[#423ec7] text-white">
-                            <th class="py-4 px-4 font-normal text-[14px] border-r border-[#26245f] border-b border-black w-1/4">Nama Vendor</th>
-                            <th class="py-4 px-4 font-normal text-[14px] border-r border-[#26245f] border-b border-black w-1/4">Status Pengajuan</th>
-                            <th class="py-4 px-4 font-normal text-[14px] border-r border-[#26245f] border-b border-black w-1/4">Cek Quotation</th>
-                            <th class="py-4 px-4 font-normal text-[14px] border-b border-black w-1/4">Aksi</th>
+                            <th
+                                class="w-1/4 border-b border-r border-[#26245f] border-black px-4 py-4 text-[14px] font-normal">
+                                Nama Vendor</th>
+                            <th
+                                class="w-1/4 border-b border-r border-[#26245f] border-black px-4 py-4 text-[14px] font-normal">
+                                Status Pengajuan</th>
+                            <th
+                                class="w-1/4 border-b border-r border-[#26245f] border-black px-4 py-4 text-[14px] font-normal">
+                                Cek Quotation</th>
+                            <th class="w-1/4 border-b border-black px-4 py-4 text-[14px] font-normal">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($vendors as $vendor)
-                        <tr class="border-b border-black hover:bg-gray-50 transition text-[14px]">
-                            <td class="py-4 px-4 text-black border-r border-black">{{ $vendor->nama_perusahaan }}</td>
-                            
-                            <!-- Status Pengajuan -->
-                            <td class="py-4 px-4 text-black border-r border-black">
-                                @if($vendor->sudah_mengajukan > 0)
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#e6f7e8] text-[#2ebd3a]">
-                                        Sudah Mengajukan
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#fee6e6] text-[#e53e3e]">
-                                        Belum Mengajukan
-                                    </span>
-                                @endif
-                            </td>
+                            <tr class="border-b border-black text-[14px] transition hover:bg-gray-50">
+                                <td class="border-r border-black px-4 py-4 text-black">{{ $vendor->nama_perusahaan }}
+                                </td>
 
-                            <!-- Cek Quotation -->
-                            <td class="py-4 px-4 border-r border-black">
-                                @if($vendor->sudah_mengajukan > 0)
-                                    <button wire:click.prevent="$dispatch('openQuotationModal', { idVendor: {{ $vendor->id_vendor }} })" 
-                                            class="bg-[#e4e6fb] text-[#423ec7] px-4 py-1.5 rounded-md text-xs font-medium hover:bg-[#d0d3f8] transition">
-                                        Cek
-                                    </button>
-                                @else
-                                    <span class="text-gray-500">-</span>
-                                @endif
-                            </td>
+                                <!-- Status Pengajuan -->
+                                <td class="border-r border-black px-4 py-4 text-black">
+                                    @if ($vendor->sudah_mengajukan > 0)
+                                        <span
+                                            class="inline-flex items-center rounded-full bg-[#e6f7e8] px-3 py-1 text-xs font-medium text-[#2ebd3a]">
+                                            Sudah Mengajukan
+                                        </span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center rounded-full bg-[#fee6e6] px-3 py-1 text-xs font-medium text-[#e53e3e]">
+                                            Belum Mengajukan
+                                        </span>
+                                    @endif
+                                </td>
 
-                            <!-- Aksi -->
-                            <td class="py-4 px-4 text-center">
-                                <div class="flex items-center justify-center gap-4">
-                                    @if($vendor->sudah_mengajukan > 0)
-                                        <button @click="approveUrl = '{{ route('po.show', ['id_vendor' => $vendor->id_vendor, 'id_penawaran' => $vendor->first_penawaran_id ?? 0]) }}'; showApproveModal = true;" class="hover:scale-110 transition-transform">
-                                            <i class="ph ph-check text-[#4adb49] text-xl font-bold"></i>
-                                        </button>
-                                        <button class="hover:scale-110 transition-transform">
-                                            <i class="ph ph-x text-[#f52b2b] text-xl font-bold"></i>
+                                <!-- Cek Quotation -->
+                                <td class="border-r border-black px-4 py-4">
+                                    @if ($vendor->sudah_mengajukan > 0)
+                                        <button
+                                            wire:click.prevent="$dispatch('openQuotationModal', { idVendor: {{ $vendor->id_vendor }} })"
+                                            class="rounded-md bg-[#e4e6fb] px-4 py-1.5 text-xs font-medium text-[#423ec7] transition hover:bg-[#d0d3f8]">
+                                            Cek
                                         </button>
                                     @else
-                                        <button wire:click="kirimReminder({{ $vendor->id_vendor }})" title="Kirim Reminder" class="hover:scale-110 transition-transform text-gray-600 hover:text-primary">
-                                            <i class="ph ph-envelope-simple text-xl font-bold"></i>
-                                        </button>
+                                        <span class="text-gray-500">-</span>
                                     @endif
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+
+                                <!-- Aksi -->
+                                <td class="px-4 py-4 text-center">
+                                    <div class="flex items-center justify-center gap-4">
+                                        @if ($vendor->sudah_mengajukan > 0)
+                                            <button
+                                                @click="approveUrl = '{{ route('po.show', ['id_vendor' => $vendor->id_vendor, 'id_penawaran' => $vendor->first_penawaran_id ?? 0]) }}'; showApproveModal = true;"
+                                                class="transition-transform hover:scale-110">
+                                                <i class="ph ph-check text-xl font-bold text-[#4adb49]"></i>
+                                            </button>
+                                            <button class="transition-transform hover:scale-110">
+                                                <i class="ph ph-x text-xl font-bold text-[#f52b2b]"></i>
+                                            </button>
+                                        @else
+                                            <button
+                                                @click="reminderVendorId = {{ $vendor->id_vendor }}; showReminderModal = true;"
+                                                title="Kirim Reminder"
+                                                class="hover:text-primary text-gray-600 transition-transform hover:scale-110">
+                                                <i class="ph ph-envelope-simple text-xl font-bold"></i>
+                                            </button>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
                         @empty
-                        <tr>
-                            <td colspan="4" class="py-8 text-center text-gray-500">Tidak ada vendor yang ditugaskan.</td>
-                        </tr>
+                            <tr>
+                                <td colspan="4" class="py-8 text-center text-gray-500">Tidak ada vendor yang
+                                    ditugaskan.</td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -191,42 +225,41 @@
         });
     </script>
     <!-- Approve Confirmation Modal -->
-    <div x-show="showApproveModal && !showSuccessCheck"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0"
-         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
-         style="display: none;" x-cloak>
+    <div x-show="showApproveModal && !showSuccessCheck" x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+        style="display: none;" x-cloak>
         <div x-show="showApproveModal && !showSuccessCheck"
-             x-transition:enter="transition ease-out duration-300 delay-100"
-             x-transition:enter-start="opacity-0 scale-90 translate-y-4"
-             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95"
-             class="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl border border-gray-100"
-             @click.away="showApproveModal = false">
+            x-transition:enter="transition ease-out duration-300 delay-100"
+            x-transition:enter-start="opacity-0 scale-90 translate-y-4"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            class="w-full max-w-sm rounded-2xl border border-gray-100 bg-white p-8 shadow-2xl"
+            @click.away="showApproveModal = false">
 
             <!-- Icon -->
-            <div class="flex justify-center mb-5">
-                <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center border-2 border-amber-300">
+            <div class="mb-5 flex justify-center">
+                <div
+                    class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-amber-300 bg-amber-50">
                     <i class="ph ph-warning text-3xl text-amber-500"></i>
                 </div>
             </div>
 
-            <h3 class="text-lg font-bold text-gray-900 text-center mb-2">Konfirmasi Approve</h3>
-            <p class="text-sm text-gray-500 text-center mb-8 leading-relaxed">Apakah Anda yakin ingin menerima quotation dari vendor ini? Tindakan ini tidak dapat dibatalkan.</p>
+            <h3 class="mb-2 text-center text-lg font-bold text-gray-900">Konfirmasi Approve</h3>
+            <p class="mb-8 text-center text-sm leading-relaxed text-gray-500">Apakah Anda yakin ingin menerima
+                quotation dari vendor ini? Tindakan ini tidak dapat dibatalkan.</p>
 
             <div class="flex items-center gap-3">
                 <button @click="showApproveModal = false"
-                    class="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all duration-200 active:scale-95">
+                    class="flex-1 rounded-xl bg-gray-100 px-4 py-2.5 text-sm font-semibold text-gray-700 transition-all duration-200 hover:bg-gray-200 active:scale-95">
                     Batal
                 </button>
-                <button @click="showSuccessCheck = true; setTimeout(() => { window.location.href = approveUrl; }, 2200);"
-                    class="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-[#423ec7] hover:bg-[#3633a8] rounded-xl transition-all duration-200 shadow-lg shadow-indigo-200 active:scale-95">
+                <button
+                    @click="showSuccessCheck = true; setTimeout(() => { window.location.href = approveUrl; }, 2200);"
+                    class="flex-1 rounded-xl bg-[#423ec7] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition-all duration-200 hover:bg-[#3633a8] active:scale-95">
                     Ya, Terima
                 </button>
             </div>
@@ -234,24 +267,24 @@
     </div>
 
     <!-- Success Checkmark Modal -->
-    <div x-show="showSuccessCheck"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         class="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
-         style="display: none;" x-cloak>
-        <div x-show="showSuccessCheck"
-             x-transition:enter="transition ease-out duration-400 delay-100"
-             x-transition:enter-start="opacity-0 scale-75"
-             x-transition:enter-end="opacity-100 scale-100"
-             class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-gray-200 flex flex-col items-center gap-5">
+    <div x-show="showSuccessCheck" x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+        style="display: none;" x-cloak>
+        <div x-show="showSuccessCheck" x-transition:enter="transition ease-out duration-400 delay-100"
+            x-transition:enter-start="opacity-0 scale-75" x-transition:enter-end="opacity-100 scale-100"
+            class="flex w-full max-w-sm flex-col items-center gap-5 rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-2xl">
 
             <div class="flex items-center justify-center">
-                <div class="relative w-20 h-20">
-                    <div class="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-25"></div>
-                    <div class="relative w-20 h-20 bg-green-50 rounded-full flex items-center justify-center border-4 border-green-500 periksa-animate-circle">
-                        <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" stroke-width="4" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" style="stroke-dasharray: 50; stroke-dashoffset: 50; animation: periksaCheckmark 0.8s ease-in-out 0.3s forwards;"></path>
+                <div class="relative h-20 w-20">
+                    <div class="absolute inset-0 animate-ping rounded-full bg-green-100 opacity-25"></div>
+                    <div
+                        class="periksa-animate-circle relative flex h-20 w-20 items-center justify-center rounded-full border-4 border-green-500 bg-green-50">
+                        <svg class="h-12 w-12 text-green-500" fill="none" stroke="currentColor" stroke-width="4"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"
+                                style="stroke-dasharray: 50; stroke-dashoffset: 50; animation: periksaCheckmark 0.8s ease-in-out 0.3s forwards;">
+                            </path>
                         </svg>
                     </div>
                 </div>
@@ -259,22 +292,126 @@
 
             <div>
                 <h3 class="text-xl font-bold text-gray-900">Berhasil!</h3>
-                <p class="text-gray-500 text-sm mt-2 font-medium">Quotation berhasil diterima. Mengalihkan ke halaman PO...</p>
+                <p class="mt-2 text-sm font-medium text-gray-500">Quotation berhasil diterima. Mengalihkan ke halaman
+                    PO...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Send Reminder Confirmation Modal -->
+    <div x-show="showReminderModal" x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+        style="display: none;" x-cloak>
+        <div x-show="showReminderModal" x-transition:enter="transition ease-out duration-300 delay-100"
+            x-transition:enter-start="opacity-0 scale-90 translate-y-4"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            class="w-full max-w-sm rounded-2xl border border-gray-100 bg-white p-8 shadow-2xl"
+            @click.away="showReminderModal = false">
+
+            <!-- Icon -->
+            <div class="mb-5 flex justify-center">
+                <div
+                    class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-blue-300 bg-blue-50">
+                    <i class="ph ph-envelope-simple text-3xl font-bold text-blue-500"></i>
+                </div>
+            </div>
+
+            <h3 class="mb-2 text-center text-lg font-bold text-gray-900">Kirim Pengingat</h3>
+            <p class="mb-8 text-center text-sm leading-relaxed text-gray-500">Apakah Anda yakin ingin mengirim pesan
+                pengingat (reminder) ke vendor ini agar segera mengajukan penawaran?</p>
+
+            <div class="flex items-center gap-3">
+                <button @click="showReminderModal = false"
+                    class="flex-1 rounded-xl bg-gray-100 px-4 py-2.5 text-sm font-semibold text-gray-700 transition-all duration-200 hover:bg-gray-200 active:scale-95">
+                    Batal
+                </button>
+                <button
+                    @click="showReminderModal = false; showReminderLoading = true; $wire.kirimReminder(reminderVendorId);"
+                    class="flex-1 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition-all duration-200 hover:bg-blue-700 active:scale-95">
+                    Kirim
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div x-show="showReminderLoading" x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+        style="display: none;" x-cloak>
+        <div
+            class="flex w-full max-w-sm flex-col items-center gap-5 rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-2xl">
+            <div class="flex items-center justify-center">
+                <div class="h-16 w-16 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600"></div>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-gray-900">Mengirim Pengingat...</h3>
+                <p class="mt-2 text-sm font-medium text-gray-500">Mohon tunggu sebentar, email sedang dikirim ke
+                    vendor.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Reminder Modal (Centang) -->
+    <div x-show="showReminderSuccess" x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+        style="display: none;" x-cloak>
+        <div x-show="showReminderSuccess" x-transition:enter="transition ease-out duration-400 delay-100"
+            x-transition:enter-start="opacity-0 scale-75" x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            class="flex w-full max-w-sm flex-col items-center gap-5 rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-2xl">
+
+            <div class="flex items-center justify-center">
+                <div class="relative h-20 w-20">
+                    <div class="absolute inset-0 animate-ping rounded-full bg-green-100 opacity-25"></div>
+                    <div
+                        class="periksa-animate-circle relative flex h-20 w-20 items-center justify-center rounded-full border-4 border-green-500 bg-green-50">
+                        <svg class="h-12 w-12 text-green-500" fill="none" stroke="currentColor" stroke-width="4"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"
+                                style="stroke-dasharray: 50; stroke-dashoffset: 50; animation: periksaCheckmark 0.8s ease-in-out 0.3s forwards;">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-bold text-gray-900">Berhasil Dikirim!</h3>
+                <p class="mt-2 text-sm font-medium text-gray-500">Reminder berhasil dikirim ke vendor <span
+                        class="font-bold text-gray-800" x-text="reminderVendorName"></span>.</p>
             </div>
         </div>
     </div>
 
     <style>
         @keyframes periksaCheckmark {
-            to { stroke-dashoffset: 0; }
+            to {
+                stroke-dashoffset: 0;
+            }
         }
+
         @keyframes periksaScaleCircle {
-            0% { transform: scale(0); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(0);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
+
         .periksa-animate-circle {
             animation: periksaScaleCircle 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
     </style>
 </main>
-

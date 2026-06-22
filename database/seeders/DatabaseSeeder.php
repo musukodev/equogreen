@@ -27,5 +27,7 @@ class DatabaseSeeder extends Seeder
             'role'           => 'Procurement',
             'id_procurement' => $procurement->id_procurement,
         ]);
+
+        $this->call(VendorSeeder::class);
     }
 }

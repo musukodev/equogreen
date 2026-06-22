@@ -7,11 +7,6 @@
                 class="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm flex-shrink-0 group">
                 <img src="/gambar/garis3.png" alt="Menu" class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
             </button>
-            <!-- Back Button -->
-            <a href="{{ route('procurement-dashboard') }}"
-                class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm" wire:navigate>
-                <img src="/gambar/back-arrow.png" alt="Back" class="w-6 h-6 object-contain brightness-0" />
-            </a>
             <div>
                 <h1 class="text-2xl md:text-[36px] font-bold text-[#111827] tracking-tight">Batch Barang</h1>
                 <p class="text-gray-400 md:text-gray-500 text-xs md:text-base mt-0.5 md:mt-1">Silahkan akses folder sesuai tahun yang diinginkan</p>
