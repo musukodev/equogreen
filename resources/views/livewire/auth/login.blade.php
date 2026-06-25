@@ -1,75 +1,82 @@
-<!DOCTYPE html>
-<html lang="id">
+<div class="font-inter relative min-h-screen w-full"
+    style="background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Equogreen Procurement</title>
-    <meta name="description" content="Masuk ke platform Equogreen untuk mengelola quotation dan pengadaan vendor Anda.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'inter': ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            blue: '#1d4ed8',
-                        }
-                    },
-                    animation: {
-                        'blob': 'blob 7s infinite',
-                        'blob-delay': 'blob 9s infinite 2s',
-                        'float': 'float 6s ease-in-out infinite',
-                        'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
-                    },
-                    keyframes: {
-                        blob: {
-                            '0%': {
-                                transform: 'translate(0px, 0px) scale(1)'
-                            },
-                            '33%': {
-                                transform: 'translate(30px, -50px) scale(1.1)'
-                            },
-                            '66%': {
-                                transform: 'translate(-20px, 20px) scale(0.9)'
-                            },
-                            '100%': {
-                                transform: 'translate(0px, 0px) scale(1)'
-                            },
-                        },
-                        float: {
-                            '0%, 100%': {
-                                transform: 'translateY(0px)'
-                            },
-                            '50%': {
-                                transform: 'translateY(-10px)'
-                            },
-                        },
-                        fadeInUp: {
-                            '0%': {
-                                opacity: '0',
-                                transform: 'translateY(30px)'
-                            },
-                            '100%': {
-                                opacity: '1',
-                                transform: 'translateY(0)'
-                            },
-                        }
-                    }
-                }
+    <style>
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+
+            100% {
+                transform: translate(0px, 0px) scale(1);
             }
         }
-    </script>
-</head>
 
-<body class="font-inter flex min-h-screen bg-slate-50 antialiased">
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+
+        .animate-blob-delay {
+            animation: blob 9s infinite 2s;
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+    </style>
+
+    <!-- Decorative background blobs -->
+    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden opacity-[0.8]">
+        <div
+            class="animate-blob absolute left-[-10%] top-[-10%] h-[40%] w-[40%] rounded-full bg-blue-200 opacity-70 mix-blend-multiply blur-[80px] filter">
+        </div>
+        <div
+            class="animate-blob animation-delay-2000 absolute right-[-10%] top-[20%] h-[35%] w-[35%] rounded-full bg-slate-300 opacity-70 mix-blend-multiply blur-[80px] filter">
+        </div>
+        <div
+            class="animate-blob animation-delay-4000 absolute bottom-[-20%] left-[20%] h-[45%] w-[45%] rounded-full bg-blue-100 opacity-70 mix-blend-multiply blur-[80px] filter">
+        </div>
+        <!-- Add subtle grid overlay -->
+        <div class="absolute inset-0 opacity-[0.03]"
+            style="background-image: linear-gradient(#1d4ed8 1px, transparent 1px), linear-gradient(to right, #1d4ed8 1px, transparent 1px); background-size: 40px 40px;">
+        </div>
+    </div>
 
     <!-- Full-screen split layout -->
     <div class="relative z-10 flex min-h-screen w-full flex-col md:flex-row">
@@ -164,9 +171,9 @@
             </div>
         </div>
 
-        <!--RIGHT COLUMN — Login Form -->
+        <!-- RIGHT COLUMN — Login Form -->
         <div
-            class="relative flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden bg-slate-50 p-6 sm:p-10 md:min-h-screen md:w-[55%] md:p-12 lg:px-14">
+            class="relative flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden bg-transparent p-6 sm:p-10 md:min-h-screen md:w-[55%] md:p-12 lg:px-14">
 
             <!-- Form Card -->
             <div class="animate-fade-in-up relative w-full max-w-[460px] rounded-3xl border border-white/80 bg-white/90 p-6 opacity-0 shadow-[0_15px_50px_rgba(29,78,216,0.08)] backdrop-blur-md sm:p-8 md:p-10"
@@ -203,11 +210,8 @@
                                 <i class="ph ph-envelope text-lg text-gray-400 md:text-xl"></i>
                             </div>
                             <input type="text" wire:model="username"
-                                class="h-[44px] w-full rounded-xl border border-gray-200 bg-white/70 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600/20 md:h-[48px] md:pl-11"
+                                class="@error('username') border-red-500 @enderror h-[44px] w-full rounded-xl border border-gray-200 bg-white/70 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600/20 md:h-[48px] md:pl-11"
                                 placeholder="Masukkan username Anda" required autofocus>
-                            @error('username')
-                                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-                            @enderror
                         </div>
                     </div>
 
@@ -221,12 +225,9 @@
                                 <i class="ph ph-lock text-lg text-gray-400 md:text-xl"></i>
                             </div>
                             <input type="password" wire:model="password"
-                                class="h-[44px] w-full rounded-xl border border-gray-200 bg-white/70 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600/20 md:h-[48px] md:pl-11"
+                                class="@error('password') border-red-500 @enderror h-[44px] w-full rounded-xl border border-gray-200 bg-white/70 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600/20 md:h-[48px] md:pl-11"
                                 placeholder="Masukkan password Anda" required>
                         </div>
-                        @error('password')
-                            <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <!-- Submit -->
@@ -252,32 +253,14 @@
                 <!-- Register -->
                 <div>
                     <a href="{{ route('registrasi') }}"
-                        class="flex h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-blue-600 bg-white/70 text-sm font-semibold text-blue-600 transition-colors hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 md:h-[48px] md:text-base">
+                        class="flex h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-blue-600 bg-white/70 text-sm font-semibold text-blue-600 transition-colors hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 md:h-[48px] md:text-base"
+                        wire:navigate>
                         <i class="ph ph-user-plus text-lg"></i>
                         Daftar Akun Baru
                     </a>
                 </div>
 
-
-
             </div>
         </div>
     </div>
-
-    <script>
-        // Loading state on submit
-        const loginBtn = document.getElementById('loginBtn');
-        document.querySelector('form').addEventListener('submit', () => {
-            loginBtn.innerHTML = `
-            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-            </svg>
-            Memproses...`;
-            loginBtn.disabled = true;
-            loginBtn.classList.add('opacity-80', 'cursor-not-allowed');
-        });
-    </script>
-</body>
-
-</html>
+</div>
