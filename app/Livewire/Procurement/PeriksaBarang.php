@@ -7,6 +7,7 @@ use App\Models\Penawaran;
 use App\Models\PenawaranVendor;
 use App\Models\Vendor;
 use App\Models\Quotation;
+use App\Models\Pengumuman;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\VendorReminderMail;
 
 #[Layout('components.layouts.app')]
-#[Title('Detail Penawaran - Equogreen')]  
+#[Title('Detail Penawaran - Equogreen')]
 class PeriksaBarang extends Component
 {
     public $batch_id;
@@ -33,6 +34,14 @@ class PeriksaBarang extends Component
         $vendor = Vendor::find($id_vendor);
         if ($vendor && $vendor->email_perusahaan) {
             Mail::to($vendor->email_perusahaan)->send(new VendorReminderMail($vendor, $this->batch_id));
+
+            // Masukkan pesan reminder ke tabel pengumuman
+            $pesan = "Kami mengingatkan Anda untuk segera mengunggah Quotation untuk Batch " . $this->batch_id . ". Silakan login ke portal vendor Equogreen untuk melengkapi dokumen yang dibutuhkan.";
+            Pengumuman::create([
+                'id_vendor' => $vendor->id_vendor,
+                'isi' => $pesan,
+            ]);
+
             $this->dispatch('reminder-sent', nama_vendor: $vendor->nama_perusahaan);
         }
     }
@@ -40,18 +49,18 @@ class PeriksaBarang extends Component
     public function render()
     {
         $batch = Batch::findOrFail($this->batch_id);
-        
+
         $penawarans = Penawaran::where('group_id', $this->group_id)->get();
         if ($penawarans->isEmpty()) {
             abort(404, 'Grup Penawaran tidak ditemukan.');
         }
 
         $penawaranIds = $penawarans->pluck('id_penawaran');
-        
+
         $vendorIds = PenawaranVendor::whereIn('id_penawaran', $penawaranIds)->pluck('id_vendor')->unique();
-        
+
         $query = Vendor::whereIn('id_vendor', $vendorIds)
-            ->withCount(['quotations as sudah_mengajukan' => function($q) use ($penawaranIds) {
+            ->withCount(['quotations as sudah_mengajukan' => function ($q) use ($penawaranIds) {
                 $q->whereIn('id_penawaran', $penawaranIds);
             }]);
 

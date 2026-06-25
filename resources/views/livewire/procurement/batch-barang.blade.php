@@ -1,66 +1,46 @@
-<main class="flex-1 flex flex-col min-w-0 p-4 md:p-6 lg:p-8 pt-0 gap-6 h-full overflow-y-auto w-full">
-    <!-- Header Layout -->
-    <header class="flex flex-col md:flex-row md:items-end justify-between border-b border-gray-200 pb-2 mt-4 md:mt-8 gap-4 px-2 md:px-0">
-        <!-- Left: Back Button, Title & Tabs -->
-        <div class="flex flex-col gap-4 md:gap-6">
-            <!-- Top Section (Mobile & Desktop) -->
-            <div class="flex items-center justify-between md:justify-start gap-4">
-                <div class="flex items-center gap-4">
-                    <!-- Mobile Hamburger -->
-                    <button onclick="toggleSidebar()"
-                        class="md:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white transition-all duration-200 shadow-sm flex-shrink-0 group">
-                        <img src="/gambar/garis3.png" alt="Menu" class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
-                    </button>
-                    <!-- Back Button -->
-                    <a href="{{ route('procurement-batch_barang') }}"
-                        class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white transition-all duration-200 shadow-sm" wire:navigate>
-                        <img src="/gambar/back-arrow.png" alt="Back" class="w-6 h-6 object-contain brightness-0" />
-                    </a>
-                    <h1 class="text-2xl md:text-[36px] font-bold text-[#111827] leading-none">Daftar Batch</h1>
-                </div>
-
-                <!-- Tabs Section (Desktop) -->
-                <div class="hidden md:flex items-center gap-8 ml-2">
-                    <a href="{{ route('procurement-batch_barang') }}"
-                        class="text-[17px] font-bold text-black border-b-[3px] border-primary pb-1 whitespace-nowrap" wire:navigate>
-                        Buat Batch
-                    </a>
-                </div>
-            </div>
-
-            <!-- Tabs Section (Mobile Only) -->
-            <div class="flex md:hidden items-center gap-6 px-1">
-                <a href="{{ route('procurement-batch_barang') }}"
-                    class="text-[15px] font-bold text-black border-b-2 border-primary pb-1 whitespace-nowrap" wire:navigate>
-                    Buat Batch
-                </a>
+<main class="flex h-full w-full min-w-0 flex-1 flex-col gap-6 overflow-y-auto p-4 pt-0 md:p-6 lg:p-8">
+    <!-- Top Header -->
+    <header class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <!-- Mobile Hamburger -->
+            <button onclick="toggleSidebar()"
+                class="hover:bg-primary hover:border-primary group flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white lg:hidden">
+                <img src="/gambar/garis3.png" alt="Menu"
+                    class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
+            </button>
+            <div>
+                <h1 class="text-2xl font-bold text-[#111827] md:text-[36px]">Batch Barang</h1>
+                <p class="mt-0.5 text-xs text-gray-400 md:mt-1 md:text-base md:text-gray-500">Kelola dan lihat informasi
+                    seluruh batch barang</p>
             </div>
         </div>
 
-        <!-- Right: Profile Section (Desktop Only) -->
-        <div class="hidden md:flex items-center gap-3">
+        <!-- Profile Section -->
+        <div class="flex items-center gap-3">
             <button
-                class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:bg-primary hover:border-primary transition-all duration-200 group shadow-sm">
+                class="hover:bg-primary hover:border-primary group flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] transition-all duration-200">
                 <img src="/gambar/bell-black.png" alt="Notifikasi"
-                    class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
+                    class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
             </button>
-            <img src="/gambar/profileup.png" alt="Profil"
-                class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-all duration-200 cursor-pointer" />
-            <div class="w-px h-10 bg-gray-200"></div>
-            <span class="font-medium text-gray-700 text-[17px]">Procurement</span>
+            <a href="{{ route('profile_procurement') }}">
+                <img src="/gambar/profileup.png" alt="Profil"
+                    class="hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" />
+            </a>
+            <div class="hidden h-10 w-px bg-gray-200 md:block"></div>
+            <span class="hidden text-[17px] font-medium text-gray-700 md:block">Procurement</span>
         </div>
     </header>
 
     <!-- Form Workspace / Grid Card -->
     <div class="w-full">
-        <div class="bg-white rounded-xl border border-gray-400 p-6 md:p-8 shadow-sm w-full">
+        <div class="w-full rounded-xl border border-gray-400 bg-white p-6 shadow-sm md:p-8">
             <!-- Toolbar (Search and Add) -->
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <div class="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                 <input type="text" placeholder="Search"
-                    class="w-full sm:w-[60%] lg:w-[40%] xl:w-[70%] border border-gray-400 rounded-md px-4 py-2 text-[15px] outline-none focus:border-black transition">
+                    class="w-full rounded-md border border-gray-400 px-4 py-2 text-[15px] outline-none transition focus:border-black sm:w-[60%] lg:w-[40%] xl:w-[70%]">
 
                 <button wire:click="$set('showModal', true)"
-                    class="w-full sm:w-auto bg-[#1e40ff] text-white font-bold rounded-md px-6 py-2 flex items-center justify-center gap-2 hover:bg-blue-500 transition">
+                    class="flex w-full items-center justify-center gap-2 rounded-md bg-[#1e40ff] px-6 py-2 font-bold text-white transition hover:bg-blue-500 sm:w-auto">
                     <i class="fa-solid fa-plus text-sm"></i> Tambah Batch
                 </button>
             </div>
@@ -70,47 +50,54 @@
             <!-- Title -->
             <div class="mb-4">
                 <h2 class="text-xl font-bold text-black">Daftar Batch</h2>
-                @if(session('success'))
-                    <div class="mt-2 p-3 bg-green-100 border border-green-400 text-green-700 text-sm rounded">
+                @if (session('success'))
+                    <div class="mt-2 rounded border border-green-400 bg-green-100 p-3 text-sm text-green-700">
                         {{ session('success') }}
                     </div>
                 @endif
             </div>
-            
+
             <div class="overflow-x-auto">
-                <table class="w-full border border-gray-300 rounded-lg overflow-hidden">
-                    <thead class="bg-blue-600 ">
+                <table class="w-full overflow-hidden rounded-lg border border-gray-300">
+                    <thead class="bg-blue-600">
                         <tr>
-                            <th class="px-4 py-3 text-left text-sm font-bold border-b text-white">No</th>
-                            <th class="px-4 py-3 text-left text-sm font-bold border-b text-white">Waktu Mulai</th>
-                            <th class="px-4 py-3 text-left text-sm font-bold border-b text-white">Waktu Selesai</th>
-                            <th class="px-6 py-3 text-center text-sm font-bold border-b text-white">Aksi</th>
+                            <th class="border-b px-4 py-3 text-left text-sm font-bold text-white">No</th>
+                            <th class="border-b px-4 py-3 text-left text-sm font-bold text-white">Waktu Mulai</th>
+                            <th class="border-b px-4 py-3 text-left text-sm font-bold text-white">Waktu Selesai</th>
+                            <th class="border-b px-6 py-3 text-center text-sm font-bold text-white">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($batches as $index => $batch)
-                        <tr class="border-b hover:bg-gray-50" wire:key="batch-{{ $batch->id_batch }}">
-                            <td class="px-4 py-3 whitespace-nowrap">{{ $index + 1 }}</td>
-                            <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($batch->waktu_mulai)->translatedFormat('d F Y, H:i') }}</td>
-                            <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($batch->waktu_selesai)->translatedFormat('d F Y, H:i') }}</td>
-                            <td class="px-6 py-3 text-center flex justify-center items-center gap-4">
-                                <a href="{{ route('procurement-tambah_barang', ['batch_id' => $batch->id_batch]) }}"
-                                    class="flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white text-[13px] font-bold rounded-md hover:bg-blue-700 transition shadow-sm" wire:navigate>
-                                    <i class="fa-solid fa-arrow-up-right-from-square text-[12px]"></i>
-                                    Buka
-                                </a>
-                                <!-- Delete Button -->
-                                <button type="button" wire:click="deleteBatch('{{ $batch->id_batch }}')" wire:confirm="Hapus batch ini secara permanen?" class="text-red-600 hover:text-red-800 transition-transform hover:scale-110">
-                                    <i class="fa-regular fa-trash-can text-[22px]"></i>
-                                </button>
-                            </td>
-                        </tr>
+                            <tr class="border-b hover:bg-gray-50" wire:key="batch-{{ $batch->id_batch }}">
+                                <td class="whitespace-nowrap px-4 py-3">{{ $index + 1 }}</td>
+                                <td class="whitespace-nowrap px-4 py-3">
+                                    {{ \Carbon\Carbon::parse($batch->waktu_mulai)->translatedFormat('d F Y, H:i') }}
+                                </td>
+                                <td class="whitespace-nowrap px-4 py-3">
+                                    {{ \Carbon\Carbon::parse($batch->waktu_selesai)->translatedFormat('d F Y, H:i') }}
+                                </td>
+                                <td class="flex items-center justify-center gap-4 px-6 py-3 text-center">
+                                    <a href="{{ route('procurement-tambah_barang', ['batch_id' => $batch->id_batch]) }}"
+                                        class="flex items-center gap-1.5 rounded-md bg-blue-600 px-4 py-2 text-[13px] font-bold text-white shadow-sm transition hover:bg-blue-700"
+                                        wire:navigate>
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-[12px]"></i>
+                                        Buka
+                                    </a>
+                                    <!-- Delete Button -->
+                                    <button type="button" wire:click="deleteBatch('{{ $batch->id_batch }}')"
+                                        wire:confirm="Hapus batch ini secara permanen?"
+                                        class="text-red-600 transition-transform hover:scale-110 hover:text-red-800">
+                                        <i class="fa-regular fa-trash-can text-[22px]"></i>
+                                    </button>
+                                </td>
+                            </tr>
                         @empty
-                        <tr>
-                            <td colspan="4" class="px-4 py-6 text-center text-gray-500">
-                                Belum ada batch.
-                            </td>
-                        </tr>
+                            <tr>
+                                <td colspan="4" class="px-4 py-6 text-center text-gray-500">
+                                    Belum ada batch.
+                                </td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -119,133 +106,170 @@
     </div>
 
     <!-- Modal Tambah Batch -->
-    @if($showModal)
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 transition-all duration-300 backdrop-blur-sm">
-        <div class="animate-modal-slide-up bg-brand-bg rounded-lg shadow-xl w-full max-w-[600px] overflow-hidden border border-gray-400">
-            <!-- Modal Header -->
-            <div class="bg-white px-6 py-4 flex justify-between items-start">
-                <div>
-                    <h2 class="text-[17px] font-bold text-black leading-tight">Batch Deadline</h2>
-                    <p class="text-[13px] text-gray-700 mt-1">Atur tenggat waktu batch pada halaman ini</p>
+    @if ($showModal)
+        <div
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 backdrop-blur-sm transition-all duration-300">
+            <div
+                class="animate-modal-slide-up bg-brand-bg w-full max-w-[600px] overflow-hidden rounded-lg border border-gray-400 shadow-xl">
+                <!-- Modal Header -->
+                <div class="flex items-start justify-between bg-white px-6 py-4">
+                    <div>
+                        <h2 class="text-[17px] font-bold leading-tight text-black">Batch Deadline</h2>
+                        <p class="mt-1 text-[13px] text-gray-700">Atur tenggat waktu batch pada halaman ini</p>
+                    </div>
+                    <button wire:click="$set('showModal', false)"
+                        class="mt-0.5 flex h-8 w-8 items-center justify-center rounded bg-[#ff4a4a] text-white shadow-sm transition hover:bg-red-600">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
                 </div>
-                <button wire:click="$set('showModal', false)"
-                    class="w-8 h-8 bg-[#ff4a4a] text-white rounded flex items-center justify-center hover:bg-red-600 transition shadow-sm mt-0.5">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
+
+                <!-- Modal Body -->
+                <form wire:submit="store" class="border-t border-gray-400 bg-white p-6 pb-8">
+                    <!-- Badge -->
+                    <div class="mb-5">
+                        <span
+                            class="inline-block rounded border border-black bg-white px-4 py-1.5 text-[15px] font-bold leading-none text-black">
+                            Batch Baru
+                        </span>
+                    </div>
+
+                    <!-- Time Input Card 2 (Dates) -->
+                    <div
+                        class="mb-4 flex w-full flex-col rounded border border-[#4142cf] bg-[#4142cf] shadow-sm md:flex-row">
+                        <!-- Icon Side -->
+                        <div
+                            class="relative flex h-full min-h-[80px] w-[80px] flex-shrink-0 items-center justify-center border-r border-[#696ce6]">
+                            <i class="fa-regular fa-calendar text-[32px] font-light text-white"></i>
+                            <i
+                                class="fa-solid fa-clock absolute bottom-[22px] right-[20px] rounded-full border border-[#4142cf] bg-[#4142cf] text-[12px] text-white"></i>
+                        </div>
+                        <!-- Input Side -->
+                        <div class="flex-1 p-4 px-5">
+                            <div class="flex flex-col gap-4 sm:flex-row">
+                                <div class="flex-1">
+                                    <label class="mb-1.5 block text-[13px] text-white">Start Date</label>
+                                    <input type="date" wire:model="start_date" required
+                                        class="h-[34px] w-full rounded-md bg-white px-3 py-1.5 text-[13px] text-black shadow-sm outline-none">
+                                    @error('start_date')
+                                        <span class="text-[10px] text-red-300">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="flex-1">
+                                    <label class="mb-1.5 block text-[13px] text-white">End Date</label>
+                                    <input type="date" wire:model="end_date" required
+                                        class="h-[34px] w-full rounded-md bg-white px-3 py-1.5 text-[13px] text-black shadow-sm outline-none">
+                                    @error('end_date')
+                                        <span class="text-[10px] text-red-300">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Time Input Card 1 (Times) -->
+                    <div
+                        class="mb-6 flex w-full flex-col rounded border border-[#4142cf] bg-[#4142cf] shadow-sm md:flex-row">
+                        <!-- Icon Side -->
+                        <div
+                            class="relative flex h-full min-h-[80px] w-[80px] flex-shrink-0 items-center justify-center border-r border-[#696ce6]">
+                            <i class="fa-regular fa-clock text-[32px] font-light text-white"></i>
+                            <i
+                                class="fa-solid fa-clock absolute bottom-[22px] right-[20px] rounded-full border border-[#4142cf] bg-[#4142cf] text-[12px] text-white"></i>
+                        </div>
+                        <!-- Input Side -->
+                        <div class="flex-1 p-4 px-5">
+                            <div class="flex flex-col gap-4 sm:flex-row">
+                                <div class="flex-1">
+                                    <label class="mb-1.5 block text-[13px] text-white">Start Time</label>
+                                    <input type="time" wire:model="start_time" required
+                                        class="h-[34px] w-full rounded-md bg-white px-3 py-1.5 text-black shadow-sm outline-none">
+                                    @error('start_time')
+                                        <span class="text-[10px] text-red-300">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="flex-1">
+                                    <label class="mb-1.5 block text-[13px] text-white">End Time</label>
+                                    <input type="time" wire:model="end_time" required
+                                        class="h-[34px] w-full rounded-md bg-white px-3 py-1.5 text-black shadow-sm outline-none">
+                                    @error('end_time')
+                                        <span class="text-[10px] text-red-300">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                        class="relative w-full rounded bg-[#1e40ff] py-2.5 text-[15px] font-normal text-white shadow transition hover:bg-blue-700">
+                        <span wire:loading.remove wire:target="store">Simpan</span>
+                        <span wire:loading wire:target="store">Menyimpan...</span>
+                    </button>
+                </form>
             </div>
-
-            <!-- Modal Body -->
-            <form wire:submit="store" class="p-6 pb-8 border-t border-gray-400 bg-white">
-                <!-- Badge -->
-                <div class="mb-5">
-                    <span class="inline-block px-4 py-1.5 bg-white border border-black rounded text-[15px] font-bold text-black leading-none">
-                        Batch Baru
-                    </span>
-                </div>
-
-                <!-- Time Input Card 2 (Dates) -->
-                <div class="bg-[#4142cf] rounded flex flex-col md:flex-row mb-4 shadow-sm w-full border border-[#4142cf]">
-                    <!-- Icon Side -->
-                    <div class="w-[80px] h-full min-h-[80px] flex items-center justify-center border-r border-[#696ce6] flex-shrink-0 relative">
-                        <i class="fa-regular fa-calendar text-white text-[32px] font-light"></i>
-                        <i class="fa-solid fa-clock text-white text-[12px] bg-[#4142cf] rounded-full absolute bottom-[22px] right-[20px] border border-[#4142cf]"></i>
-                    </div>
-                    <!-- Input Side -->
-                    <div class="flex-1 p-4 px-5">
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <div class="flex-1">
-                                <label class="block text-white text-[13px] mb-1.5">Start Date</label>
-                                <input type="date" wire:model="start_date" required class="w-full bg-white rounded-md px-3 py-1.5 text-black outline-none h-[34px] shadow-sm text-[13px]">
-                                @error('start_date') <span class="text-red-300 text-[10px]">{{ $message }}</span> @enderror
-                            </div>
-                            <div class="flex-1">
-                                <label class="block text-white text-[13px] mb-1.5">End Date</label>
-                                <input type="date" wire:model="end_date" required class="w-full bg-white rounded-md px-3 py-1.5 text-black outline-none h-[34px] shadow-sm text-[13px]">
-                                @error('end_date') <span class="text-red-300 text-[10px]">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Time Input Card 1 (Times) -->
-                <div class="bg-[#4142cf] rounded flex flex-col md:flex-row mb-6 shadow-sm w-full border border-[#4142cf]">
-                    <!-- Icon Side -->
-                    <div class="w-[80px] h-full min-h-[80px] flex items-center justify-center border-r border-[#696ce6] flex-shrink-0 relative">
-                        <i class="fa-regular fa-clock text-white text-[32px] font-light"></i>
-                        <i class="fa-solid fa-clock text-white text-[12px] bg-[#4142cf] rounded-full absolute bottom-[22px] right-[20px] border border-[#4142cf]"></i>
-                    </div>
-                    <!-- Input Side -->
-                    <div class="flex-1 p-4 px-5">
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <div class="flex-1">
-                                <label class="block text-white text-[13px] mb-1.5">Start Time</label>
-                                <input type="time" wire:model="start_time" required class="w-full bg-white rounded-md px-3 py-1.5 text-black outline-none h-[34px] shadow-sm">
-                                @error('start_time') <span class="text-red-300 text-[10px]">{{ $message }}</span> @enderror
-                            </div>
-                            <div class="flex-1">
-                                <label class="block text-white text-[13px] mb-1.5">End Time</label>
-                                <input type="time" wire:model="end_time" required class="w-full bg-white rounded-md px-3 py-1.5 text-black outline-none h-[34px] shadow-sm">
-                                @error('end_time') <span class="text-red-300 text-[10px]">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="w-full bg-[#1e40ff] hover:bg-blue-700 text-white font-normal text-[15px] py-2.5 rounded shadow transition relative">
-                    <span wire:loading.remove wire:target="store">Simpan</span>
-                    <span wire:loading wire:target="store">Menyimpan...</span>
-                </button>
-            </form>
         </div>
-    </div>
     @endif
     <!-- Success Modal -->
-    @if($showSuccessModal)
-    <div x-data="{
+    @if ($showSuccessModal)
+        <div x-data="{
             init() {
                 setTimeout(() => {
                     $wire.set('showSuccessModal', false);
                 }, 2500);
             }
-         }"
-         class="fixed inset-0 z-[100] bg-black bg-opacity-50 flex items-center justify-center p-4 transition-all duration-300 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center border border-gray-200 flex flex-col items-center gap-5 animate-modal-slide-up">
-            
-            <div class="flex items-center justify-center">
-                <div class="relative w-20 h-20">
-                    <div class="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-25"></div>
-                    <div class="relative w-20 h-20 bg-green-50 rounded-full flex items-center justify-center border-4 border-green-500 animate-circle">
-                        <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" stroke-width="4" viewBox="0 0 24 24">
-                            <path class="animate-check" stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" style="stroke-dasharray: 50; stroke-dashoffset: 50; animation: checkmark 0.8s ease-in-out 0.3s forwards;"></path>
-                        </svg>
+        }"
+            class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 p-4 backdrop-blur-sm transition-all duration-300">
+            <div
+                class="animate-modal-slide-up flex w-full max-w-sm flex-col items-center gap-5 rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-2xl">
+
+                <div class="flex items-center justify-center">
+                    <div class="relative h-20 w-20">
+                        <div class="absolute inset-0 animate-ping rounded-full bg-green-100 opacity-25"></div>
+                        <div
+                            class="animate-circle relative flex h-20 w-20 items-center justify-center rounded-full border-4 border-green-500 bg-green-50">
+                            <svg class="h-12 w-12 text-green-500" fill="none" stroke="currentColor"
+                                stroke-width="4" viewBox="0 0 24 24">
+                                <path class="animate-check" stroke-linecap="round" stroke-linejoin="round"
+                                    d="M5 13l4 4L19 7"
+                                    style="stroke-dasharray: 50; stroke-dashoffset: 50; animation: checkmark 0.8s ease-in-out 0.3s forwards;">
+                                </path>
+                            </svg>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div>
-                <h3 class="text-xl font-bold text-gray-900">Berhasil!</h3>
-                <p class="text-gray-500 text-sm mt-2 font-medium">{{ $successMessage }}</p>
-            </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900">Berhasil!</h3>
+                    <p class="mt-2 text-sm font-medium text-gray-500">{{ $successMessage }}</p>
+                </div>
 
-            <!-- OK Button -->
-            <button wire:click="$set('showSuccessModal', false)"
-                class="w-full bg-[#1e40ff] hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl transition duration-200 shadow-lg active:scale-95">
-                OK
-            </button>
+                <!-- OK Button -->
+                <button wire:click="$set('showSuccessModal', false)"
+                    class="w-full rounded-xl bg-[#1e40ff] py-2.5 font-bold text-white shadow-lg transition duration-200 hover:bg-blue-700 active:scale-95">
+                    OK
+                </button>
+            </div>
         </div>
-    </div>
-    <style>
-    @keyframes checkmark {
-        to { stroke-dashoffset: 0; }
-    }
-    @keyframes scaleCircle {
-        0% { transform: scale(0); }
-        100% { transform: scale(1); }
-    }
-    .animate-circle {
-        animation: scaleCircle 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-    </style>
+        <style>
+            @keyframes checkmark {
+                to {
+                    stroke-dashoffset: 0;
+                }
+            }
+
+            @keyframes scaleCircle {
+                0% {
+                    transform: scale(0);
+                }
+
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            .animate-circle {
+                animation: scaleCircle 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            }
+        </style>
     @endif
 </main>

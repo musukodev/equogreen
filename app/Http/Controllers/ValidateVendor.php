@@ -33,8 +33,8 @@ class ValidateVendor extends Controller
 
 
             ]);
+            Mail::to($vendor->email_perusahaan)->send(new VendorApprovedMail($vendor, $temporaryPassword));
         }
-        Mail::to($vendor->email)->send(new VendorApprovedMail($vendor, $temporaryPassword));
         return redirect()
             ->route('procurement-validasi-vendor')
             ->with('success', 'Vendor berhasil divalidasi dan akun berhasil dibuat.');

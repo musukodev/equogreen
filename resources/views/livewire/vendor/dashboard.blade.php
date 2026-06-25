@@ -1,238 +1,243 @@
-<div class="flex-1 flex flex-col h-screen overflow-y-auto w-full">
-    <!-- Main Workspace Padding Wrapper -->
-    <main class="flex-1 flex flex-col min-w-0 p-4 md:p-6 lg:p-8 pt-0 gap-2 mt-6">
+<main class="flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-auto p-6 lg:p-8">
 
-        <!-- Top Header (If not provided by layout) -->
-        <header class="flex items-center justify-between mb-6">
-            <div class="flex items-center gap-4">
-                <!-- Mobile Hamburger -->
-                <button onclick="toggleSidebar()"
-                    class="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm flex-shrink-0 group">
-                    <img src="/gambar/garis3.png" alt="Menu" class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
-                </button>
-                <div>
-                    <h1 class="text-2xl md:text-[36px] font-bold text-[#111827]">Dashboard</h1>
-                    <p class="text-gray-400 md:text-gray-500 text-xs md:text-base mt-0.5 md:mt-1">Akses semua quotation
-                        Anda dalam satu tempat</p>
-                </div>
+    <!-- Top Header (If not provided by layout) -->
+    <header class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <!-- Mobile Hamburger -->
+            <button onclick="toggleSidebar()"
+                class="hover:bg-primary hover:border-primary group flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white lg:hidden">
+                <img src="/gambar/garis3.png" alt="Menu"
+                    class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
+            </button>
+            <div>
+                <h1 class="text-2xl font-bold text-[#111827] md:text-[36px]">Dashboard</h1>
+                <p class="mt-0.5 text-xs text-gray-400 md:mt-1 md:text-base md:text-gray-500">Akses semua quotation
+                    Anda dalam satu tempat</p>
             </div>
+        </div>
 
-            <!-- Profile Section -->
-            <div class="flex items-center gap-3" x-data="{ openNotifications: false }">
-                <!-- Notification Bell -->
-                <div class="relative">
-                    <button @click="openNotifications = !openNotifications"
-                        class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:bg-primary hover:border-primary transition-all duration-200 group">
-                        <img src="/gambar/bell-black.png" alt="Notifikasi"
-                            class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
-                        @if(count($notifications) > 0)
-                            <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-extrabold flex items-center justify-center rounded-full animate-pulse">
-                                {{ count($notifications) }}
-                            </span>
-                        @endif
-                    </button>
+        <!-- Profile Section -->
+        <div class="flex items-center gap-3" x-data="{ openNotifications: false }">
+            <!-- Notification Bell -->
+            <div class="relative">
+                <button @click="openNotifications = !openNotifications"
+                    class="hover:bg-primary hover:border-primary group flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] transition-all duration-200">
+                    <img src="/gambar/bell-black.png" alt="Notifikasi"
+                        class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
+                    @if (count($notifications) > 0)
+                        <span
+                            class="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-500 text-[10px] font-extrabold text-white">
+                            {{ count($notifications) }}
+                        </span>
+                    @endif
+                </button>
 
-                    <!-- Dropdown List Notifikasi -->
-                    <div x-show="openNotifications" 
-                         @click.away="openNotifications = false"
-                         x-transition:enter="transition ease-out duration-100"
-                         x-transition:enter-start="transform opacity-0 scale-95"
-                         x-transition:enter-end="transform opacity-100 scale-100"
-                         x-transition:leave="transition ease-in duration-75"
-                         x-transition:leave-start="transform opacity-100 scale-100"
-                         x-transition:leave-end="transform opacity-0 scale-95"
-                         class="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-2xl shadow-xl p-4 z-50 flex flex-col gap-3"
-                         style="display: none;" x-cloak>
-                        <h4 class="font-bold text-gray-800 border-b pb-2 text-sm flex items-center justify-between">
-                            <span>Notifikasi</span>
-                            <span class="text-xs text-gray-400 font-normal">Terbaru</span>
-                        </h4>
-                        <div class="max-h-60 overflow-y-auto flex flex-col gap-2.5 pr-1">
-                            @forelse($notifications as $notif)
-                                <div class="p-3 rounded-xl bg-gray-50 border border-gray-100 hover:bg-gray-100 transition duration-150 flex flex-col gap-1 text-left">
-                                    <p class="text-xs text-gray-700 leading-relaxed font-medium">{{ $notif->isi }}</p>
-                                    <span class="text-[9px] text-gray-400 font-bold self-end">{{ $notif->created_at ? $notif->created_at->diffForHumans() : '-' }}</span>
-                                </div>
-                            @empty
-                                <div class="text-center py-6 flex flex-col items-center gap-2">
-                                    <i class="ph ph-bell-slash text-2xl text-gray-300"></i>
-                                    <p class="text-xs text-gray-400 font-medium">Tidak ada notifikasi baru</p>
-                                </div>
-                            @endforelse
-                        </div>
+                <!-- Dropdown List Notifikasi -->
+                <div x-show="openNotifications" @click.away="openNotifications = false"
+                    x-transition:enter="transition ease-out duration-100"
+                    x-transition:enter-start="transform opacity-0 scale-95"
+                    x-transition:enter-end="transform opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-75"
+                    x-transition:leave-start="transform opacity-100 scale-100"
+                    x-transition:leave-end="transform opacity-0 scale-95"
+                    class="absolute right-0 z-50 mt-2 flex w-80 flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-xl"
+                    style="display: none;" x-cloak>
+                    <h4 class="flex items-center justify-between border-b pb-2 text-sm font-bold text-gray-800">
+                        <span>Notifikasi</span>
+                        <span class="text-xs font-normal text-gray-400">Terbaru</span>
+                    </h4>
+                    <div class="flex max-h-60 flex-col gap-2.5 overflow-y-auto pr-1">
+                        @forelse($notifications as $notif)
+                            <div
+                                class="flex flex-col gap-1 rounded-xl border border-gray-100 bg-gray-50 p-3 text-left transition duration-150 hover:bg-gray-100">
+                                <p class="text-xs font-medium leading-relaxed text-gray-700">{{ $notif->isi }}</p>
+                                <span
+                                    class="self-end text-[9px] font-bold text-gray-400">{{ $notif->created_at ? $notif->created_at->diffForHumans() : '-' }}</span>
+                            </div>
+                        @empty
+                            <div class="flex flex-col items-center gap-2 py-6 text-center">
+                                <i class="ph ph-bell-slash text-2xl text-gray-300"></i>
+                                <p class="text-xs font-medium text-gray-400">Tidak ada notifikasi baru</p>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
+            </div>
 
-                <!-- Profile -->
-                <img src="/gambar/profileup.png" alt="Profil"
-                    class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-all duration-200 cursor-pointer" />
-                <div class="hidden md:block w-px h-10 bg-gray-200"></div>
-                <span class="hidden md:block font-medium text-gray-700 text-[17px]">{{ Auth::user()->vendor->nama_perusahaan ?? 'Vendor' }}</span>
-            </div>
-        </header>
-
-        <!-- Summary Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 mb-4 mt-0">
-            <!-- Card 1 -->
-            <div
-                class="bg-white rounded-2xl p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] flex items-center gap-4 border border-gray-100 transition-all duration-300 hover:scale-[1.01] hover:shadow-md cursor-pointer group">
-                <div
-                    class="w-[52px] h-[52px] rounded-xl bg-[#c5d5ca] flex items-center justify-center text-gray-600 transition-transform group-hover:rotate-3">
-                    <i class="fa-solid fa-file-invoice text-2xl opacity-70"></i>
-                </div>
-                <div>
-                    <h3 class="text-2xl font-extrabold text-black leading-tight mb-0.5">{{ count($batches) }}</h3>
-                    <p class="text-gray-500 font-medium text-sm">Quotation aktif</p>
-                </div>
-            </div>
-            <!-- Card 2 -->
-            <div
-                class="bg-white rounded-2xl p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] flex items-center gap-4 border border-gray-100 transition-all duration-300 hover:scale-[1.01] hover:shadow-md cursor-pointer group">
-                <div
-                    class="w-[52px] h-[52px] rounded-xl bg-[#fce5be] flex items-center justify-center transition-transform group-hover:rotate-3">
-                    <i class="fa-solid fa-hourglass-half text-2xl text-[#d97706] opacity-70"></i>
-                </div>
-                <div>
-                    <h3 class="text-2xl font-extrabold text-black leading-tight mb-0.5">0</h3>
-                    <p class="text-gray-500 font-medium text-sm">Menunggu review</p>
-                </div>
-            </div>
-            <!-- Card 3 -->
-            <div
-                class="bg-white rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)] flex items-center gap-5 border border-gray-100 transition-all duration-300 hover:scale-[1.01] hover:shadow-md cursor-pointer group">
-                <div
-                    class="w-[52px] h-[52px] rounded-xl bg-[#f6b4b4] flex items-center justify-center transition-transform group-hover:rotate-3">
-                    <i class="fa-solid fa-circle-check text-2xl text-[#dc2626] opacity-70"></i>
-                </div>
-                <div>
-                    <h3 class="text-2xl font-extrabold text-black leading-tight mb-0.5">0</h3>
-                    <p class="text-gray-500 font-medium text-sm">Selesai</p>
-                </div>
-            </div>
+            <!-- Profile -->
+            <img src="/gambar/profileup.png" alt="Profil"
+                class="hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" />
+            <div class="hidden h-10 w-px bg-gray-200 md:block"></div>
+            <span
+                class="hidden text-[17px] font-medium text-gray-700 md:block">{{ Auth::user()->vendor->nama_perusahaan ?? 'Vendor' }}</span>
         </div>
+    </header>
 
-        <!-- Pengumuman Card -->
+    <!-- Summary Cards -->
+    <div class="mb-4 mt-0 grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-3">
+        <!-- Card 1 -->
         <div
-            class="bg-[#4039c9] rounded-2xl p-6 md:p-7 lg:p-8 mb-4 text-white relative overflow-hidden shadow-lg min-h-[140px] md:min-h-[160px] flex items-center transition-all duration-300 hover:scale-[1.01] hover:shadow-xl cursor-pointer group">
-            <div class="relative z-10 w-full md:w-3/4">
-                <p
-                    class="text-[10px] md:text-[11px] font-black uppercase tracking-widest mb-2 md:mb-3 text-white/70">
-                    PENGUMUMAN</p>
-                <h2 class="text-lg md:text-2xl lg:text-[30px] font-bold mb-3 md:mb-4 leading-tight tracking-tight">
-                    Ketuk untuk melihat
-                    Pengumuman<br class="hidden sm:block">Pengadaan Barang hari ini</h2>
-                <p class="text-white/80 text-xs md:text-sm lg:text-base font-medium">Pastikan semua dokumen
-                    quotation telah
-                    dilengkapi sebelum batas waktu</p>
-            </div>
-            <!-- Decorative Circles -->
+            class="group flex cursor-pointer items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300 hover:scale-[1.01] hover:shadow-md">
             <div
-                class="hidden md:block absolute right-[-5%] top-[-10%] w-64 h-64 bg-white/5 rounded-full mix-blend-overlay">
+                class="flex h-[52px] w-[52px] items-center justify-center rounded-xl bg-[#c5d5ca] text-gray-600 transition-transform group-hover:rotate-3">
+                <i class="fa-solid fa-file-invoice text-2xl opacity-70"></i>
             </div>
-            <!-- Banner Icon Area -->
-            <div
-                class="hidden md:flex absolute right-12 lg:right-20 top-1/2 transform -translate-y-1/2 w-24 h-24 lg:w-32 lg:h-32 bg-[#2d4ddd]/65 rounded-full items-center justify-center">
-                <img src="/gambar/pengumuman.png" alt="Banner Icon" class="w-16 h-16 object-contain" />
+            <div>
+                <h3 class="mb-0.5 text-2xl font-extrabold leading-tight text-black">{{ count($batches) }}</h3>
+                <p class="text-sm font-medium text-gray-500">Quotation aktif</p>
             </div>
         </div>
-
-        <!-- Daftar Quotation Header -->
-        <div class="mb-3 mt-0">
-            <div class="inline-flex items-center gap-3 bg-[#d7dfec] px-4 py-2.5 rounded-xl shadow-sm">
-                <div class="w-8 h-8 rounded-full border-[1.5px] border-black flex items-center justify-center">
-                    <i class="fa-regular fa-file-lines text-black text-sm"></i>
-                </div>
-                <h2 class="text-lg font-bold text-black pr-2">Daftar Quotation</h2>
+        <!-- Card 2 -->
+        <div
+            class="group flex cursor-pointer items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300 hover:scale-[1.01] hover:shadow-md">
+            <div
+                class="flex h-[52px] w-[52px] items-center justify-center rounded-xl bg-[#fce5be] transition-transform group-hover:rotate-3">
+                <i class="fa-solid fa-hourglass-half text-2xl text-[#d97706] opacity-70"></i>
+            </div>
+            <div>
+                <h3 class="mb-0.5 text-2xl font-extrabold leading-tight text-black">0</h3>
+                <p class="text-sm font-medium text-gray-500">Menunggu review</p>
             </div>
         </div>
+        <!-- Card 3 -->
+        <div
+            class="group flex cursor-pointer items-center gap-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300 hover:scale-[1.01] hover:shadow-md">
+            <div
+                class="flex h-[52px] w-[52px] items-center justify-center rounded-xl bg-[#f6b4b4] transition-transform group-hover:rotate-3">
+                <i class="fa-solid fa-circle-check text-2xl text-[#dc2626] opacity-70"></i>
+            </div>
+            <div>
+                <h3 class="mb-0.5 text-2xl font-extrabold leading-tight text-black">0</h3>
+                <p class="text-sm font-medium text-gray-500">Selesai</p>
+            </div>
+        </div>
+    </div>
 
-        <!-- Quotation Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 pb-20">
-            @forelse($batches as $batch)
+    <!-- Pengumuman Card -->
+    <div
+        class="group relative mb-4 flex min-h-[140px] cursor-pointer items-center overflow-hidden rounded-2xl bg-[#4039c9] p-6 text-white shadow-lg transition-all duration-300 hover:scale-[1.01] hover:shadow-xl md:min-h-[160px] md:p-7 lg:p-8">
+        <div class="relative z-10 w-full md:w-3/4">
+            <p class="mb-2 text-[10px] font-black uppercase tracking-widest text-white/70 md:mb-3 md:text-[11px]">
+                PENGUMUMAN</p>
+            <h2 class="mb-3 text-lg font-bold leading-tight tracking-tight md:mb-4 md:text-2xl lg:text-[30px]">
+                Ketuk untuk melihat
+                Pengumuman<br class="hidden sm:block">Pengadaan Barang hari ini</h2>
+            <p class="text-xs font-medium text-white/80 md:text-sm lg:text-base">Pastikan semua dokumen
+                quotation telah
+                dilengkapi sebelum batas waktu</p>
+        </div>
+        <!-- Decorative Circles -->
+        <div
+            class="absolute right-[-5%] top-[-10%] hidden h-64 w-64 rounded-full bg-white/5 mix-blend-overlay md:block">
+        </div>
+        <!-- Banner Icon Area -->
+        <div
+            class="absolute right-12 top-1/2 hidden h-24 w-24 -translate-y-1/2 transform items-center justify-center rounded-full bg-[#2d4ddd]/65 md:flex lg:right-20 lg:h-32 lg:w-32">
+            <img src="/gambar/pengumuman.png" alt="Banner Icon" class="h-16 w-16 object-contain" />
+        </div>
+    </div>
+
+    <!-- Daftar Quotation Header -->
+    <div class="mb-3 mt-0">
+        <div class="inline-flex items-center gap-3 rounded-xl bg-[#d7dfec] px-4 py-2.5 shadow-sm">
+            <div class="flex h-8 w-8 items-center justify-center rounded-full border-[1.5px] border-black">
+                <i class="fa-regular fa-file-lines text-sm text-black"></i>
+            </div>
+            <h2 class="pr-2 text-lg font-bold text-black">Daftar Quotation</h2>
+        </div>
+    </div>
+
+    <!-- Quotation Grid -->
+    <div class="grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 md:gap-5 lg:grid-cols-3">
+        @forelse($batches as $batch)
             <!-- Quotation Item -->
             <div
-                class="bg-white rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col transition-all duration-300 ease-in-out hover:-translate-y-1 hover:scale-[1.01] hover:shadow-xl hover:border-gray-300 cursor-pointer">
+                class="flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300 ease-in-out hover:-translate-y-1 hover:scale-[1.01] hover:border-gray-300 hover:shadow-xl">
 
                 @php
-                $colors = [
-                ['bg' => '#e4e9e5', 'icon' => '#609966', 'iconClass' => 'fa-pen-nib'],
-                ['bg' => '#fbf0dc', 'icon' => '#e5b83b', 'iconClass' => 'fa-couch'],
-                ['bg' => '#fbd4d4', 'icon' => '#ce3030', 'iconClass' => 'fa-mobile-screen'],
-                ['bg' => '#e0e7ff', 'icon' => '#4338ca', 'iconClass' => 'fa-box-open']
-                ];
-                $theme = $colors[$loop->index % count($colors)];
+                    $colors = [
+                        ['bg' => '#e4e9e5', 'icon' => '#609966', 'iconClass' => 'fa-pen-nib'],
+                        ['bg' => '#fbf0dc', 'icon' => '#e5b83b', 'iconClass' => 'fa-couch'],
+                        ['bg' => '#fbd4d4', 'icon' => '#ce3030', 'iconClass' => 'fa-mobile-screen'],
+                        ['bg' => '#e0e7ff', 'icon' => '#4338ca', 'iconClass' => 'fa-box-open'],
+                    ];
+                    $theme = $colors[$loop->index % count($colors)];
                 @endphp
 
-                <div class="h-[120px] bg-[{{ $theme['bg'] }}] flex items-center justify-center relative overflow-hidden" style="background-color: {{ $theme['bg'] }};">
+                <div class="relative flex h-[120px] items-center justify-center overflow-hidden bg-[{{ $theme['bg'] }}]"
+                    style="background-color: {{ $theme['bg'] }};">
                     <i class="fa-solid {{ $theme['iconClass'] }} text-[80px]" style="color: {{ $theme['icon'] }};"></i>
                 </div>
-                <div class="p-5 flex flex-col flex-grow">
-                    <h3 class="text-[15px] font-bold text-black mb-3 leading-tight tracking-tight mt-1">
+                <div class="flex flex-grow flex-col p-5">
+                    <h3 class="mb-3 mt-1 text-[15px] font-bold leading-tight tracking-tight text-black">
                         Pengadaan Barang
                     </h3>
 
-                    <div class="bg-[#faebca] border border-[#ecd5a0] rounded-md p-2.5 mb-4 shadow-sm w-full">
-                        <p class="text-[9px] font-extrabold text-[#7a5712] mb-0.5 tracking-wider">BATAS WAKTU</p>
-                        <p class="text-xs font-bold text-[#7a5712]">{{ \Carbon\Carbon::parse($batch->waktu_selesai)->translatedFormat('d F Y, H.i') }} WIB</p>
+                    <div class="mb-4 w-full rounded-md border border-[#ecd5a0] bg-[#faebca] p-2.5 shadow-sm">
+                        <p class="mb-0.5 text-[9px] font-extrabold tracking-wider text-[#7a5712]">BATAS WAKTU</p>
+                        <p class="text-xs font-bold text-[#7a5712]">
+                            {{ \Carbon\Carbon::parse($batch->waktu_selesai)->translatedFormat('d F Y, H.i') }} WIB</p>
                     </div>
 
-                    <p id="timer_{{ $batch->id_batch }}" class="text-[#d71919] font-extrabold text-[11px] mb-5"></p>
+                    <p id="timer_{{ $batch->id_batch }}" class="mb-5 text-[11px] font-extrabold text-[#d71919]"></p>
 
-                    <a href="{{ route('vendor-buat_quotation', $batch->id_batch) }}" class="mt-auto block w-full bg-[#1e40ff] text-white text-center font-bold text-sm py-3 rounded-lg hover:bg-blue-700 transition" wire:navigate>
+                    <a href="{{ route('vendor-buat_quotation', $batch->id_batch) }}"
+                        class="mt-auto block w-full rounded-lg bg-[#1e40ff] py-3 text-center text-sm font-bold text-white transition hover:bg-blue-700"
+                        wire:navigate>
                         Buka Quotation
                     </a>
                 </div>
             </div>
-            @empty
-            <div class="col-span-full bg-white rounded-xl border border-gray-200 p-8 text-center text-gray-500 shadow-sm mt-4">
-                <i class="fa-regular fa-folder-open text-4xl mb-3 text-gray-300"></i>
+        @empty
+            <div
+                class="col-span-full mt-4 rounded-xl border border-gray-200 bg-white p-8 text-center text-gray-500 shadow-sm">
+                <i class="fa-regular fa-folder-open mb-3 text-4xl text-gray-300"></i>
                 <p>Belum ada daftar quotation (pengadaan barang) yang tertuju pada Anda.</p>
             </div>
-            @endforelse
-        </div>
+        @endforelse
+    </div>
 
-    </main>
+    @if (count($batches) > 0)
+        <script>
+            const timers = [
+                @foreach ($batches as $batch)
+                    {
+                        id: 'timer_{{ $batch->id_batch }}',
+                        deadline: '{{ \Carbon\Carbon::parse($batch->waktu_selesai)->format('Y-m-d\TH:i:s') }}'
+                    },
+                @endforeach
+            ];
 
-    @if(count($batches) > 0)
-    <script>
-        const timers = [
-            @foreach($batches as $batch) {
-                id: 'timer_{{ $batch->id_batch }}',
-                deadline: '{{ \Carbon\Carbon::parse($batch->waktu_selesai)->format("Y-m-d\TH:i:s") }}'
-            },
-            @endforeach
-        ];
+            function updateTimers() {
+                const now = new Date();
 
-        function updateTimers() {
-            const now = new Date();
+                timers.forEach(({
+                    id,
+                    deadline
+                }) => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
 
-            timers.forEach(({
-                id,
-                deadline
-            }) => {
-                const el = document.getElementById(id);
-                if (!el) return;
+                    const diff = new Date(deadline) - now;
 
-                const diff = new Date(deadline) - now;
+                    if (diff <= 0) {
+                        el.textContent = 'Waktu habis!';
+                        el.classList.remove('text-[#d71919]');
+                        el.classList.add('text-gray-400');
+                        return;
+                    }
 
-                if (diff <= 0) {
-                    el.textContent = 'Waktu habis!';
-                    el.classList.remove('text-[#d71919]');
-                    el.classList.add('text-gray-400');
-                    return;
-                }
+                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((diff % (1000 * 60)) / 1000);
 
-                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((diff % (1000 * 60)) / 1000);
+                    el.textContent = `${d}d : ${h}h : ${m}m : ${s}s`;
+                });
+            }
 
-                el.textContent = `${d}d : ${h}h : ${m}m : ${s}s`;
-            });
-        }
-
-        updateTimers();
-        setInterval(updateTimers, 1000);
-    </script>
+            updateTimers();
+            setInterval(updateTimers, 1000);
+        </script>
     @endif
-</div>
+</main>

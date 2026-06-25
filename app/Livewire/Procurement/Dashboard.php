@@ -96,12 +96,54 @@ class Dashboard extends Component
         // Reset data form
         $this->pengumuman = '';
         $this->selectedCategories = [];
-        
+
         session()->flash('success', 'Pengumuman berhasil dikirim ke ' . $vendors->count() . ' vendor terkait!');
     }
 
     public function render()
     {
-        return view('livewire.procurement.dashboard');
+        // Ambil kategori dari database secara dinamis berdasarkan kategori_vendor yang terdaftar pada vendor approved
+        $categories = Vendor::where('status', 'approved')
+            ->whereNotNull('kategori_vendor')
+            ->where('kategori_vendor', '!=', '')
+            ->distinct()
+            ->pluck('kategori_vendor')
+            ->toArray();
+
+        // Jika kosong (misal belum ada vendor yang approved), kita bisa tampilkan fallback/default
+        if (empty($categories)) {
+            $categories = [
+                'ATK',
+                'Perangkat Lunak',
+                'APD',
+                'Generator Set',
+                'Elektronik',
+                'Pantry',
+                'Kemasan',
+                'Plumbing Set',
+                'Furniture',
+                'Alat Komunikasi',
+                'Peralatan Lab',
+                'Papan Informasi',
+                'Kesehatan',
+                'Suku Cadang',
+                'Keamanan Fisik',
+                'Kendaraan Logistik',
+                'Mesin Produksi',
+                'Bahan Penolong',
+                'Pemadam Api',
+                'K. Operasional',
+                'Perangkat IT',
+                'Bahan Baku Utama',
+                'Perangkat Listrik',
+                'Seragam Karyawan'
+            ];
+        } else {
+            sort($categories);
+        }
+
+        return view('livewire.procurement.dashboard', [
+            'categories' => $categories
+        ]);
     }
 }

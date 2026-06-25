@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/tambah_barang/{batch_id}', \App\Livewire\Procurement\TambahBarang::class)->name('procurement-tambah_barang');
 
     Route::get('/validasi-vendor', [VendorController::class, 'index'])->name('procurement-validasi-vendor');
+    Route::get('/procurement/riwayat-po', \App\Livewire\Procurement\RiwayatPO::class)->name('procurement-riwayat-po');
     Route::post('/approve-vendor/{id}', [App\Http\Controllers\ValidateVendor::class, 'approveVendor'])->name('approve.vendor');
     Route::post('/reject-vendor/{id}', [App\Http\Controllers\ValidateVendor::class, 'rejectVendor'])->name('reject.vendor');
 
@@ -63,7 +64,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/vendor-riwayat', function () {
         $vendor_id = \Illuminate\Support\Facades\Auth::user()->vendor->id_vendor ?? null;
-        
+
         if (!$vendor_id) {
             return redirect()->route('vendor-dashboard')->with('error', 'Vendor tidak ditemukan.');
         }
@@ -93,7 +94,11 @@ Route::middleware('auth')->group(function () {
             $history[$groupKey]['items'][] = $q;
         }
 
-        return view('equogreen-frontend.riwayat_vendor', compact('history'));
+        $notifications = \App\Models\Pengumuman::where('id_vendor', $vendor_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('equogreen-frontend.riwayat_vendor', compact('history', 'notifications'));
     })->name('vendor-riwayat');
 
     Route::get('/fastexcel-quotation', [QuotationFastExcelController::class, 'index']);
