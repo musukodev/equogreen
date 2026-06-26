@@ -103,7 +103,7 @@
                 <a href="{{ route('procurement-validasi-vendor') }}"
                     class="{{ request()->routeIs('procurement-validasi-vendor') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
                     <img src="/gambar/validasi.png" alt="Validasi Vendor"
-                        class="h-7 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
+                        class="h-10 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
                     Validasi Vendor
                 </a>
                 <div class="my-1 border-b border-gray-100"></div>
