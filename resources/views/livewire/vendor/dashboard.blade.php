@@ -20,17 +20,17 @@
         <div class="flex items-center gap-3" x-data="{ openNotifications: false }">
             <!-- Notification Bell -->
             <div class="relative">
-                <button @click="openNotifications = !openNotifications"
-                    class="hover:bg-primary hover:border-primary group flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] transition-all duration-200">
-                    <img src="/gambar/bell-black.png" alt="Notifikasi"
-                        class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
+               
+                <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:border-primary transition-all duration-200 shadow-sm">
+                <img src="/gambar/bell-black.png" alt="Notifikasi"
+                    class="w-6 h-6 object-contain" />
                     @if (count($notifications) > 0)
                         <span
                             class="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-500 text-[10px] font-extrabold text-white">
                             {{ count($notifications) }}
                         </span>
                     @endif
-                </button>
+            </button>
 
                 <!-- Dropdown List Notifikasi -->
                 <div x-show="openNotifications" @click.away="openNotifications = false"
@@ -83,7 +83,7 @@
                 <i class="fa-solid fa-file-invoice text-2xl opacity-70"></i>
             </div>
             <div>
-                <h3 class="mb-0.5 text-2xl font-extrabold leading-tight text-black">{{ count($batches) }}</h3>
+                <h3 class="mb-0.5 text-2xl font-extrabold leading-tight text-black">{{ count($groupedPenawarans) }}</h3>
                 <p class="text-sm font-medium text-gray-500">Quotation aktif</p>
             </div>
         </div>
@@ -149,7 +149,8 @@
 
     <!-- Quotation Grid -->
     <div class="grid grid-cols-1 gap-4 pb-20 sm:grid-cols-2 md:gap-5 lg:grid-cols-3">
-        @forelse($batches as $batch)
+        @forelse($groupedPenawarans as $groupId => $items)
+            @php $batch = $items->first()->batch; @endphp
             <!-- Quotation Item -->
             <div
                 class="flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300 ease-in-out hover:-translate-y-1 hover:scale-[1.01] hover:border-gray-300 hover:shadow-xl">
@@ -179,9 +180,9 @@
                             {{ \Carbon\Carbon::parse($batch->waktu_selesai)->translatedFormat('d F Y, H.i') }} WIB</p>
                     </div>
 
-                    <p id="timer_{{ $batch->id_batch }}" class="mb-5 text-[11px] font-extrabold text-[#d71919]"></p>
+                    <p id="timer_{{ $groupId }}" class="mb-5 text-[11px] font-extrabold text-[#d71919]"></p>
 
-                    <a href="{{ route('vendor-buat_quotation', $batch->id_batch) }}"
+                    <a href="{{ route('vendor-buat_quotation', $groupId) }}"
                         class="mt-auto block w-full rounded-lg bg-[#1e40ff] py-3 text-center text-sm font-bold text-white transition hover:bg-blue-700"
                         wire:navigate>
                         Buka Quotation
@@ -197,12 +198,13 @@
         @endforelse
     </div>
 
-    @if (count($batches) > 0)
+    @if (count($groupedPenawarans) > 0)
         <script>
             const timers = [
-                @foreach ($batches as $batch)
+                @foreach ($groupedPenawarans as $groupId => $items)
+                    @php $batch = $items->first()->batch; @endphp
                     {
-                        id: 'timer_{{ $batch->id_batch }}',
+                        id: 'timer_{{ $groupId }}',
                         deadline: '{{ \Carbon\Carbon::parse($batch->waktu_selesai)->format('Y-m-d\TH:i:s') }}'
                     },
                 @endforeach

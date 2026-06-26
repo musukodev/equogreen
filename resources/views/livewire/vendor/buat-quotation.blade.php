@@ -25,11 +25,16 @@
             <!-- Profile Section -->
             <div class="flex items-center gap-3">
                 <!-- Notification Bell -->
-                <button
-                    class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:bg-primary hover:border-primary transition-all duration-200 group">
-                    <img src="/gambar/bell-black.png" alt="Notifikasi"
-                        class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
-                </button>
+                <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:border-primary transition-all duration-200 shadow-sm">
+                <img src="/gambar/bell-black.png" alt="Notifikasi"
+                    class="w-6 h-6 object-contain" />
+                    @if (count($notifications) > 0)
+                        <span
+                            class="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-500 text-[10px] font-extrabold text-white">
+                            {{ count($notifications) }}
+                        </span>
+                    @endif
+            </button>
 
                 <!-- Profile -->
                 <img src="/gambar/profileup.png" alt="Profil"
@@ -64,10 +69,10 @@
             <form action="{{ route('fastexcel.import') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-xl border border-gray-400 p-6 shadow-sm flex flex-col transition-all duration-300 hover:scale-[1.005] hover:shadow-md mb-8 mt-6">
                 @csrf
                 <input type="hidden" name="id_vendor" value="{{ Auth::user()->vendor->id_vendor }}">
-                @if($batch->penawaran->isNotEmpty())
+                @if($penawarans->isNotEmpty())
                 <input type="hidden"
                     name="id_penawaran"
-                    value="{{ $batch->penawaran->first()->id_penawaran }}">
+                    value="{{ $penawarans->first()->id_penawaran }}">
                 @endif
                 
 
@@ -100,7 +105,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($batch->penawaran as $item)
+                            @forelse($penawarans as $item)
                             <tr>
                                 <td class="border border-gray-400 px-4 py-2 text-sm text-gray-800">{{ $item->nama_barang }}</td>
                                 <td class="border border-gray-400 px-4 py-2 text-sm text-gray-800">{{ $item->spesifikasi }}</td>

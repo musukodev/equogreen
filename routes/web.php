@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/batch_barang', \App\Livewire\Procurement\BatchBarang::class)->name('procurement-batch_barang');
 
-    Route::get('/buat_quotation/{id_batch}', \App\Livewire\Vendor\BuatQuotation::class)
+    Route::get('/buat_quotation/{group_id}', \App\Livewire\Vendor\BuatQuotation::class)
         ->name('vendor-buat_quotation');
 
     Route::get('/po-document/{id_vendor}/{id_penawaran}', [App\Http\Controllers\POController::class, 'show'])->name('po.show');

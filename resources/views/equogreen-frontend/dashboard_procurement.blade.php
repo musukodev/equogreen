@@ -134,11 +134,10 @@
         <!-- Profile Section -->
         <div class="flex items-center gap-3">
           <!-- Notification Bell -->
-          <button
-            class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:bg-primary hover:border-primary transition-all duration-200 group">
-            <img src="/gambar/bell-black.png" alt="Notifikasi"
-              class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
-          </button>
+          <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:border-primary transition-all duration-200 shadow-sm">
+                <img src="/gambar/bell-black.png" alt="Notifikasi"
+                    class="w-6 h-6 object-contain" />
+            </button>
 
           <!-- Profile -->
 

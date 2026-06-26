@@ -12,19 +12,19 @@ use Livewire\Attributes\Title;
 #[Title('Buat Quotation - Equogreen')]
 class BuatQuotation extends Component
 {
-    public $id_batch;
+    public $group_id;
     public $isEditing = false;
 
-    public function mount($id_batch)
+    public function mount($group_id)
 {
-    $this->id_batch = $id_batch;
+    $this->group_id = $group_id;
 }
     public function deleteQuotation()
     {
         $vendor_id = Auth::user()->vendor->id_vendor;
-        $batch = Batch::where('id_batch', $this->id_batch)->with('penawaran')->firstOrFail();
-        if ($batch->penawaran->isNotEmpty()) {
-            $idPenawaran = $batch->penawaran->first()->id_penawaran;
+        $penawarans = \App\Models\Penawaran::where('group_id', $this->group_id)->get();
+        if ($penawarans->isNotEmpty()) {
+            $idPenawaran = $penawarans->first()->id_penawaran;
             \App\Models\Quotation::where('id_vendor', $vendor_id)
                 ->where('id_penawaran', $idPenawaran)
                 ->delete();
@@ -40,25 +40,23 @@ class BuatQuotation extends Component
     {
         $vendor_id = Auth::user()->vendor->id_vendor;
 
-        $batch = Batch::where('id_batch', $this->id_batch)
-            ->whereHas('penawaran.penawaranVendors', function ($q) use ($vendor_id) {
+        $penawarans = \App\Models\Penawaran::where('group_id', $this->group_id)
+            ->whereHas('penawaranVendors', function ($q) use ($vendor_id) {
                 $q->where('id_vendor', $vendor_id);
             })
-            ->with([
-                'penawaran' => function ($q) use ($vendor_id) {
-                    $q->whereHas('penawaranVendors', function ($q2) use ($vendor_id) {
-                        $q2->where('id_vendor', $vendor_id);
-                    });
-                }
-            ])
-            ->firstOrFail();
+            ->with('batch')
+            ->get();
+            
+        abort_if($penawarans->isEmpty(), 404);
+        
+        $batch = $penawarans->first()->batch;
 
         $hasUploaded = false;
         $uploadedFileName = null;
         $lastModified = null;
 
-        if ($batch->penawaran->isNotEmpty()) {
-            $idPenawaran = $batch->penawaran->first()->id_penawaran;
+        if ($penawarans->isNotEmpty()) {
+            $idPenawaran = $penawarans->first()->id_penawaran;
             $hasUploaded = \App\Models\Quotation::where('id_vendor', $vendor_id)
                 ->where('id_penawaran', $idPenawaran)
                 ->exists();
@@ -74,11 +72,20 @@ class BuatQuotation extends Component
             }
         }
 
+        $notifications = [];
+        if ($vendor_id) {
+            $notifications = \App\Models\Pengumuman::where('id_vendor', $vendor_id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+
         return view('livewire.vendor.buat-quotation', [
             'batch' => $batch,
+            'penawarans' => $penawarans,
             'hasUploaded' => $hasUploaded,
             'uploadedFileName' => $uploadedFileName,
-            'lastModified' => $lastModified
+            'lastModified' => $lastModified,
+            'notifications' => $notifications
         ]);
     }
 }

@@ -115,17 +115,16 @@
             <div class="flex items-center gap-3" x-data="{ openNotifications: false }">
                 <!-- Notification Bell -->
                 <div class="relative">
-                    <button @click="openNotifications = !openNotifications"
-                        class="hover:bg-primary hover:border-primary group flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] transition-all duration-200">
-                        <img src="/gambar/bell-black.png" alt="Notifikasi"
-                            class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
-                        @if (count($notifications) > 0)
-                            <span
-                                class="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-500 text-[10px] font-extrabold text-white">
-                                {{ count($notifications) }}
-                            </span>
-                        @endif
-                    </button>
+                    <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:border-primary transition-all duration-200 shadow-sm">
+                <img src="/gambar/bell-black.png" alt="Notifikasi"
+                    class="w-6 h-6 object-contain" />
+                    @if (count($notifications) > 0)
+                        <span
+                            class="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-500 text-[10px] font-extrabold text-white">
+                            {{ count($notifications) }}
+                        </span>
+                    @endif
+            </button>
 
                     <!-- Dropdown List Notifikasi -->
                     <div x-show="openNotifications" @click.away="openNotifications = false"

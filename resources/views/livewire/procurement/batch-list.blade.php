@@ -15,8 +15,9 @@
 
         <!-- Profile Section -->
         <div class="flex items-center gap-3">
-            <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:bg-primary hover:border-primary transition-all duration-200 group">
-                <img src="/gambar/bell-black.png" alt="Notifikasi" class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
+            <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:border-primary transition-all duration-200 shadow-sm">
+                <img src="/gambar/bell-black.png" alt="Notifikasi"
+                    class="w-6 h-6 object-contain" />
             </button>
             <a href="{{ route('profile_procurement') }}"> <img src="/gambar/profileup.png" alt="Profil" class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-all duration-200 cursor-pointer" /></a>
             <div class="hidden md:block w-px h-10 bg-gray-200"></div>

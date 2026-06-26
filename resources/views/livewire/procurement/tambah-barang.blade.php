@@ -25,11 +25,10 @@
 
             <!-- Right: Profile Section -->
             <div class="flex items-center gap-3">
-                <button
-                    class="hover:bg-primary hover:border-primary group flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] transition-all duration-200">
-                    <img src="/gambar/bell-black.png" alt="Notifikasi"
-                        class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
-                </button>
+                <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:border-primary transition-all duration-200 shadow-sm">
+                <img src="/gambar/bell-black.png" alt="Notifikasi"
+                    class="w-6 h-6 object-contain" />
+            </button>
                 <img src="/gambar/profileup.png" alt="Profil"
                     class="hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" />
                 <div class="hidden h-10 w-px bg-gray-200 md:block"></div>

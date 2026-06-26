@@ -17,10 +17,10 @@ class Dashboard extends Component
     {
         $vendor_id = Auth::user()->id_vendor;
 
-        // Fetch batches that have penawaran assigned to this vendor
-        $batches = Batch::whereHas('penawaran.penawaranVendors', function($q) use ($vendor_id) {
+        // Fetch penawaran that are assigned to this vendor, grouped by group_id
+        $groupedPenawarans = \App\Models\Penawaran::whereHas('penawaranVendors', function($q) use ($vendor_id) {
             $q->where('id_vendor', $vendor_id);
-        })->get();
+        })->with('batch')->get()->groupBy('group_id');
 
         // Ambil data pengumuman/notifikasi untuk vendor ini
         $notifications = [];
@@ -31,7 +31,7 @@ class Dashboard extends Component
         }
 
         return view('livewire.vendor.dashboard', [
-            'batches' => $batches,
+            'groupedPenawarans' => $groupedPenawarans,
             'notifications' => $notifications
         ]);
     }
