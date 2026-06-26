@@ -1,98 +1,3 @@
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Vendor - Equogreen</title>
-    <!-- Using Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#4039c9',
-                        accent: '#002eff',
-                        brand: {
-                            bg: '#f1f5fa',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    keyframes: {
-                        modalSlideUp: {
-                            'from': {
-                                opacity: '0',
-                                transform: 'translateY(24px) scale(0.96)'
-                            },
-                            'to': {
-                                opacity: '1',
-                                transform: 'translateY(0) scale(1)'
-                            },
-                        }
-                    },
-                    animation: {
-                        'modal-slide-up': 'modalSlideUp 0.25s ease-out',
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <style>
-        [x-cloak] {
-            display: none !important;
-        }
-    </style>
-</head>
-
-<body class="bg-brand-bg flex h-screen overflow-hidden font-sans text-gray-800 antialiased">
-
-    <!-- ===== SIDEBAR ===== -->
-    <!-- Sidebar Overlay -->
-    <div id="sidebarOverlay" class="fixed inset-0 z-40 hidden bg-black/50 lg:hidden" onclick="toggleSidebar()"></div>
-    <aside id="sidebar"
-        class="fixed inset-y-0 left-0 z-50 flex min-h-screen w-[280px] flex-shrink-0 -translate-x-full transform flex-col bg-white shadow-md transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0">
-        <!-- Logo -->
-        <div class="flex items-center gap-3 border-b border-gray-100 px-6 pb-6 pt-8">
-            <img src="/gambar/logo.png" alt="Logo Equogreen" class="h-14 w-14 rounded-full object-cover" />
-            <span class="text-2xl font-bold text-gray-800">Equogreen</span>
-        </div>
-
-        <nav class="flex flex-1 flex-col gap-1 px-4 py-6">
-            <a href="{{ route('vendor-dashboard') }}"
-                class="hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold text-gray-600 transition-all duration-200 hover:text-white">
-                <img src="/gambar/dashboard-layout.png" alt="Dashboard"
-                    class="h-7 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
-                Dashboard
-            </a>
-            <div class="my-1 border-b border-gray-100"></div>
-            <a href="{{ route('vendor-riwayat') }}"
-                class="text-primary hover:bg-primary group flex items-center gap-3 rounded-xl bg-[#eef3ff] px-4 py-3 text-[17px] font-bold text-gray-700 transition-all duration-200 hover:text-white">
-                <img src="/gambar/riwayat.png" alt="Riwayat"
-                    class="h-7 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
-                Riwayat
-            </a>
-            <div class="my-1 border-b border-gray-100"></div>
-
-        </nav>
-
-        <!-- Logout -->
-        <div class="border-t border-gray-100 px-4 pb-8 pt-4">
-            <a href="#"
-                class="group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold text-red-500 transition-all duration-200 hover:bg-red-50">
-                <img src="/gambar/logout.png" alt="Logout" class="h-7 w-7 object-contain" />
-                Logout
-            </a>
-        </div>
-    </aside>
-
-    <!-- ===== MAIN CONTENT ===== -->
     <main class="flex min-w-0 flex-1 flex-col gap-6 overflow-y-auto p-4 md:p-6 lg:p-8">
 
         <!-- Top Header -->
@@ -115,16 +20,16 @@
             <div class="flex items-center gap-3" x-data="{ openNotifications: false }">
                 <!-- Notification Bell -->
                 <div class="relative">
-                    <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:border-primary transition-all duration-200 shadow-sm">
-                <img src="/gambar/bell-black.png" alt="Notifikasi"
-                    class="w-6 h-6 object-contain" />
-                    @if (count($notifications) > 0)
-                        <span
-                            class="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-500 text-[10px] font-extrabold text-white">
-                            {{ count($notifications) }}
-                        </span>
-                    @endif
-            </button>
+                    <button
+                        class="hover:border-primary flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] shadow-sm transition-all duration-200">
+                        <img src="/gambar/bell-black.png" alt="Notifikasi" class="h-6 w-6 object-contain" />
+                        @if (count($notifications) > 0)
+                            <span
+                                class="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-500 text-[10px] font-extrabold text-white">
+                                {{ count($notifications) }}
+                            </span>
+                        @endif
+                    </button>
 
                     <!-- Dropdown List Notifikasi -->
                     <div x-show="openNotifications" @click.away="openNotifications = false"
@@ -346,6 +251,3 @@
             </div>
         </div>
     @endforeach
-</body>
-
-</html>

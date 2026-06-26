@@ -29,9 +29,9 @@
                     </button>
                     <!-- Back Button -->
                     <a href="{{ url()->previous() }}"
-                        class="hover:bg-primary hover:border-primary flex h-10 w-10 items-center justify-center rounded-full border border-black bg-white text-black shadow-sm transition-all duration-200 hover:text-white"
+                        class="hover:bg-primary hover:border-primary flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white"
                         wire:navigate>
-                        <i class="ph ph-arrow-left text-xl"></i>
+                        <img src="/gambar/back-arrow.png" alt="Back" class="h-6 w-6 object-contain brightness-0" />
                     </a>
                     <h1 class="text-2xl font-bold leading-none text-[#111827] md:text-[32px]">Batch
                         {{ $batch->id_batch }}</h1>
@@ -40,10 +40,10 @@
 
             <!-- Right: Profile Section (Mobile Only) -->
             <div class="flex items-center gap-3 md:hidden">
-                <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:border-primary transition-all duration-200 shadow-sm">
-                <img src="/gambar/bell-black.png" alt="Notifikasi"
-                    class="w-6 h-6 object-contain" />
-            </button>
+                <button
+                    class="hover:border-primary flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] shadow-sm transition-all duration-200">
+                    <img src="/gambar/bell-black.png" alt="Notifikasi" class="h-6 w-6 object-contain" />
+                </button>
                 <img src="/gambar/profileup.png" alt="Profil"
                     class="h-10 w-10 rounded-full border border-gray-200 object-cover" />
             </div>
@@ -51,9 +51,9 @@
 
         <!-- Right: Profile Section (Desktop Only) -->
         <div class="hidden items-center gap-3 md:flex">
-            <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:border-primary transition-all duration-200 shadow-sm">
-                <img src="/gambar/bell-black.png" alt="Notifikasi"
-                    class="w-6 h-6 object-contain" />
+            <button
+                class="hover:border-primary flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] shadow-sm transition-all duration-200">
+                <img src="/gambar/bell-black.png" alt="Notifikasi" class="h-6 w-6 object-contain" />
             </button>
             <img src="/gambar/profileup.png" alt="Profil"
                 class="hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" />

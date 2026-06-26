@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
 
 
 
-    Route::get('/notifikasi', [App\Http\Controllers\NotifikasiController::class, 'index'])->name('procurement-notifikasi');
+    Route::get('/notifikasi', \App\Livewire\Procurement\Notifikasi::class)->name('procurement-notifikasi');
 
     Route::get('/vendor-profile', function () {
         return view('equogreen-frontend.profile_vendor');
@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/tambah_barang/{batch_id}', \App\Livewire\Procurement\TambahBarang::class)->name('procurement-tambah_barang');
 
-    Route::get('/validasi-vendor', [VendorController::class, 'index'])->name('procurement-validasi-vendor');
+    Route::get('/validasi-vendor', \App\Livewire\Procurement\VendorController::class)->name('procurement-validasi-vendor');
     Route::get('/procurement/riwayat-po', \App\Livewire\Procurement\RiwayatPO::class)->name('procurement-riwayat-po');
     Route::post('/approve-vendor/{id}', [App\Http\Controllers\ValidateVendor::class, 'approveVendor'])->name('approve.vendor');
     Route::post('/reject-vendor/{id}', [App\Http\Controllers\ValidateVendor::class, 'rejectVendor'])->name('reject.vendor');

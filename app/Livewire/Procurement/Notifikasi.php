@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Livewire\Procurement;
+
+use App\Models\Vendor;
+use Livewire\Component;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
+
+#[Layout('components.layouts.app')]
+#[Title('Daftar Vendor - Equogreen')]
+class Notifikasi extends Component
+{
+    public function render()
+    {
+        $vendors = Vendor::where('status', 'approved')->get();
+
+        return view('livewire.procurement.notifikasi', compact('vendors'));
+    }
+}
