@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('payment_term', 100)->nullable();
             $table->integer('lead_time_weeks')->nullable();
             $table->date('quotation_date');
+            $table->string('status', 20)->default('pending');
             $table->foreign('id_vendor', 'fk_quotation_vendor')->references('id_vendor')->on('vendor')->onDelete('cascade');
             $table->foreign('id_penawaran', 'fk_quotation_penawaran')->references('id_penawaran')->on('penawaran')->onDelete('cascade');
             $table->timestamps();

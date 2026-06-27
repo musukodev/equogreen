@@ -75,10 +75,15 @@ class BatchBarang extends Component
 
     public function render()
     {
+        $layoutData = [
+            'headerTitle' => 'Batch Barang',
+            'headerDescription' => 'Silahkan akses folder sesuai tahun yang diinginkan'
+        ];
+
         if (Batch::count() == 0) {
             return view('livewire.procurement.batch-barang-item-kosong', [
                 'batches' => []
-            ]);
+            ])->layoutData($layoutData);
         }
 
         $batches = Batch::with('penawaran')
@@ -87,6 +92,6 @@ class BatchBarang extends Component
 
         return view('livewire.procurement.batch-barang', [
             'batches' => $batches
-        ]);
+        ])->layoutData($layoutData);
     }
 }

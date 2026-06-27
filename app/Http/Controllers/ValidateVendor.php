@@ -44,6 +44,10 @@ class ValidateVendor extends Controller
     {
         $vendor = Vendor::findOrFail($id);
 
+        if ($vendor->email_perusahaan) {
+            \Illuminate\Support\Facades\Mail::to($vendor->email_perusahaan)->send(new \App\Mail\VendorRegisterRejectedMail($vendor));
+        }
+
         $vendor->delete();
 
         return redirect()

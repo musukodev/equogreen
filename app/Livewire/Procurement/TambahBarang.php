@@ -240,6 +240,10 @@ class TambahBarang extends Component
 
     public function render()
     {
-        return view('livewire.procurement.tambah-barang');
+        return view('livewire.procurement.tambah-barang')
+            ->layoutData([
+                'headerTitle' => 'Tambah Barang',
+                'backUrl' => route('procurement-batch_barang')
+            ]);
     }
 }

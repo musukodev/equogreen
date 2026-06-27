@@ -49,6 +49,10 @@ class POController extends Controller
 
     public function sendEmail($id_vendor, $id_penawaran)
     {
+        if (auth()->check() && strtolower(auth()->user()->role) !== 'procurement') {
+            abort(403, 'Hanya Procurement yang diizinkan mengirim PO melalui email.');
+        }
+
         $data = $this->getPOData($id_vendor, $id_penawaran);
         $pdf = Pdf::loadView('equogreen-frontend.po_pdf', $data);
         

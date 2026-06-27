@@ -7,6 +7,7 @@ use App\Models\Quotation;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class QuotationFastExcelController extends Controller
 {
@@ -24,7 +25,11 @@ class QuotationFastExcelController extends Controller
 
         // 1. Validasi file
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv'
+            'file' => 'required|file|mimes:xlsx,xls,csv'
+        ], [
+            'file.required' => 'Mohon pilih file quotation terlebih dahulu.',
+            'file.mimes' => 'Format berkas tidak sesuai! Mohon unggah berkas dengan format .xlsx, .xls, atau .csv.',
+            'file.file' => 'Berkas yang diunggah tidak valid.'
         ]);
         $idVendor = Auth::user()->vendor->id_vendor;
 
@@ -33,46 +38,77 @@ class QuotationFastExcelController extends Controller
         // 2. Ambil path sementara (temporary path) dari file yang diupload
         $path = $request->file('file')->getRealPath();
 
-        // 3. Hapus data quotation lama untuk vendor dan penawaran ini (agar replace/ubah file berfungsi)
-        Quotation::where('id_vendor', $idVendor)
-            ->where('id_penawaran', $idPenawaran)
-            ->delete();
-
         // 3.5 Simpan file secara fisik untuk keperluan riwayat/tampilan
         $directory = "public/quotations/{$idPenawaran}_{$idVendor}";
-        Storage::deleteDirectory($directory); // hapus file lama jika ada
         
-        $fileName = $request->file('file')->getClientOriginalName();
-        $request->file('file')->storeAs($directory, $fileName);
+        // 4. Proses import menggunakan FastExcel dengan penanganan error
+        try {
+            DB::beginTransaction();
 
-        // 4. Proses import menggunakan FastExcel
-        (new FastExcel)->import($path, function ($line) use ($idVendor, $idPenawaran) {
-            // $line adalah array asosiatif per baris dari file Excel.
-            // Key-nya (seperti 'nama', 'email') SANGAT bergantung pada 
-            // teks di baris pertama (header) file Excel Anda.
+            // Simpan backup data lama terlebih dahulu jika rollback diperlukan
+            $oldQuotations = Quotation::where('id_vendor', $idVendor)
+                ->where('id_penawaran', $idPenawaran)
+                ->get();
 
-            return Quotation::create([
-                'id_vendor'       => $idVendor,
-                'id_penawaran'    => $idPenawaran,
+            // Hapus data lama untuk di-replace
+            Quotation::where('id_vendor', $idVendor)
+                ->where('id_penawaran', $idPenawaran)
+                ->delete();
 
-                'no_item'         => $line['no_item'],
-                'coll_no'         => $line['coll_no'],
-                'rfq_no'          => $line['rfq_no'],
-                'material_no'     => $line['material_no'],
-                'description'     => $line['description'],
-                'qty'             => $line['qty'],
-                'uom'             => $line['uom'],
-                'currency'        => $line['currency'],
-                'net_price'       => $line['net_price'],
-                'incoterm'        => $line['incoterm'],
-                'destination'     => $line['destination'],
-                'remark_1'        => $line['remark_1'],
-                'remark_2'        => $line['remark_2'],
-                'payment_term'    => $line['payment_term'],
-                'lead_time_weeks' => $line['lead_time_weeks'],
-                'quotation_date'  => $line['quotation_date'],
-            ]);
-        });
+            (new FastExcel)->import($path, function ($line) use ($idVendor, $idPenawaran) {
+                // Cek validitas kolom minimal (wajib ada)
+                if (!array_key_exists('material_no', $line) || !array_key_exists('description', $line) || !array_key_exists('qty', $line) || !array_key_exists('net_price', $line)) {
+                    throw new \Exception("Format kolom Excel tidak sesuai template. Pastikan kolom wajib seperti 'material_no', 'description', 'qty', dan 'net_price' tersedia.");
+                }
+
+                // Cek agar baris tidak kosong
+                if (empty($line['material_no']) && empty($line['description'])) {
+                    return null;
+                }
+
+                return Quotation::create([
+                    'id_vendor'       => $idVendor,
+                    'id_penawaran'    => $idPenawaran,
+                    'no_item'         => $line['no_item'] ?? null,
+                    'coll_no'         => $line['coll_no'] ?? null,
+                    'rfq_no'          => $line['rfq_no'] ?? null,
+                    'material_no'     => $line['material_no'],
+                    'description'     => $line['description'],
+                    'qty'             => $line['qty'],
+                    'uom'             => $line['uom'] ?? null,
+                    'currency'        => $line['currency'] ?? 'IDR',
+                    'net_price'       => $line['net_price'],
+                    'incoterm'        => $line['incoterm'] ?? null,
+                    'destination'     => $line['destination'] ?? null,
+                    'remark_1'        => $line['remark_1'] ?? null,
+                    'remark_2'        => $line['remark_2'] ?? null,
+                    'payment_term'    => $line['payment_term'] ?? null,
+                    'lead_time_weeks' => $line['lead_time_weeks'] ?? null,
+                    'quotation_date'  => !empty($line['quotation_date']) ? $line['quotation_date'] : now()->toDateString(),
+                    'status'          => 'pending'
+                ]);
+            });
+
+            // Simpan file fisik jika sukses
+            Storage::deleteDirectory($directory); 
+            $fileName = $request->file('file')->getClientOriginalName();
+            $request->file('file')->storeAs($directory, $fileName);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Kembalikan error secara ramah ke halaman uploader
+            $errorMsg = $e->getMessage();
+            if (str_contains($errorMsg, 'chk_quotation_qty')) {
+                $errorMsg = 'Jumlah barang (qty) pada Excel harus lebih besar dari 0.';
+            } elseif (str_contains($errorMsg, 'chk_quotation_net_price')) {
+                $errorMsg = 'Harga satuan (net_price) pada Excel tidak boleh kurang dari 0.';
+            } elseif (str_contains($errorMsg, 'chk_quotation_lead_time')) {
+                $errorMsg = 'Lead time pada Excel tidak boleh kurang dari 0.';
+            }
+
+            return redirect()->back()->withErrors(['file' => 'Gagal mengimpor data: ' . $errorMsg])->withInput();
+        }
 
         return redirect()->back()->with('success', 'Quotation berhasil terkirim');
     }

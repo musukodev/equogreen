@@ -123,6 +123,7 @@
            class="px-6 py-2.5 bg-black text-white font-medium rounded hover:bg-gray-800 transition shadow-sm">
             Download as PDF
         </a>
+        @if(auth()->check() && strtolower(auth()->user()->role) === 'procurement')
         <form action="{{ route('po.email', ['id_vendor' => $quotations->first()->id_vendor, 'id_penawaran' => $quotations->first()->id_penawaran]) }}" method="POST">
             @csrf
             <button type="submit" 
@@ -130,6 +131,7 @@
                 Send to Email
             </button>
         </form>
+        @endif
     </div>
 
 </body>

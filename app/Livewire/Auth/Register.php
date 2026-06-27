@@ -110,9 +110,13 @@ class Register extends Component
             $data['portofolio'] = $filename;
         }
 
-        Vendor::create($data);
+        $vendor = Vendor::create($data);
 
-        session()->flash('success', 'Vendor berhasil didaftarkan!');
+        if ($vendor->email_perusahaan) {
+            \Illuminate\Support\Facades\Mail::to($vendor->email_perusahaan)->send(new \App\Mail\VendorRegisteredConfirmationMail($vendor));
+        }
+
+        session()->flash('success', 'Pendaftaran berhasil! Akun Anda sedang ditinjau. Mohon tunggu konfirmasi admin melalui email.');
         return redirect()->route('registrasi');
     }
 

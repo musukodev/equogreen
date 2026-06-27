@@ -1,35 +1,6 @@
-<!-- ===== MAIN CONTENT ===== -->
-<main class="flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-auto p-6 lg:p-8">
-
-    <!-- Top Header -->
-    <header class="flex items-center justify-between">
-        <div class="flex items-center gap-4">
-            <!-- Mobile Hamburger -->
-            <button onclick="toggleSidebar()"
-                class="hover:bg-primary hover:border-primary group flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white lg:hidden">
-                <img src="/gambar/garis3.png" alt="Menu"
-                    class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
-            </button>
-            <div>
-                <h1 class="text-2xl font-bold text-[#111827] md:text-[36px]">Daftar Vendor</h1>
-                <p class="mt-0.5 text-xs text-gray-400 md:mt-1 md:text-base md:text-gray-500">Kelola dan lihat informasi
-                    seluruh vendor yang terdaftar</p>
-            </div>
-        </div>
-
-        <!-- Profile Section -->
-        <div class="flex items-center gap-3">
-            <button
-                class="hover:bg-primary hover:border-primary group flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] transition-all duration-200">
-                <img src="/gambar/bell-black.png" alt="Notifikasi"
-                    class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
-            </button>
-            <a href="{{ route('profile_procurement') }}"> <img src="/gambar/profileup.png" alt="Profil"
-                    class="hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" /></a>
-            <div class="hidden h-10 w-px bg-gray-200 md:block"></div>
-            <span class="hidden text-[17px] font-medium text-gray-700 md:block">Procurement</span>
-        </div>
-    </header>
+<div>
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="flex flex-col gap-6 p-6 lg:p-8">
 
     <!-- Filter Bar: Kategori Dropdown + Search -->
     <div class="flex flex-col items-center gap-4 md:flex-row">
@@ -179,4 +150,4 @@
             }
         });
     </script>
-</main>
+</div>

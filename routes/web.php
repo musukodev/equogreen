@@ -36,12 +36,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/notifikasi', \App\Livewire\Procurement\Notifikasi::class)->name('procurement-notifikasi');
 
-    Route::get('/vendor-profile', function () {
-        return view('equogreen-frontend.profile_vendor');
-    })->name('vendor_profile');
-    Route::get('/procurement-profile', function () {
-        return view('equogreen-frontend.profile_procurement');
-    })->name('profile_procurement');
+    Route::get('/vendor-profile', \App\Livewire\Vendor\ProfileVendor::class)->name('vendor_profile');
+    Route::get('/procurement-profile', \App\Livewire\Procurement\ProfileProcurement::class)->name('profile_procurement');
 
     Route::get('/periksa_barang/{batch_id}/{group_id}', \App\Livewire\Procurement\PeriksaBarang::class)->name('procurement-periksa_barang');
 
@@ -62,44 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/po-document/{id_vendor}/{id_penawaran}/pdf', [App\Http\Controllers\POController::class, 'downloadPdf'])->name('po.pdf');
     Route::post('/po-document/{id_vendor}/{id_penawaran}/email', [App\Http\Controllers\POController::class, 'sendEmail'])->name('po.email');
 
-    Route::get('/vendor-riwayat', function () {
-        $vendor_id = \Illuminate\Support\Facades\Auth::user()->vendor->id_vendor ?? null;
-
-        if (!$vendor_id) {
-            return redirect()->route('vendor-dashboard')->with('error', 'Vendor tidak ditemukan.');
-        }
-
-        // Ambil semua quotation milik vendor ini
-        $allQuotations = \App\Models\Quotation::with('penawaran.batch')
-            ->where('id_vendor', $vendor_id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        // Kelompokkan berdasarkan waktu upload (created_at) dan id_batch
-        // Mengingat import excel dilakukan dalam waktu yang sama
-        $history = [];
-        foreach ($allQuotations as $q) {
-            // Gunakan format waktu hingga menit untuk grouping
-            $timeKey = $q->created_at ? $q->created_at->format('Y-m-d H:i') : 'Unknown Time';
-            $batchId = $q->penawaran && $q->penawaran->batch ? $q->penawaran->batch->id_batch : 'Unknown';
-            $groupKey = $timeKey . '_' . $batchId;
-
-            if (!isset($history[$groupKey])) {
-                $history[$groupKey] = [
-                    'waktu' => $q->created_at ? $q->created_at->format('d-m-Y H:i') : '-',
-                    'batch_id' => $batchId,
-                    'items' => []
-                ];
-            }
-            $history[$groupKey]['items'][] = $q;
-        }
-
-        $notifications = \App\Models\Pengumuman::where('id_vendor', $vendor_id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return view('equogreen-frontend.riwayat_vendor', compact('history', 'notifications'));
-    })->name('vendor-riwayat');
+    Route::get('/vendor-riwayat', \App\Livewire\Vendor\Riwayat::class)->name('vendor-riwayat');
 
     Route::get('/fastexcel-quotation', [QuotationFastExcelController::class, 'index']);
     Route::post('/fastexcel-quotation', [QuotationFastExcelController::class, 'import'])->name('fastexcel.import');

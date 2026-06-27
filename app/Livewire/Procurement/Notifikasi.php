@@ -15,6 +15,10 @@ class Notifikasi extends Component
     {
         $vendors = Vendor::where('status', 'approved')->get();
 
-        return view('livewire.procurement.notifikasi', compact('vendors'));
+        return view('livewire.procurement.notifikasi', compact('vendors'))
+            ->layoutData([
+                'headerTitle' => 'Daftar Vendor',
+                'headerDescription' => 'Kelola dan lihat informasi seluruh vendor yang terdaftar'
+            ]);
     }
 }

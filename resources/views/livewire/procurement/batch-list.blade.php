@@ -1,29 +1,4 @@
-<main class="flex-1 flex flex-col min-w-0 p-6 lg:p-8 gap-6 h-full overflow-y-auto">
-    <!-- Top Header -->
-    <header class="flex items-center justify-between">
-        <div class="flex items-center gap-4">
-            <!-- Mobile Hamburger -->
-            <button onclick="toggleSidebar()"
-                class="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm flex-shrink-0 group">
-                <img src="/gambar/garis3.png" alt="Menu" class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
-            </button>
-            <div>
-                <h1 class="text-2xl md:text-[36px] font-bold text-[#111827]">Batch Barang</h1>
-                <p class="text-gray-400 md:text-gray-500 text-xs md:text-base mt-0.5 md:mt-1">Silahkan akses folder sesuai tahun yang diinginkan</p>
-            </div>
-        </div>
-
-        <!-- Profile Section -->
-        <div class="flex items-center gap-3">
-            <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:border-primary transition-all duration-200 shadow-sm">
-                <img src="/gambar/bell-black.png" alt="Notifikasi"
-                    class="w-6 h-6 object-contain" />
-            </button>
-            <a href="{{ route('profile_procurement') }}"> <img src="/gambar/profileup.png" alt="Profil" class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-all duration-200 cursor-pointer" /></a>
-            <div class="hidden md:block w-px h-10 bg-gray-200"></div>
-            <span class="hidden md:block font-medium text-gray-700 text-[17px]">Procurement</span>
-        </div>
-    </header>
+<div class="flex flex-col gap-6 p-6 lg:p-8">
 
     <!-- Search Bar & Add Folder Button -->
     <div class="flex items-center gap-4">
@@ -87,4 +62,4 @@
         </div>
     </div>
     @endif
-</main>
+</div>

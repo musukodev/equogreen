@@ -29,6 +29,10 @@ class RiwayatPO extends Component
 
         $pos = $query->orderBy('tanggal', 'desc')->get();
 
-        return view('livewire.procurement.riwayat-po', compact('pos'));
+        return view('livewire.procurement.riwayat-po', compact('pos'))
+            ->layoutData([
+                'headerTitle' => 'Riwayat PO',
+                'headerDescription' => 'Lihat riwayat Purchase Order yang telah dikirim ke vendor'
+            ]);
     }
 }

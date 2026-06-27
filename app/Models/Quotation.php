@@ -36,6 +36,7 @@ class Quotation extends Model
         'payment_term',
         'lead_time_weeks',
         'quotation_date',
+        'status',
     ];
 
     

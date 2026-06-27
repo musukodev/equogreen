@@ -1,43 +1,6 @@
-<div class="flex h-screen w-full flex-1 flex-col overflow-y-auto">
-
-    <!-- Main Workspace Padding Wrapper -->
-    <main class="relative flex min-w-0 flex-1 flex-col gap-6 overflow-y-auto p-6 lg:p-8">
-
-        <!-- Top Header -->
-        <header class="flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <!-- Mobile Hamburger -->
-                <button onclick="toggleSidebar()"
-                    class="hover:bg-primary hover:border-primary group flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white lg:hidden">
-                    <img src="/gambar/garis3.png" alt="Menu"
-                        class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
-                </button>
-                <!-- Back Button -->
-                <a href="{{ url()->previous() }}"
-                    class="hover:bg-primary hover:border-primary flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white"
-                    wire:navigate>
-                    <img src="/gambar/back-arrow.png" alt="Back" class="h-6 w-6 object-contain brightness-0" />
-                </a>
-                <div>
-                    <h1 class="text-2xl font-bold text-[#111827] md:text-[36px]">Tambah Barang</h1>
-                </div>
-            </div>
-
-            <!-- Right: Profile Section -->
-            <div class="flex items-center gap-3">
-                <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:border-primary transition-all duration-200 shadow-sm">
-                <img src="/gambar/bell-black.png" alt="Notifikasi"
-                    class="w-6 h-6 object-contain" />
-            </button>
-                <img src="/gambar/profileup.png" alt="Profil"
-                    class="hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" />
-                <div class="hidden h-10 w-px bg-gray-200 md:block"></div>
-                <span class="hidden text-[17px] font-medium text-gray-700 md:block">Procurement</span>
-            </div>
-        </header>
-
-        <!-- Form Workspace -->
-        <div class="w-full">
+<div class="flex flex-col gap-6 p-6 lg:p-8">
+    <!-- Form Workspace -->
+    <div class="w-full">
             @if (session('error'))
                 <div class="mb-4 rounded-xl border border-red-400 bg-red-100 p-3 text-[14px] text-red-700 shadow-sm">
                     {{ session('error') }}
@@ -240,11 +203,13 @@
                                             @enderror
                                         </td>
                                         <td class="border border-gray-400 p-0 text-center">
-                                            @if (!$edit_id)
+                                            @if (!$edit_id && count($items) > 1)
                                                 <button type="button" wire:click="hapusBaris({{ $index }})"
-                                                    class="h-[45px] w-full text-red-500 hover:text-red-700">
+                                                    class="h-[45px] w-full text-gray-400 hover:text-red-600 transition-colors duration-150">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
+                                            @else
+                                                <span class="text-gray-300 font-semibold">-</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -338,11 +303,11 @@
                                                     class="text-gray-600 transition hover:text-black" title="Edit">
                                                     <i class="fa-solid fa-pen-to-square text-lg"></i>
                                                 </button>
-                                                <a href="{{ route('procurement-periksa_barang', ['batch_id' => $batch_id, 'group_id' => $group['group_id']]) }}"
-                                                    class="inline-block rounded bg-blue-100 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:bg-blue-200"
-                                                    wire:navigate>
-                                                    Cek
-                                                </a>
+                                                 <a href="{{ route('procurement-periksa_barang', ['batch_id' => $batch_id, 'group_id' => $group['group_id'], 'from' => 'tambah']) }}"
+                                                     class="inline-block rounded bg-blue-100 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:bg-blue-200"
+                                                     wire:navigate>
+                                                     Cek
+                                                 </a>
                                             </div>
                                         </td>
                                     </tr>
@@ -361,6 +326,4 @@
             </div>
 
         </div>
-
-    </main>
 </div>

@@ -1,34 +1,5 @@
-<main class="flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-auto p-6 lg:p-8">
-
-    <!-- Top Header -->
-    <header class="flex items-center justify-between">
-        <div class="flex items-center gap-4">
-            <!-- Mobile Hamburger -->
-            <button onclick="toggleSidebar()"
-                class="hover:bg-primary hover:border-primary group flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white lg:hidden">
-                <img src="/gambar/garis3.png" alt="Menu"
-                    class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
-            </button>
-            <div>
-                <h1 class="text-2xl font-bold text-[#111827] md:text-[36px]">Validasi Pendaftaran Vendor</h1>
-                <p class="mt-0.5 text-xs text-gray-400 md:mt-1 md:text-base md:text-gray-500">Periksa dan setujui
-                    akses vendor
-                    baru</p>
-            </div>
-        </div>
-
-        <!-- Profile Section -->
-        <div class="flex items-center gap-3">
-            <button
-                class="hover:border-primary flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] shadow-sm transition-all duration-200">
-                <img src="/gambar/bell-black.png" alt="Notifikasi" class="h-6 w-6 object-contain" />
-            </button>
-            <a href="{{ route('profile_procurement') }}"> <img src="/gambar/profileup.png" alt="Profil"
-                    class="hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" /></a>
-            <div class="hidden h-10 w-px bg-gray-200 md:block"></div>
-            <span class="hidden text-[17px] font-medium text-gray-700 md:block">Procurement</span>
-        </div>
-    </header>
+<div>
+<div class="flex flex-col gap-6 p-6 lg:p-8">
 
     @if (session('success'))
         <div class="mb-4 rounded-xl border border-green-400 bg-green-100 p-3 text-[14px] text-green-700 shadow-sm">
@@ -69,20 +40,21 @@
                         </td>
 
                         <td class="border-r border-gray-100 px-5 py-4 text-center">
-                            <a href="{{ asset('storage/portofolio/' . $vendor->portofolio) }}" target="_blank"
+                            <button type="button" 
+                                onclick="openPortofolio('{{ $vendor->nama_perusahaan }}', '{{ strtoupper(substr($vendor->nama_perusahaan, 0, 1)) }}', '{{ $vendor->kategori_vendor }}', '{{ $vendor->email_perusahaan }}', '{{ $vendor->no_hp }}', '{{ \Carbon\Carbon::parse($vendor->created_at)->format('d M Y') }}', '{{ $vendor->npwp ?? '-' }}', '{{ $vendor->alamat }}', '{{ $vendor->deskripsi }}')"
                                 class="text-accent hover:text-primary text-sm font-semibold underline underline-offset-2 transition-colors">
-
                                 Lihat
-                            </a>
+                            </button>
                         </td>
 
                         <td class="px-5 py-4">
                             <div class="flex items-center justify-center gap-3">
 
-                                <form action="{{ route('approve.vendor', $vendor->id_vendor) }}" method="POST"
+                                <form id="form-approve-{{ $vendor->id_vendor }}" action="{{ route('approve.vendor', $vendor->id_vendor) }}" method="POST"
                                     class="inline">
                                     @csrf
-                                    <button type="submit"
+                                    <button type="button"
+                                        onclick="triggerConfirm('approve', '{{ $vendor->id_vendor }}', '{{ $vendor->nama_perusahaan }}')"
                                         class="btn-approve flex h-9 w-9 items-center justify-center rounded-lg bg-green-50 text-green-500 transition-all duration-200 hover:bg-green-100 hover:text-green-600"
                                         title="Setujui {{ $vendor->nama_perusahaan }}">
 
@@ -94,11 +66,12 @@
                                     </button>
                                 </form>
 
-                                <form action="{{ route('reject.vendor', $vendor->id_vendor) }}" method="POST"
+                                <form id="form-reject-{{ $vendor->id_vendor }}" action="{{ route('reject.vendor', $vendor->id_vendor) }}" method="POST"
                                     class="inline">
                                     @csrf
 
-                                    <button type="submit"
+                                    <button type="button"
+                                        onclick="triggerConfirm('reject', '{{ $vendor->id_vendor }}', '{{ $vendor->nama_perusahaan }}')"
                                         class="btn-reject flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-lg font-bold text-red-500 transition-all duration-200 hover:bg-red-100 hover:text-red-600"
                                         title="Tolak {{ $vendor->nama_perusahaan }}">
 
@@ -156,10 +129,6 @@
                 <div class="rounded-lg bg-gray-50 p-3">
                     <p class="mb-0.5 text-xs text-gray-400">Tanggal Daftar</p>
                     <p class="text-sm font-semibold text-gray-700" id="modal-tanggal">—</p>
-                </div>
-                <div class="rounded-lg bg-gray-50 p-3">
-                    <p class="mb-0.5 text-xs text-gray-400">NPWP</p>
-                    <p class="text-sm font-semibold text-gray-700" id="modal-npwp">—</p>
                 </div>
                 <div class="col-span-2 rounded-lg bg-gray-50 p-3">
                     <p class="mb-0.5 text-xs text-gray-400">Alamat</p>
@@ -226,17 +195,16 @@
         // =============================================
         // PORTOFOLIO MODAL
         // =============================================
-        function openPortofolio(index) {
-            const v = VENDORS[index];
-            document.getElementById('modal-avatar').textContent = v.nama.charAt(0);
-            document.getElementById('modal-nama').textContent = v.nama;
-            document.getElementById('modal-kategori').textContent = v.kategori;
-            document.getElementById('modal-email').textContent = v.email;
-            document.getElementById('modal-phone').textContent = v.phone;
-            document.getElementById('modal-tanggal').textContent = v.tanggal;
-            document.getElementById('modal-npwp').textContent = v.npwp;
-            document.getElementById('modal-alamat').textContent = v.alamat;
-            document.getElementById('modal-desc').textContent = v.desc;
+        function openPortofolio(vendorName, avatarStr, kategoriStr, emailStr, phoneStr, dateStr, npwpStr, addressStr, descStr) {
+            document.getElementById('modal-avatar').textContent = avatarStr || vendorName.charAt(0);
+            document.getElementById('modal-nama').textContent = vendorName;
+            document.getElementById('modal-kategori').textContent = kategoriStr;
+            document.getElementById('modal-email').textContent = emailStr;
+            document.getElementById('modal-phone').textContent = phoneStr;
+            document.getElementById('modal-tanggal').textContent = dateStr;
+            document.getElementById('modal-npwp').textContent = npwpStr || '-';
+            document.getElementById('modal-alamat').textContent = addressStr;
+            document.getElementById('modal-desc').textContent = descStr || '-';
             portofolioModal.classList.remove('hidden');
             portofolioModal.classList.add('flex');
         }
@@ -255,28 +223,24 @@
         // =============================================
         // CONFIRM MODAL (Setuju / Tolak)
         // =============================================
-        function openConfirm(type, index) {
-            const v = VENDORS[index];
-            pendingAction = {
-                type,
-                index
-            };
+        let activeFormId = null;
 
+        function triggerConfirm(type, vendorId, vendorNameStr) {
+            const confirmModal = document.getElementById('confirm-modal');
             const iconWrap = document.getElementById('confirm-icon-wrap');
             const icon = document.getElementById('confirm-icon');
             const title = document.getElementById('confirm-title');
             const desc = document.getElementById('confirm-desc');
             const okBtn = document.getElementById('confirm-ok');
-            const vendorName = document.getElementById('confirm-vendor-name');
 
-            vendorName.textContent = v.nama;
+            activeFormId = `form-${type}-${vendorId}`;
 
             if (type === 'approve') {
                 iconWrap.className =
                     'w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl bg-green-50 text-green-500';
                 icon.textContent = '✓';
                 title.textContent = 'Setujui Vendor?';
-                desc.innerHTML = `Vendor <strong>${v.nama}</strong> akan disetujui dan mendapatkan akses.`;
+                desc.innerHTML = `Vendor <strong>${vendorNameStr}</strong> akan disetujui dan mendapatkan akses.`;
                 okBtn.className =
                     'flex-1 py-2.5 rounded-xl text-white font-bold text-sm transition-all duration-200 bg-green-500 hover:bg-green-600';
             } else {
@@ -284,7 +248,7 @@
                     'w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl bg-red-50 text-red-500';
                 icon.textContent = '✕';
                 title.textContent = 'Tolak Vendor?';
-                desc.innerHTML = `Vendor <strong>${v.nama}</strong> akan ditolak pendaftarannya.`;
+                desc.innerHTML = `Vendor <strong>${vendorNameStr}</strong> akan ditolak pendaftarannya.`;
                 okBtn.className =
                     'flex-1 py-2.5 rounded-xl text-white font-bold text-sm transition-all duration-200 bg-red-500 hover:bg-red-600';
             }
@@ -296,37 +260,19 @@
         confirmCancel.addEventListener('click', () => {
             confirmModal.classList.add('hidden');
             confirmModal.classList.remove('flex');
-            pendingAction = null;
+            activeFormId = null;
         });
         confirmModal.addEventListener('click', (e) => {
             if (e.target === confirmModal) {
                 confirmModal.classList.add('hidden');
                 confirmModal.classList.remove('flex');
-                pendingAction = null;
+                activeFormId = null;
             }
         });
 
         confirmOk.addEventListener('click', () => {
-            if (!pendingAction) return;
-            const {
-                type,
-                index
-            } = pendingAction;
-            const vendorNama = VENDORS[index].nama;
-
-            // Hapus vendor dari array
-            VENDORS.splice(index, 1);
-            confirmModal.classList.add('hidden');
-            confirmModal.classList.remove('flex');
-            pendingAction = null;
-
-            // Re-render table
-            renderTable();
-
-            if (type === 'approve') {
-                showToast(`${vendorNama} berhasil disetujui!`);
-            } else {
-                showToast(`${vendorNama} berhasil ditolak.`);
+            if (activeFormId) {
+                document.getElementById(activeFormId).submit();
             }
         });
 
@@ -358,4 +304,5 @@
         }
     </script>
 
-</main>
+</div>
+</div>

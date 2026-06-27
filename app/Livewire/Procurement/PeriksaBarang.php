@@ -29,6 +29,63 @@ class PeriksaBarang extends Component
         $this->group_id = $group_id;
     }
 
+    public function setujuiQuotation($id_vendor)
+    {
+        $vendor = Vendor::find($id_vendor);
+        if (!$vendor) return;
+
+        // Ambil penawaran terkait dari grup ini
+        $penawarans = Penawaran::where('group_id', $this->group_id)->get();
+        if ($penawarans->isEmpty()) return;
+
+        $penawaranIds = $penawarans->pluck('id_penawaran');
+
+        // 1. Update status quotation vendor terpilih menjadi approved
+        Quotation::where('id_vendor', $id_vendor)
+            ->whereIn('id_penawaran', $penawaranIds)
+            ->update(['status' => 'approved']);
+
+        // 2. Update status quotation vendor pesaing lain di dalam grup ini menjadi rejected
+        Quotation::where('id_vendor', '!=', $id_vendor)
+            ->whereIn('id_penawaran', $penawaranIds)
+            ->update(['status' => 'rejected']);
+
+        // 3. Masukkan notifikasi persetujuan ke tabel pengumuman untuk vendor approved
+        $pesanApproved = "Selamat! Quotation Anda untuk Batch " . $this->batch_id . " telah disetujui oleh Procurement. Berkas PO telah diterbitkan.";
+        Pengumuman::create([
+            'id_vendor' => $id_vendor,
+            'isi' => $pesanApproved,
+        ]);
+
+        // Kirim email notifikasi persetujuan ke vendor
+        if ($vendor->email_perusahaan) {
+            Mail::to($vendor->email_perusahaan)->send(new \App\Mail\VendorQuotationApprovedMail($vendor, $this->batch_id, $pesanApproved));
+        }
+
+        // 4. Masukkan notifikasi penolakan ke tabel pengumuman untuk vendor rejected
+        $pesanRejected = "Mohon maaf, quotation Anda untuk Batch " . $this->batch_id . " tidak terpilih oleh Procurement. Terima kasih telah berpartisipasi.";
+        $pesaingVendorIds = Vendor::whereIn('id_vendor', function($q) use ($penawaranIds, $id_vendor) {
+            $q->select('id_vendor')->from('quotation')->whereIn('id_penawaran', $penawaranIds)->where('id_vendor', '!=', $id_vendor);
+        })->pluck('id_vendor');
+
+        foreach ($pesaingVendorIds as $pesaingId) {
+            Pengumuman::create([
+                'id_vendor' => $pesaingId,
+                'isi' => $pesanRejected,
+            ]);
+
+            // Kirim email notifikasi penolakan ke vendor pesaing
+            $pesaing = Vendor::find($pesaingId);
+            if ($pesaing && $pesaing->email_perusahaan) {
+                Mail::to($pesaing->email_perusahaan)->send(new \App\Mail\VendorQuotationRejectedMail($pesaing, $this->batch_id, $pesanRejected));
+            }
+        }
+
+        // Arahkan ke halaman detail PO document
+        $firstPenawaranId = $penawaranIds->first();
+        return redirect()->route('po.show', ['id_vendor' => $id_vendor, 'id_penawaran' => $firstPenawaranId]);
+    }
+
     public function kirimReminder($id_vendor)
     {
         $vendor = Vendor::find($id_vendor);
@@ -82,9 +139,20 @@ class PeriksaBarang extends Component
                     ->whereIn('id_penawaran', $penawaranIds)
                     ->first();
                 $vendor->first_penawaran_id = $q ? $q->id_penawaran : null;
+                $vendor->quotation_status = $q ? $q->status : 'pending';
+            } else {
+                $vendor->quotation_status = 'not_submitted';
             }
         }
 
-        return view('livewire.procurement.periksa-barang', compact('batch', 'penawarans', 'vendors'));
+        $backUrl = request()->query('from') === 'tambah'
+            ? route('procurement-tambah_barang', ['batch_id' => $this->batch_id])
+            : route('procurement-batch_barang');
+
+        return view('livewire.procurement.periksa-barang', compact('batch', 'penawarans', 'vendors'))
+            ->layoutData([
+                'headerTitle' => 'Batch ' . $batch->id_batch,
+                'backUrl' => $backUrl
+            ]);
     }
 }

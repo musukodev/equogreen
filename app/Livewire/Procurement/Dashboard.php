@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Mail;
 #[Title('Dashboard Procurement - Equogreen')]
 class Dashboard extends Component
 {
-    public $showPengumumanModal = false;
     public $showWaktuModal = false;
 
     public $pengumuman = '';
@@ -34,20 +33,6 @@ class Dashboard extends Component
         } else {
             $this->selectedCategories[] = $category;
         }
-    }
-
-    public function savePengumuman()
-    {
-        // Simpan pesan pengumuman saja ke properti state
-        $this->showPengumumanModal = false;
-        session()->flash('success', 'Isi pengumuman berhasil draf/disimpan sementara! Silahkan pilih kategori lalu klik Kirim.');
-    }
-
-    public function deletePengumuman()
-    {
-        $this->pengumuman = '';
-        $this->showPengumumanModal = false;
-        session()->flash('success', 'Draf pengumuman berhasil dibersihkan!');
     }
 
     public function saveWaktu()
@@ -142,8 +127,21 @@ class Dashboard extends Component
             sort($categories);
         }
 
+        // Hitung statistik dashboard
+        $totalVendorApproved = Vendor::where('status', 'approved')->count();
+        $totalVendorPending = Vendor::where('status', 'pending')->count();
+        $totalBatchAktif = \App\Models\Batch::where('waktu_selesai', '>', now())->count();
+        $totalNilaiPO = \App\Models\Quotation::sum(DB::raw('qty * net_price'));
+
         return view('livewire.procurement.dashboard', [
-            'categories' => $categories
+            'categories' => $categories,
+            'totalVendorApproved' => $totalVendorApproved,
+            'totalVendorPending' => $totalVendorPending,
+            'totalBatchAktif' => $totalBatchAktif,
+            'totalNilaiPO' => $totalNilaiPO
+        ])->layoutData([
+            'headerTitle' => 'Dashboard',
+            'headerDescription' => 'Halo, ATK Corner! Selamat datang di website Equogreen'
         ]);
     }
 }

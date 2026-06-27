@@ -44,6 +44,9 @@ class BatchList extends Component
 
         return view('livewire.procurement.batch-list', [
             'years' => $years
+        ])->layoutData([
+            'headerTitle' => 'Batch Barang',
+            'headerDescription' => 'Silahkan akses folder sesuai tahun yang diinginkan'
         ]);
     }
 }

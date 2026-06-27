@@ -1,12 +1,17 @@
-<main x-data="{
+<div x-data="{
     showApproveModal: false,
     showSuccessCheck: false,
     approveUrl: '',
+    approveVendorId: null,
     showReminderModal: false,
     reminderVendorId: null,
     showReminderLoading: false,
     showReminderSuccess: false,
-    reminderVendorName: ''
+    reminderVendorName: '',
+    showRejectModal: false,
+    rejectVendorId: null,
+    showRejectSuccess: false,
+    rejectVendorName: ''
 }"
     @reminder-sent.window="
     showReminderLoading = false; 
@@ -14,53 +19,12 @@
     showReminderSuccess = true; 
     setTimeout(() => { showReminderSuccess = false; }, 2000);
 "
-    class="relative flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-auto p-6 lg:p-8">
-
-    <!-- Top Header -->
-    <header class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-        <div class="flex w-full items-center justify-between gap-4 md:w-auto md:justify-start">
-            <div class="flex items-center gap-3 md:gap-6">
-                <div class="flex items-center gap-2 md:gap-4">
-                    <!-- Mobile Hamburger -->
-                    <button onclick="toggleSidebar()"
-                        class="hover:bg-primary group flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 lg:hidden">
-                        <img src="/gambar/garis3.png" alt="Menu"
-                            class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
-                    </button>
-                    <!-- Back Button -->
-                    <a href="{{ url()->previous() }}"
-                        class="hover:bg-primary hover:border-primary flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white"
-                        wire:navigate>
-                        <img src="/gambar/back-arrow.png" alt="Back" class="h-6 w-6 object-contain brightness-0" />
-                    </a>
-                    <h1 class="text-2xl font-bold leading-none text-[#111827] md:text-[32px]">Batch
-                        {{ $batch->id_batch }}</h1>
-                </div>
-            </div>
-
-            <!-- Right: Profile Section (Mobile Only) -->
-            <div class="flex items-center gap-3 md:hidden">
-                <button
-                    class="hover:border-primary flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] shadow-sm transition-all duration-200">
-                    <img src="/gambar/bell-black.png" alt="Notifikasi" class="h-6 w-6 object-contain" />
-                </button>
-                <img src="/gambar/profileup.png" alt="Profil"
-                    class="h-10 w-10 rounded-full border border-gray-200 object-cover" />
-            </div>
-        </div>
-
-        <!-- Right: Profile Section (Desktop Only) -->
-        <div class="hidden items-center gap-3 md:flex">
-            <button
-                class="hover:border-primary flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] shadow-sm transition-all duration-200">
-                <img src="/gambar/bell-black.png" alt="Notifikasi" class="h-6 w-6 object-contain" />
-            </button>
-            <img src="/gambar/profileup.png" alt="Profil"
-                class="hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" />
-            <div class="h-10 w-px bg-gray-200"></div>
-            <span class="text-[17px] font-medium text-gray-700">Procurement</span>
-        </div>
-    </header>
+    @quotation-rejected.window="
+    showRejectSuccess = true;
+    rejectVendorName = $event.detail.nama_vendor;
+    setTimeout(() => { showRejectSuccess = false; }, 2000);
+"
+    class="flex flex-col gap-6 p-6 lg:p-8">
 
     @if (session()->has('message'))
         <div class="mb-4 rounded-lg bg-green-50 p-4 text-sm text-green-800" role="alert">
@@ -180,14 +144,30 @@
                                 <td class="px-4 py-4 text-center">
                                     <div class="flex items-center justify-center gap-4">
                                         @if ($vendor->sudah_mengajukan > 0)
-                                            <button
-                                                @click="approveUrl = '{{ route('po.show', ['id_vendor' => $vendor->id_vendor, 'id_penawaran' => $vendor->first_penawaran_id ?? 0]) }}'; showApproveModal = true;"
-                                                class="transition-transform hover:scale-110">
-                                                <i class="ph ph-check text-xl font-bold text-[#4adb49]"></i>
-                                            </button>
-                                            <button class="transition-transform hover:scale-110">
-                                                <i class="ph ph-x text-xl font-bold text-[#f52b2b]"></i>
-                                            </button>
+                                            @if ($vendor->quotation_status === 'approved')
+                                                <span class="inline-flex items-center rounded-md bg-green-100 px-2.5 py-1 text-xs font-bold text-green-700 border border-green-300">
+                                                    Approved
+                                                </span>
+                                            @elseif ($vendor->quotation_status === 'rejected')
+                                                <span class="inline-flex items-center rounded-md bg-red-100 px-2.5 py-1 text-xs font-bold text-red-700 border border-red-300">
+                                                    Rejected
+                                                </span>
+                                            @else
+                                                <!-- Jika belum ada vendor lain yang di-approve dalam grup ini, tampilkan tombol aksi -->
+                                                @php
+                                                    $anyApproved = $vendors->contains(fn($v) => $v->quotation_status === 'approved');
+                                                @endphp
+                                                @if (!$anyApproved)
+                                                    <button
+                                                        @click="approveUrl = '{{ route('po.show', ['id_vendor' => $vendor->id_vendor, 'id_penawaran' => $vendor->first_penawaran_id ?? 0]) }}'; approveVendorId = {{ $vendor->id_vendor }}; showApproveModal = true;"
+                                                        class="transition-transform hover:scale-110">
+                                                        <i class="ph ph-check text-xl font-bold text-[#4adb49]"></i>
+                                                    </button>
+                                                @else
+                                                    <!-- Jika ada vendor lain yang sudah di-approve, nonaktifkan/beri tanda strip -->
+                                                    <span class="text-gray-400 font-semibold">-</span>
+                                                @endif
+                                            @endif
                                         @else
                                             <button
                                                 @click="reminderVendorId = {{ $vendor->id_vendor }}; showReminderModal = true;"
@@ -257,7 +237,7 @@
                     Batal
                 </button>
                 <button
-                    @click="showSuccessCheck = true; setTimeout(() => { window.location.href = approveUrl; }, 2200);"
+                    @click="showSuccessCheck = true; $wire.setujuiQuotation(approveVendorId);"
                     class="flex-1 rounded-xl bg-[#423ec7] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition-all duration-200 hover:bg-[#3633a8] active:scale-95">
                     Ya, Terima
                 </button>
@@ -413,4 +393,4 @@
             animation: periksaScaleCircle 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
     </style>
-</main>
+</div>

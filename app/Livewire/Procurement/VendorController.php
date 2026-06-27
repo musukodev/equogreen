@@ -45,6 +45,10 @@ class VendorController extends Component
     {
         $vendors = Vendor::where('status', 'pending')->get();
 
-        return view('livewire.procurement.validasi-vendor', compact('vendors'));
+        return view('livewire.procurement.validasi-vendor', compact('vendors'))
+            ->layoutData([
+                'headerTitle' => 'Validasi Pendaftaran Vendor',
+                'headerDescription' => 'Periksa dan setujui akses vendor baru'
+            ]);
     }
 }
