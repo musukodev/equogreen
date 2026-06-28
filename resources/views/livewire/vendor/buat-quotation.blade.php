@@ -115,7 +115,7 @@
                     <div class="w-full space-y-3">
                         <a href="{{ route('download-template') }}"
                             class="block w-full rounded-lg bg-black py-3.5 text-center text-[15px] text-white transition hover:bg-gray-800">
-                            Download Template
+                            Unduh Templat
                         </a>
 
                         <!-- MODIFIKASI UPLOAD BOX DISINI -->
@@ -132,7 +132,7 @@
                                         <div class="flex flex-wrap gap-2">
                                             <button type="button" wire:click="$set('isEditing', true)"
                                                 class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-3 py-1.5 text-[13px] font-bold text-blue-700 shadow-sm transition hover:bg-blue-50">
-                                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                                                <i class="fa-solid fa-pen-to-square"></i> Ubah
                                             </button>
                                             <button type="button" wire:click="deleteQuotation"
                                                 wire:confirm="Apakah Anda yakin ingin menghapus quotation ini?"

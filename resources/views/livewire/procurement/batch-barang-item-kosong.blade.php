@@ -6,7 +6,7 @@
         <div class="w-full rounded-xl border border-gray-400 bg-white p-6 shadow-sm md:p-8">
             <!-- Toolbar (Search and Add) -->
             <div class="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-                <input type="text" placeholder="Search"
+                <input type="text" placeholder="Cari..."
                     class="w-full rounded-md border border-gray-400 px-4 py-2 text-[15px] outline-none transition focus:border-black sm:w-[60%] lg:w-[40%] xl:w-[70%]">
 
                 <button wire:click="$set('showModal', true)"
@@ -95,12 +95,35 @@
                 <!-- Modal Body -->
                 <form wire:submit="store" class="border-t border-gray-400 bg-white p-6 pb-8">
                     <!-- Badge -->
-                    <div class="mb-5">
+                    <div class="mb-5 flex items-center justify-between gap-4">
                         <span
                             class="inline-block rounded border border-black bg-white px-4 py-1.5 text-[15px] font-bold leading-none text-black">
                             Batch {{ $year }}
                         </span>
                     </div>
+
+                    @if(auth()->user()->role === 'Superadmin')
+                        <!-- Dropdown Pilihan Procurement (Superadmin Only) -->
+                        <div class="mb-5 flex flex-col gap-1.5">
+                            <label class="text-sm font-semibold text-gray-700">Tugaskan ke Procurement</label>
+                            <div class="relative">
+                                <select wire:model="id_procurement_terpilih"
+                                    class="h-10 w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-700 transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                    required>
+                                    <option value="">Pilih Admin Procurement</option>
+                                    @foreach($procurementList as $proc)
+                                        <option value="{{ $proc->id_procurement }}">{{ $proc->nama_procurement }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                    <i class="ph-bold ph-caret-down"></i>
+                                </div>
+                            </div>
+                            @error('id_procurement_terpilih')
+                                <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    @endif
 
                     <!-- Time Input Card 2 (Dates) -->
                     <div

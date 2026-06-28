@@ -46,7 +46,7 @@ class BatchList extends Component
             'years' => $years
         ])->layoutData([
             'headerTitle' => 'Batch Barang',
-            'headerDescription' => 'Silahkan akses folder sesuai tahun yang diinginkan'
+            'headerDescription' => 'Silakan akses folder sesuai tahun yang diinginkan'
         ]);
     }
 }

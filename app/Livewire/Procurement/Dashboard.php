@@ -8,6 +8,7 @@ use Livewire\Attributes\Title;
 use App\Models\Vendor;
 use App\Models\Pengumuman;
 use App\Mail\VendorAnnouncementMail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -133,6 +134,9 @@ class Dashboard extends Component
         $totalBatchAktif = \App\Models\Batch::where('waktu_selesai', '>', now())->count();
         $totalNilaiPO = \App\Models\Quotation::sum(DB::raw('qty * net_price'));
 
+        $user = Auth::user();
+        $namaProcurement = $user->procurement?->nama_procurement ?? 'Procurement';
+
         return view('livewire.procurement.dashboard', [
             'categories' => $categories,
             'totalVendorApproved' => $totalVendorApproved,
@@ -141,7 +145,7 @@ class Dashboard extends Component
             'totalNilaiPO' => $totalNilaiPO
         ])->layoutData([
             'headerTitle' => 'Dashboard',
-            'headerDescription' => 'Halo, ATK Corner! Selamat datang di website Equogreen'
+            'headerDescription' => 'Halo, ' . $namaProcurement . '! Selamat datang di website Equogreen'
         ]);
     }
 }

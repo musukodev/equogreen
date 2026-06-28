@@ -2,6 +2,12 @@
   <!-- ===== MAIN CONTENT ===== -->
   <div class="flex flex-col gap-6 p-6 lg:p-8">
 
+    @if (session('success'))
+        <div class="mb-4 rounded-xl border border-green-400 bg-green-100 p-4 text-sm font-semibold text-green-700 shadow-sm">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <!-- Filter Bar: Kategori Dropdown + Search -->
     <div class="flex flex-col items-center gap-4 md:flex-row">
         <!-- Kategori Dropdown -->
@@ -28,7 +34,7 @@
                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <input id="search-input" type="text" placeholder="Search"
+            <input id="search-input" type="text" placeholder="Cari..."
                 class="focus:border-primary focus:ring-primary/20 w-full rounded-xl border border-gray-800 bg-white py-3 pl-12 pr-4 text-sm text-gray-700 outline-none transition-all duration-200 focus:ring-2" />
         </div>
     </div>
@@ -37,29 +43,35 @@
     <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
         <table class="w-full border-collapse" id="notif-table">
             <thead>
-                <tr class="border-b border-gray-200 bg-blue-600">
-                    <th class="px-3 py-3.5 text-left text-xs font-semibold text-white md:px-5 md:text-sm">Nama
-                        Vendor</th>
-                    <th class="px-3 py-3.5 text-left text-xs font-semibold text-white md:px-5 md:text-sm">Kategori
-                    </th>
-                    <th class="px-3 py-3.5 text-center text-xs font-semibold text-white md:px-5 md:text-sm">Profile
-                    </th>
+                <tr class="border-b border-gray-200 bg-[#3a3fe0] text-white">
+                    <th class="px-5 py-3.5 text-left text-sm font-semibold w-[50%]">Nama Vendor</th>
+                    <th class="px-5 py-3.5 text-left text-sm font-semibold w-[30%]">Kategori</th>
+                    <th class="px-5 py-3.5 text-center text-sm font-semibold w-[20%]">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($vendors as $vendor)
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
-                        <td class="px-3 py-3.5 text-sm text-gray-700 md:px-5">{{ $vendor->nama_perusahaan }}</td>
-                        <td class="px-3 py-3.5 text-sm text-gray-700 md:px-5">{{ $vendor->kategori_vendor }}</td>
-                        <td class="px-3 py-3.5 text-center md:px-5">
-                            <button
-                                class="btn-profile text-accent hover:text-primary text-sm font-semibold underline underline-offset-2 transition-colors"
-                                data-nama="{{ $vendor->nama_perusahaan }}"
-                                data-kategori="{{ $vendor->kategori_vendor }}"
-                                data-email="{{ $vendor->email_perusahaan }}" data-phone="{{ $vendor->no_hp }}"
-                                data-alamat="{{ $vendor->alamat }}">
-                                Profil
-                            </button>
+                        <td class="px-5 py-3.5 text-sm text-gray-700">{{ $vendor->nama_perusahaan }}</td>
+                        <td class="px-5 py-3.5 text-sm text-gray-700">{{ $vendor->kategori_vendor }}</td>
+                        <td class="px-5 py-3.5 text-center">
+                            <div class="flex items-center justify-center gap-4">
+                                <button
+                                    class="btn-profile flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition"
+                                    data-nama="{{ $vendor->nama_perusahaan }}"
+                                    data-kategori="{{ $vendor->kategori_vendor }}"
+                                    data-email="{{ $vendor->email_perusahaan }}" data-phone="{{ $vendor->no_hp }}"
+                                    data-alamat="{{ $vendor->alamat }}">
+                                    <i class="ph-bold ph-user text-base"></i>
+                                </button>
+                                <button type="button"
+                                    wire:click="deleteVendor({{ $vendor->id_vendor }})"
+                                    wire:confirm="Apakah Anda yakin ingin menghapus akun vendor ({{ $vendor->nama_perusahaan }}) ini secara permanen dari sistem?"
+                                    class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-700 transition"
+                                    title="Hapus Vendor">
+                                    <i class="ph-bold ph-trash text-base"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

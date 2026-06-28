@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('id_vendor', 'fk_akun_vendor')->references('id_vendor')->on('vendor')->onDelete('cascade');
         });
         
-        DB::statement("ALTER TABLE akun ADD CONSTRAINT chk_akun_role CHECK (role in ('Vendor','Procurement'))");
+        DB::statement("ALTER TABLE akun ADD CONSTRAINT chk_akun_role CHECK (role in ('Vendor','Procurement','Superadmin'))");
     }
 
     public function down(): void

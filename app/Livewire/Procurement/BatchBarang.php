@@ -22,19 +22,34 @@ class BatchBarang extends Component
     public $start_time;
     public $end_date;
     public $end_time;
+    public $id_procurement_terpilih = null;
+    
+    public $procurementList = [];
 
     public function mount()
     {
-        // No year filter needed
+        // Muat daftar procurement jika yang login adalah Superadmin
+        if (Auth::user()->role === 'Superadmin') {
+            $this->procurementList = \App\Models\Procurement::all();
+        }
     }
 
     public function store()
     {
-        $this->validate([
+        $rules = [
             'start_date' => 'required|date',
             'start_time' => 'required',
             'end_date'   => 'required|date',
             'end_time'   => 'required',
+        ];
+
+        // Jika superadmin, wajib memilih procurement tujuan
+        if (Auth::user()->role === 'Superadmin') {
+            $rules['id_procurement_terpilih'] = 'required|integer';
+        }
+
+        $this->validate($rules, [
+            'id_procurement_terpilih.required' => 'Wajib memilih admin procurement tujuan untuk batch ini.'
         ]);
 
         $waktu_mulai = $this->start_date . ' ' . $this->start_time . ':00';
@@ -46,8 +61,12 @@ class BatchBarang extends Component
             return;
         }
 
+        $id_proc = Auth::user()->role === 'Superadmin' 
+            ? $this->id_procurement_terpilih 
+            : Auth::user()->id_procurement;
+
         Batch::create([
-            'id_procurement' => Auth::user()->id_procurement,
+            'id_procurement' => $id_proc,
             'waktu_mulai'    => $waktu_mulai,
             'waktu_selesai'  => $waktu_selesai,
         ]);
@@ -59,6 +78,7 @@ class BatchBarang extends Component
         $this->start_time = null;
         $this->end_date = null;
         $this->end_time = null;
+        $this->id_procurement_terpilih = null;
 
         $this->successMessage = 'Batch berhasil ditambahkan.';
         $this->showSuccessModal = true;
@@ -77,18 +97,26 @@ class BatchBarang extends Component
     {
         $layoutData = [
             'headerTitle' => 'Batch Barang',
-            'headerDescription' => 'Silahkan akses folder sesuai tahun yang diinginkan'
+            'headerDescription' => 'Silakan akses folder sesuai tahun yang diinginkan'
         ];
 
-        if (Batch::count() == 0) {
+        $user = Auth::user();
+
+        // 1. Dapatkan query dasar batch dengan relasi penawaran
+        $query = Batch::with('penawaran');
+
+        // 2. Jika bukan Superadmin, batasi hanya melihat batch buatannya sendiri
+        if ($user->role !== 'Superadmin') {
+            $query->where('id_procurement', $user->id_procurement);
+        }
+
+        $batches = $query->orderBy('waktu_mulai', 'asc')->get();
+
+        if ($batches->isEmpty()) {
             return view('livewire.procurement.batch-barang-item-kosong', [
                 'batches' => []
             ])->layoutData($layoutData);
         }
-
-        $batches = Batch::with('penawaran')
-            ->orderBy('waktu_mulai', 'asc')
-            ->get();
 
         return view('livewire.procurement.batch-barang', [
             'batches' => $batches

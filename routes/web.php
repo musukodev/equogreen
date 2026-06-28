@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
 
     // Dashboard
     Route::get('/dashboard_procurement', \App\Livewire\Procurement\Dashboard::class)->name('procurement-dashboard');
+    Route::get('/kelola-admin', \App\Livewire\Procurement\KelolaAdmin::class)->name('procurement-kelola-admin');
 
     Route::get('/dashboard_vendor', \App\Livewire\Vendor\Dashboard::class)->name('vendor-dashboard');
 

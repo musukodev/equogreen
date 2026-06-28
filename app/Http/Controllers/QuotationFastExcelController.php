@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Quotation;
+use App\Models\Vendor;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class QuotationFastExcelController extends Controller
 {
@@ -40,7 +42,7 @@ class QuotationFastExcelController extends Controller
 
         // 3.5 Simpan file secara fisik untuk keperluan riwayat/tampilan
         $directory = "public/quotations/{$idPenawaran}_{$idVendor}";
-        
+
         // 4. Proses import menggunakan FastExcel dengan penanganan error
         try {
             DB::beginTransaction();
@@ -90,11 +92,65 @@ class QuotationFastExcelController extends Controller
             });
 
             // Simpan file fisik jika sukses
-            Storage::deleteDirectory($directory); 
+            Storage::deleteDirectory($directory);
             $fileName = $request->file('file')->getClientOriginalName();
             $request->file('file')->storeAs($directory, $fileName);
 
             DB::commit();
+
+            // 5. Kirim email notifikasi ke Procurement pembuat batch & semua Superadmin
+            try {
+                $penawaran = \App\Models\Penawaran::with('batch.procurement')->find($idPenawaran);
+                if ($penawaran && $penawaran->batch) {
+                    $batch = $penawaran->batch;
+                    $recipientEmails = [];
+
+                    // Tambahkan email admin pembuat batch jika ada
+                    if ($batch->procurement && $batch->procurement->email) {
+                        $recipientEmails[] = $batch->procurement->email;
+                    }
+
+                    // Tambahkan email seluruh Superadmin
+                    $superadminEmails = \App\Models\User::where('role', 'Superadmin')
+                        ->with('procurement')
+                        ->get()
+                        ->map(fn($user) => $user->procurement?->email)
+                        ->filter()
+                        ->toArray();
+
+                    $recipientEmails = array_unique(array_merge($recipientEmails, $superadminEmails));
+
+                    if (!empty($recipientEmails)) {
+                        $vendor = Vendor::find($idVendor);
+                        if ($vendor) {
+                            Mail::to($recipientEmails)->send(new \App\Mail\AdminQuotationSubmittedAlertMail($vendor, $batch));
+
+                            // Simpan notifikasi in-app untuk pembuat batch
+                            if ($batch->id_procurement) {
+                                \App\Models\Pengumuman::create([
+                                    'id_vendor' => null,
+                                    'id_procurement' => $batch->id_procurement,
+                                    'isi' => "Vendor " . $vendor->nama_perusahaan . " telah mengirimkan quotation untuk Batch " . $batch->id_batch . "."
+                                ]);
+                            }
+
+                            // Simpan notifikasi in-app untuk seluruh Superadmin
+                            $superadmins = \App\Models\User::where('role', 'Superadmin')->get();
+                            foreach ($superadmins as $sa) {
+                                if ($sa->id_procurement && $sa->id_procurement != $batch->id_procurement) {
+                                    \App\Models\Pengumuman::create([
+                                        'id_vendor' => null,
+                                        'id_procurement' => $sa->id_procurement,
+                                        'isi' => "Vendor " . $vendor->nama_perusahaan . " telah mengirimkan quotation untuk Batch " . $batch->id_batch . "."
+                                    ]);
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (\Exception $mailEx) {
+                // Log/ignore error email agar proses upload tetap dianggap sukses bagi vendor
+            }
         } catch (\Exception $e) {
             DB::rollBack();
             // Kembalikan error secara ramah ke halaman uploader

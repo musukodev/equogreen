@@ -38,9 +38,34 @@ class User extends Authenticatable
 {
     return $this->belongsTo(Vendor::class, 'id_vendor');
 }
-public function procurement()
-{
-    return $this->belongsTo(Procurement::class, 'id_procurement');
-}
+    public function procurement()
+    {
+        return $this->belongsTo(Procurement::class, 'id_procurement');
+    }
+
+    /**
+     * Normalisasi nomor handphone ke format standar 628xxxxxxxx
+     */
+    public static function normalizePhone($phone)
+    {
+        if (empty($phone)) {
+            return $phone;
+        }
+
+        // Hapus semua karakter non-numerik
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+
+        // Jika diawali dengan 0, ubah menjadi 62
+        if (strpos($phone, '0') === 0) {
+            $phone = '62' . substr($phone, 1);
+        }
+
+        // Jika diawali dengan 8 langsung, tambahkan 62 di depannya
+        if (strpos($phone, '8') === 0) {
+            $phone = '62' . $phone;
+        }
+
+        return $phone;
+    }
 
 }

@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="relative w-full md:flex-1">
-                    <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search"
+                    <input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari..."
                         class="w-full rounded-md border border-black px-4 py-2.5 text-[14px] outline-none transition focus:ring-1 focus:ring-black">
                 </div>
             </div>

@@ -41,8 +41,16 @@
 
                         <td class="border-r border-gray-100 px-5 py-4 text-center">
                             <button type="button" 
-                                onclick="openPortofolio('{{ $vendor->nama_perusahaan }}', '{{ strtoupper(substr($vendor->nama_perusahaan, 0, 1)) }}', '{{ $vendor->kategori_vendor }}', '{{ $vendor->email_perusahaan }}', '{{ $vendor->no_hp }}', '{{ \Carbon\Carbon::parse($vendor->created_at)->format('d M Y') }}', '{{ $vendor->npwp ?? '-' }}', '{{ $vendor->alamat }}', '{{ $vendor->deskripsi }}')"
-                                class="text-accent hover:text-primary text-sm font-semibold underline underline-offset-2 transition-colors">
+                                class="btn-lihat text-accent hover:text-primary text-sm font-semibold underline underline-offset-2 transition-colors"
+                                data-nama="{{ $vendor->nama_perusahaan }}"
+                                data-avatar="{{ strtoupper(substr($vendor->nama_perusahaan, 0, 1)) }}"
+                                data-kategori="{{ $vendor->kategori_vendor }}"
+                                data-email="{{ $vendor->email_perusahaan }}"
+                                data-phone="{{ $vendor->no_hp }}"
+                                data-tanggal="{{ \Carbon\Carbon::parse($vendor->created_at)->format('d M Y') }}"
+                                data-alamat="{{ $vendor->alamat }}"
+                                data-deskripsi="{{ $vendor->deskripsi }}"
+                                data-file="{{ $vendor->portofolio }}">
                                 Lihat
                             </button>
                         </td>
@@ -107,15 +115,23 @@
                 </button>
             </div>
             <hr class="border-gray-100" />
-            <div class="flex items-center gap-4">
-                <div class="bg-primary/10 text-primary flex h-14 w-14 items-center justify-center rounded-full text-xl font-bold"
-                    id="modal-avatar">A</div>
-                <div>
-                    <p class="text-lg font-bold text-gray-800" id="modal-nama">—</p>
-                    <span
-                        class="bg-primary/10 text-primary mt-1 inline-block rounded-full px-3 py-0.5 text-xs font-semibold"
-                        id="modal-kategori">—</span>
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="bg-primary/10 text-primary flex h-14 w-14 items-center justify-center rounded-full text-xl font-bold"
+                        id="modal-avatar">A</div>
+                    <div>
+                        <p class="text-lg font-bold text-gray-800" id="modal-nama">—</p>
+                        <span
+                            class="bg-primary/10 text-primary mt-1 inline-block rounded-full px-3 py-0.5 text-xs font-semibold"
+                            id="modal-kategori">—</span>
+                    </div>
                 </div>
+                <!-- Tombol Lihat Berkas PDF (Warna Hijau di sebelah kanan) -->
+                <a id="modal-download-btn" href="#" target="_blank"
+                   class="inline-flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl transition shadow-md flex-shrink-0">
+                    <i class="ph ph-file-pdf text-base"></i>
+                    <span>Lihat PDF</span>
+                </a>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div class="rounded-lg bg-gray-50 p-3">
@@ -126,7 +142,7 @@
                     <p class="mb-0.5 text-xs text-gray-400">Telepon</p>
                     <p class="text-sm font-semibold text-gray-700" id="modal-phone">—</p>
                 </div>
-                <div class="rounded-lg bg-gray-50 p-3">
+                <div class="col-span-2 rounded-lg bg-gray-50 p-3">
                     <p class="mb-0.5 text-xs text-gray-400">Tanggal Daftar</p>
                     <p class="text-sm font-semibold text-gray-700" id="modal-tanggal">—</p>
                 </div>
@@ -195,19 +211,31 @@
         // =============================================
         // PORTOFOLIO MODAL
         // =============================================
-        function openPortofolio(vendorName, avatarStr, kategoriStr, emailStr, phoneStr, dateStr, npwpStr, addressStr, descStr) {
-            document.getElementById('modal-avatar').textContent = avatarStr || vendorName.charAt(0);
-            document.getElementById('modal-nama').textContent = vendorName;
-            document.getElementById('modal-kategori').textContent = kategoriStr;
-            document.getElementById('modal-email').textContent = emailStr;
-            document.getElementById('modal-phone').textContent = phoneStr;
-            document.getElementById('modal-tanggal').textContent = dateStr;
-            document.getElementById('modal-npwp').textContent = npwpStr || '-';
-            document.getElementById('modal-alamat').textContent = addressStr;
-            document.getElementById('modal-desc').textContent = descStr || '-';
-            portofolioModal.classList.remove('hidden');
-            portofolioModal.classList.add('flex');
-        }
+        document.querySelectorAll('.btn-lihat').forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById('modal-avatar').textContent = this.dataset.avatar || this.dataset.nama.charAt(0);
+                document.getElementById('modal-nama').textContent = this.dataset.nama;
+                document.getElementById('modal-kategori').textContent = this.dataset.kategori;
+                document.getElementById('modal-email').textContent = this.dataset.email;
+                document.getElementById('modal-phone').textContent = this.dataset.phone;
+                document.getElementById('modal-tanggal').textContent = this.dataset.tanggal;
+                document.getElementById('modal-alamat').textContent = this.dataset.alamat;
+                document.getElementById('modal-desc').textContent = this.dataset.deskripsi || '-';
+                
+                // Set link download file portofolio secara dinamis
+                const downloadBtn = document.getElementById('modal-download-btn');
+                if (this.dataset.file) {
+                    downloadBtn.setAttribute('href', '/storage/portofolio/' + this.dataset.file);
+                    downloadBtn.style.display = 'inline-flex';
+                } else {
+                    downloadBtn.setAttribute('href', '#');
+                    downloadBtn.style.display = 'none';
+                }
+                
+                portofolioModal.classList.remove('hidden');
+                portofolioModal.classList.add('flex');
+            });
+        });
 
         closePortofolioModal.addEventListener('click', () => {
             portofolioModal.classList.add('hidden');

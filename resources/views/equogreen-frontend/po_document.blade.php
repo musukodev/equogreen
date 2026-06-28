@@ -115,20 +115,39 @@
             </div>
         </div>
 
+        <!-- Signature Section -->
+        <div class="grid grid-cols-2 gap-8 mt-12 pt-8 border-t border-gray-200 text-sm">
+            <!-- Vendor Signature (Kiri) -->
+            <div class="flex flex-col items-center">
+                <p class="text-gray-500 mb-1">Disetujui Oleh,</p>
+                <p class="font-bold text-gray-800">{{ $vendor->nama_perusahaan }}</p>
+                <div class="h-20"></div> <!-- Placeholder ruang tanda tangan -->
+                <p class="border-t border-gray-400 w-48 text-center pt-1 text-gray-600">( Tanda Tangan & Stempel )</p>
+            </div>
+
+            <!-- Procurement Signature (Kanan) -->
+            <div class="flex flex-col items-center">
+                <p class="text-gray-500 mb-1">Dibuat Oleh,</p>
+                <p class="font-bold text-gray-800">PT Ecogreen Oleochemicals</p>
+                <div class="h-20"></div> <!-- Placeholder ruang tanda tangan -->
+                <p class="border-t border-gray-400 w-48 text-center pt-1 font-semibold text-gray-800">{{ $procurementName }}</p>
+            </div>
+        </div>
+
     </div>
 
     <!-- Actions -->
     <div class="max-w-4xl mx-auto flex justify-center gap-4 mb-16">
         <a href="{{ route('po.pdf', ['id_vendor' => $quotations->first()->id_vendor, 'id_penawaran' => $quotations->first()->id_penawaran]) }}" 
            class="px-6 py-2.5 bg-black text-white font-medium rounded hover:bg-gray-800 transition shadow-sm">
-            Download as PDF
+            Unduh sebagai PDF
         </a>
         @if(auth()->check() && strtolower(auth()->user()->role) === 'procurement')
         <form action="{{ route('po.email', ['id_vendor' => $quotations->first()->id_vendor, 'id_penawaran' => $quotations->first()->id_penawaran]) }}" method="POST">
             @csrf
             <button type="submit" 
                     class="px-6 py-2.5 bg-blue-600 text-white font-medium rounded hover:bg-blue-700 transition shadow-sm">
-                Send to Email
+                Kirim ke Email
             </button>
         </form>
         @endif

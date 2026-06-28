@@ -11,11 +11,17 @@ class Pengumuman extends Model
     
     protected $fillable = [
         'id_vendor',
+        'id_procurement',
         'isi',
     ];
 
     public function vendor()
     {
         return $this->belongsTo(Vendor::class, 'id_vendor', 'id_vendor');
+    }
+
+    public function procurement()
+    {
+        return $this->belongsTo(Procurement::class, 'id_procurement', 'id_procurement');
     }
 }

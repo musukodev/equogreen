@@ -20,6 +20,11 @@ class ProfileVendor extends Component
     public $penanggung_jawab;
     public $deskripsi;
 
+    // Password properties
+    public $current_password;
+    public $new_password;
+    public $new_password_confirmation;
+
     public function mount()
     {
         $vendor = Auth::user()->vendor;
@@ -49,13 +54,39 @@ class ProfileVendor extends Component
             $vendor->update([
                 'nama_perusahaan' => $this->nama_perusahaan,
                 'email_perusahaan' => $this->email_perusahaan,
-                'no_hp' => $this->no_hp,
+                'no_hp' => \App\Models\User::normalizePhone($this->no_hp),
                 'alamat' => $this->alamat,
                 'penanggung_jawab' => $this->penanggung_jawab,
                 'deskripsi' => $this->deskripsi,
             ]);
 
+            // Ubah password jika diisi
+            if (!empty($this->current_password) || !empty($this->new_password) || !empty($this->new_password_confirmation)) {
+                $this->validate([
+                    'current_password' => 'required',
+                    'new_password' => 'required|string|min:6|confirmed',
+                ], [
+                    'current_password.required' => 'Password lama wajib diisi.',
+                    'new_password.required' => 'Password baru wajib diisi.',
+                    'new_password.min' => 'Password baru minimal terdiri dari 6 karakter.',
+                    'new_password.confirmed' => 'Konfirmasi password baru tidak cocok.',
+                ]);
+
+                $user = Auth::user();
+                if (!\Illuminate\Support\Facades\Hash::check($this->current_password, $user->password)) {
+                    $this->addError('current_password', 'Password lama yang Anda masukkan salah.');
+                    return;
+                }
+
+                $user->update([
+                    'password' => \Illuminate\Support\Facades\Hash::make($this->new_password)
+                ]);
+
+                $this->reset(['current_password', 'new_password', 'new_password_confirmation']);
+            }
+
             session()->flash('success', 'Profile vendor berhasil diperbarui!');
+            $this->dispatch('profile-updated');
         } else {
             session()->flash('error', 'Data Vendor tidak ditemukan.');
         }

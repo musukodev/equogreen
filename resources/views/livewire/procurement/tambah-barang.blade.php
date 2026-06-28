@@ -234,7 +234,7 @@
                     @if ($edit_id)
                         <button type="button" wire:click="deletePenawaran('{{ $edit_id }}')"
                             class="w-full rounded-lg bg-black py-2.5 font-bold text-white transition hover:bg-gray-800 sm:w-[120px]">
-                            Delete
+                            Hapus
                         </button>
                         <button type="button" wire:click="cancelEdit"
                             class="w-full rounded-lg border border-gray-400 bg-white py-2.5 font-bold text-black transition hover:bg-gray-50 sm:w-[120px]">

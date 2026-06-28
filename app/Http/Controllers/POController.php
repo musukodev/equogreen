@@ -15,7 +15,7 @@ class POController extends Controller
     {
         $vendor = Vendor::findOrFail($id_vendor);
         
-        $quotations = Quotation::with('penawaran.batch')
+        $quotations = Quotation::with('penawaran.batch.procurement')
             ->where('id_vendor', $id_vendor)
             ->where('id_penawaran', $id_penawaran)
             ->get();
@@ -24,13 +24,17 @@ class POController extends Controller
             abort(404, 'Data Quotation tidak ditemukan');
         }
 
+        // Ambil nama procurement dari relasi batch
+        $firstQuotation = $quotations->first();
+        $procurementName = $firstQuotation->penawaran?->batch?->procurement?->nama_procurement ?? 'Procurement Team';
+
         // Hitung total
         $total = 0;
         foreach ($quotations as $q) {
             $total += ($q->qty * $q->net_price);
         }
 
-        return compact('vendor', 'quotations', 'total');
+        return compact('vendor', 'quotations', 'total', 'procurementName');
     }
 
     public function show($id_vendor, $id_penawaran)

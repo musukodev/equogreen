@@ -88,12 +88,29 @@ class Register extends Component
             'kecamatan' => 'required|string|max:255',
             'kode_pos' => 'required|string|max:10',
             'portofolio' => 'required|file|mimes:pdf,doc,docx|max:2048',
+        ], [
+            'nama_perusahaan.required' => 'Nama perusahaan wajib diisi.',
+            'email_perusahaan.required' => 'Email perusahaan wajib diisi.',
+            'email_perusahaan.email' => 'Format email perusahaan tidak valid.',
+            'email_perusahaan.unique' => 'Email perusahaan ini sudah terdaftar di sistem.',
+            'no_hp.required' => 'Nomor handphone perusahaan wajib diisi.',
+            'alamat.required' => 'Alamat perusahaan wajib diisi.',
+            'kategori_vendor.required' => 'Kategori vendor wajib diisi.',
+            'penanggung_jawab.required' => 'Nama penanggung jawab wajib diisi.',
+            'deskripsi.required' => 'Deskripsi perusahaan wajib diisi.',
+            'provinsi.required' => 'Provinsi wajib diisi.',
+            'kota.required' => 'Kota/Kabupaten wajib diisi.',
+            'kecamatan.required' => 'Kecamatan wajib diisi.',
+            'kode_pos.required' => 'Kode pos wajib diisi.',
+            'portofolio.required' => 'Berkas portofolio perusahaan wajib diunggah.',
+            'portofolio.mimes' => 'Berkas portofolio harus berupa file berformat PDF, DOC, atau DOCX.',
+            'portofolio.max' => 'Ukuran berkas portofolio tidak boleh lebih dari 2 MB (2048 KB).',
         ]);
 
         $data = [
             'nama_perusahaan' => $this->nama_perusahaan,
             'email_perusahaan' => $this->email_perusahaan,
-            'no_hp' => $this->no_hp,
+            'no_hp' => \App\Models\User::normalizePhone($this->no_hp),
             'alamat' => $this->alamat,
             'kategori_vendor' => $this->kategori_vendor,
             'penanggung_jawab' => $this->penanggung_jawab,
@@ -112,9 +129,30 @@ class Register extends Component
 
         $vendor = Vendor::create($data);
 
+        // 1. Kirim email konfirmasi ke vendor
         if ($vendor->email_perusahaan) {
             \Illuminate\Support\Facades\Mail::to($vendor->email_perusahaan)->send(new \App\Mail\VendorRegisteredConfirmationMail($vendor));
         }
+
+        // 2. Kirim email alert pendaftaran vendor baru ke semua Procurement & Superadmin
+        $adminEmails = \App\Models\User::whereIn('role', ['Procurement', 'Superadmin'])
+            ->with('procurement')
+            ->get()
+            ->map(fn($user) => $user->procurement?->email)
+            ->filter()
+            ->unique()
+            ->toArray();
+
+        if (!empty($adminEmails)) {
+            \Illuminate\Support\Facades\Mail::to($adminEmails)->send(new \App\Mail\AdminNewVendorAlertMail($vendor));
+        }
+
+        // 3. Simpan notifikasi in-app untuk semua Procurement (global)
+        \App\Models\Pengumuman::create([
+            'id_vendor' => null,
+            'id_procurement' => null, // null berarti untuk semua admin procurement
+            'isi' => "Vendor baru telah mendaftar: {$vendor->nama_perusahaan} (Kategori: " . strtoupper($vendor->kategori_vendor) . "). Silakan lakukan validasi."
+        ]);
 
         session()->flash('success', 'Pendaftaran berhasil! Akun Anda sedang ditinjau. Mohon tunggu konfirmasi admin melalui email.');
         return redirect()->route('registrasi');

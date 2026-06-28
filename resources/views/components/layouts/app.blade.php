@@ -74,7 +74,7 @@
         <!-- Nav Menu -->
         <nav class="flex flex-1 flex-col gap-1 px-4 py-6">
 
-            @if (auth()->check() && strtolower(auth()->user()->role) === 'procurement')
+            @if (auth()->check() && in_array(strtolower(auth()->user()->role), ['procurement', 'superadmin']))
                 <!-- Procurement Links -->
                 <a href="{{ route('procurement-dashboard') }}"
                     class="{{ request()->routeIs('procurement-dashboard') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
@@ -84,8 +84,19 @@
                 </a>
                 <div class="my-1 border-b border-gray-100"></div>
 
+                @if (strtolower(auth()->user()->role) === 'superadmin')
+                    <!-- Kelola Admin (Superadmin Only) -->
+                    <a href="{{ route('procurement-kelola-admin') }}"
+                        class="{{ request()->routeIs('procurement-kelola-admin') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
+                        <i
+                            class="ph-bold ph-shield-check {{ request()->routeIs('procurement-kelola-admin') ? 'text-primary' : 'text-gray-400' }} text-2xl group-hover:text-white"></i>
+                        Kelola Admin
+                    </a>
+                    <div class="my-1 border-b border-gray-100"></div>
+                @endif
+
                 <a href="{{ route('procurement-batch_barang') }}"
-                    class="{{ request()->routeIs('procurement-batch_barang') || request()->routeIs('procurement-batch_barang') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
+                    class="{{ request()->routeIs('procurement-batch_barang') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
                     <img src="/gambar/search-database.png" alt="Periksa Barang"
                         class="h-7 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
                     Batch Barang
@@ -94,7 +105,7 @@
 
                 <a href="{{ route('procurement-notifikasi') }}"
                     class="{{ request()->routeIs('procurement-notifikasi') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
-                    <img src="/gambar/add-reminder.png" alt="Daftar Vendor"
+                    <img src="/gambar/vendor-sidebar.png" alt="Daftar Vendor"
                         class="h-7 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
                     Daftar Vendor
                 </a>
@@ -103,7 +114,7 @@
                 <a href="{{ route('procurement-validasi-vendor') }}"
                     class="{{ request()->routeIs('procurement-validasi-vendor') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
                     <img src="/gambar/validasi.png" alt="Validasi Vendor"
-                        class="h-10 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
+                        class="h-7 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
                     Validasi Vendor
                 </a>
                 <div class="my-1 border-b border-gray-100"></div>
@@ -150,112 +161,194 @@
     </aside>
 
     <!-- ===== MAIN CONTENT SLOT ===== -->
-    <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+    <div class="flex h-full min-w-0 flex-1 flex-col overflow-hidden">
         <!-- Top Header Global -->
-        @if(isset($headerTitle))
-        <header class="flex items-center justify-between p-6 lg:p-8 pb-0 flex-shrink-0">
-            <div class="flex items-center gap-4">
-                <!-- Mobile Hamburger -->
-                <button onclick="toggleSidebar()"
-                    class="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm flex-shrink-0 group">
-                    <img src="/gambar/garis3.png" alt="Menu" class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
-                </button>
-                
-                @if(isset($backUrl))
-                <!-- Back Button -->
-                <a href="{{ $backUrl }}"
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm"
-                    wire:navigate>
-                    <img src="/gambar/back-arrow.png" alt="Back" class="w-6 h-6 object-contain brightness-0" />
-                </a>
-                @elseif(isset($backRoute))
-                <!-- Back Button -->
-                <a href="{{ route($backRoute) }}"
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 shadow-sm"
-                    wire:navigate>
-                    <img src="/gambar/back-arrow.png" alt="Back" class="w-6 h-6 object-contain brightness-0" />
-                </a>
-                @endif
+        @if (isset($headerTitle))
+            <header class="flex flex-shrink-0 items-center justify-between p-6 pb-0 lg:p-8">
+                <div class="flex items-center gap-4">
+                    <!-- Mobile Hamburger -->
+                    <button onclick="toggleSidebar()"
+                        class="hover:bg-primary hover:border-primary group flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white lg:hidden">
+                        <img src="/gambar/garis3.png" alt="Menu"
+                            class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
+                    </button>
 
-                <div>
-                    <h1 class="text-2xl md:text-[36px] font-bold text-[#111827] leading-none">{{ $headerTitle }}</h1>
-                    @if(isset($headerDescription))
-                        <p class="text-gray-400 md:text-gray-500 text-xs md:text-base mt-1.5">{{ $headerDescription }}</p>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Profile Section -->
-            <div class="flex items-center gap-3">
-                @if(auth()->check())
-                    @if(strtolower(auth()->user()->role) === 'procurement')
-                        <button class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:bg-primary hover:border-primary transition-all duration-200 group">
-                            <img src="/gambar/bell-black.png" alt="Notifikasi" class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
-                        </button>
-                        <a href="{{ route('profile_procurement') }}">
-                            <img src="/gambar/profileup.png" alt="Profil" class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-all duration-200 cursor-pointer" />
+                    @if (isset($backUrl))
+                        <!-- Back Button -->
+                        <a href="{{ $backUrl }}"
+                            class="hover:bg-primary hover:border-primary flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white"
+                            wire:navigate>
+                            <img src="/gambar/back-arrow.png" alt="Back"
+                                class="h-6 w-6 object-contain brightness-0" />
                         </a>
-                        <div class="hidden md:block w-px h-10 bg-gray-200"></div>
-                        <span class="hidden md:block font-medium text-gray-700 text-[17px]">Procurement</span>
-                    @elseif(strtolower(auth()->user()->role) === 'vendor')
-                        @php
-                            $vendor = auth()->user()->vendor;
-                            $notifications = \App\Models\Pengumuman::where('id_vendor', $vendor?->id_vendor)
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                        @endphp
-                        
-                        <div class="relative" x-data="{ openNotifications: false }">
-                            <button @click="openNotifications = !openNotifications"
-                                class="w-12 h-12 flex items-center justify-center bg-[#f0f5ff] rounded-full border border-gray-200 hover:bg-primary hover:border-primary transition-all duration-200 group">
-                                <img src="/gambar/bell-black.png" alt="Notifikasi" class="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert" />
-                                @if(count($notifications) > 0)
-                                    <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-extrabold flex items-center justify-center rounded-full animate-pulse">
-                                        {{ count($notifications) }}
-                                    </span>
-                                @endif
-                            </button>
+                    @elseif(isset($backRoute))
+                        <!-- Back Button -->
+                        <a href="{{ route($backRoute) }}"
+                            class="hover:bg-primary hover:border-primary flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white"
+                            wire:navigate>
+                            <img src="/gambar/back-arrow.png" alt="Back"
+                                class="h-6 w-6 object-contain brightness-0" />
+                        </a>
+                    @endif
 
-                            <!-- Dropdown List Notifikasi Vendor -->
-                            <div x-show="openNotifications" 
-                                 @click.away="openNotifications = false"
-                                 x-transition:enter="transition ease-out duration-100"
-                                 x-transition:enter-start="transform opacity-0 scale-95"
-                                 x-transition:enter-end="transform opacity-100 scale-100"
-                                 x-transition:leave="transition ease-in duration-75"
-                                 x-transition:leave-start="transform opacity-100 scale-100"
-                                 x-transition:leave-end="transform opacity-0 scale-95"
-                                 class="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-2xl shadow-xl p-4 z-50 flex flex-col gap-3"
-                                 style="display: none;" x-cloak>
-                                <h4 class="font-bold text-gray-800 border-b pb-2 text-sm flex items-center justify-between">
-                                    <span>Notifikasi</span>
-                                    <span class="text-xs text-gray-400 font-normal">Terbaru</span>
-                                </h4>
-                                <div class="max-h-60 overflow-y-auto flex flex-col gap-2.5 pr-1">
-                                    @forelse($notifications as $notif)
-                                        <div class="p-3 rounded-xl bg-gray-50 border border-gray-100 hover:bg-gray-100 transition duration-150 flex flex-col gap-1 text-left">
-                                            <p class="text-xs text-gray-700 leading-relaxed font-medium">{{ $notif->isi }}</p>
-                                            <span class="text-[9px] text-gray-400 font-bold self-end">{{ $notif->created_at ? $notif->created_at->diffForHumans() : '-' }}</span>
-                                        </div>
-                                    @empty
-                                        <div class="text-center py-6 flex flex-col items-center gap-2">
-                                            <i class="ph ph-bell-slash text-2xl text-gray-300"></i>
-                                            <p class="text-xs text-gray-400 font-medium">Tidak ada notifikasi baru</p>
-                                        </div>
-                                    @endforelse
+                    <div>
+                        <h1 class="text-2xl font-bold leading-none text-[#111827] md:text-[36px]">{{ $headerTitle }}
+                        </h1>
+                        @if (isset($headerDescription))
+                            <p class="mt-1.5 text-xs text-gray-400 md:text-base md:text-gray-500">
+                                {{ $headerDescription }}</p>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Profile Section -->
+                <div class="flex items-center gap-3">
+                    @if (auth()->check())
+                        @if (in_array(strtolower(auth()->user()->role), ['procurement', 'superadmin']))
+                            @php
+                                $role = strtolower(auth()->user()->role);
+                                $idProc = auth()->user()->id_procurement;
+
+                                if ($role === 'superadmin') {
+                                    // Superadmin melihat semua notifikasi untuk procurement (id_vendor = null)
+                                    $procNotifications = \App\Models\Pengumuman::whereNull('id_vendor')
+                                        ->orderBy('created_at', 'desc')
+                                        ->get();
+                                } else {
+                                    // Procurement biasa melihat notifikasi global (null) & yang ditugaskan ke dirinya
+                                    $procNotifications = \App\Models\Pengumuman::whereNull('id_vendor')
+                                        ->where(function ($q) use ($idProc) {
+                                            $q->whereNull('id_procurement')->orWhere('id_procurement', $idProc);
+                                        })
+                                        ->orderBy('created_at', 'desc')
+                                        ->get();
+                                }
+                            @endphp
+
+                            <div class="relative" x-data="{ openNotifications: false }">
+                                <button @click="openNotifications = !openNotifications"
+                                    class="hover:border-primary flex h-12 w-12 items-center justify-center rounded-full border-2 border-gray-200 bg-[#f0f5ff] transition-all duration-200">
+                                    <img src="/gambar/bell-black.png" alt="Notifikasi"
+                                        class="h-6 w-6 object-contain" />
+                                    @if (count($procNotifications) > 0)
+                                        <span
+                                            class="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-500 text-[10px] font-extrabold text-white">
+                                            {{ count($procNotifications) }}
+                                        </span>
+                                    @endif
+                                </button>
+
+                                <!-- Dropdown List Notifikasi Procurement -->
+                                <div x-show="openNotifications" @click.away="openNotifications = false"
+                                    x-transition:enter="transition ease-out duration-100"
+                                    x-transition:enter-start="transform opacity-0 scale-95"
+                                    x-transition:enter-end="transform opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-75"
+                                    x-transition:leave-start="transform opacity-100 scale-100"
+                                    x-transition:leave-end="transform opacity-0 scale-95"
+                                    class="absolute right-0 z-50 mt-2 flex w-96 flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-xl"
+                                    style="display: none;" x-cloak>
+                                    <h4
+                                        class="flex items-center justify-between border-b pb-2 text-sm font-bold text-gray-800">
+                                        <span>Notifikasi</span>
+                                        <span class="text-xs font-normal text-gray-400">Terbaru</span>
+                                    </h4>
+                                    <div class="flex max-h-60 flex-col gap-2.5 overflow-y-auto pr-1">
+                                        @forelse($procNotifications as $notif)
+                                            <div
+                                                class="flex flex-col gap-1 rounded-xl border border-gray-100 bg-gray-50 p-3 text-left transition duration-150 hover:bg-gray-100">
+                                                <p class="text-xs font-medium leading-relaxed text-gray-700">
+                                                    {{ $notif->isi }}</p>
+                                                <span
+                                                    class="self-end text-[9px] font-bold text-gray-400">{{ $notif->created_at ? $notif->created_at->diffForHumans() : '-' }}</span>
+                                            </div>
+                                        @empty
+                                            <div class="flex flex-col items-center gap-2 py-6 text-center">
+                                                <i class="ph ph-bell-slash text-2xl text-gray-300"></i>
+                                                <p class="text-xs font-medium text-gray-400">Tidak ada notifikasi baru
+                                                </p>
+                                            </div>
+                                        @endforelse
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <a href="{{ route('vendor_profile') }}">
-                            <img src="/gambar/profileup.png" alt="Profil" class="w-12 h-12 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-all duration-200 cursor-pointer" />
-                        </a>
-                        <div class="hidden md:block w-px h-10 bg-gray-200"></div>
-                        <span class="hidden md:block font-medium text-gray-700 text-[17px]">{{ $vendor?->nama_perusahaan ?? 'Vendor' }}</span>
+                            <a href="{{ route('profile_procurement') }}">
+                                <img src="/gambar/profileup.png" alt="Profil"
+                                    class="hover:border-primary hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" />
+                            </a>
+                            <div class="hidden h-10 w-px bg-gray-200 md:block"></div>
+                            <span class="hidden text-[17px] font-medium text-gray-700 md:block">
+                                {{ auth()->user()->procurement?->nama_procurement ?? 'Procurement' }}
+                            </span>
+                        @elseif(strtolower(auth()->user()->role) === 'vendor')
+                            @php
+                                $vendor = auth()->user()->vendor;
+                                $notifications = \App\Models\Pengumuman::whereNotNull('id_vendor')
+                                    ->where('id_vendor', $vendor?->id_vendor)
+                                    ->orderBy('created_at', 'desc')
+                                    ->get();
+                            @endphp
+
+                            <div class="relative" x-data="{ openNotifications: false }">
+                                <button @click="openNotifications = !openNotifications"
+                                    class="hover:border-primary flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] transition-all duration-200">
+                                    <img src="/gambar/bell-black.png" alt="Notifikasi"
+                                        class="h-6 w-6 object-contain" />
+                                    @if (count($notifications) > 0)
+                                        <span
+                                            class="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-500 text-[10px] font-extrabold text-white">
+                                            {{ count($notifications) }}
+                                        </span>
+                                    @endif
+                                </button>
+
+                                <!-- Dropdown List Notifikasi Vendor -->
+                                <div x-show="openNotifications" @click.away="openNotifications = false"
+                                    x-transition:enter="transition ease-out duration-100"
+                                    x-transition:enter-start="transform opacity-0 scale-95"
+                                    x-transition:enter-end="transform opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-75"
+                                    x-transition:leave-start="transform opacity-100 scale-100"
+                                    x-transition:leave-end="transform opacity-0 scale-95"
+                                    class="absolute right-0 z-50 mt-2 flex w-96 flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-xl"
+                                    style="display: none;" x-cloak>
+                                    <h4
+                                        class="flex items-center justify-between border-b pb-2 text-sm font-bold text-gray-800">
+                                        <span>Notifikasi</span>
+                                        <span class="text-xs font-normal text-gray-400">Terbaru</span>
+                                    </h4>
+                                    <div class="flex max-h-60 flex-col gap-2.5 overflow-y-auto pr-1">
+                                        @forelse($notifications as $notif)
+                                            <div
+                                                class="flex flex-col gap-1 rounded-xl border border-gray-100 bg-gray-50 p-3 text-left transition duration-150 hover:bg-gray-100">
+                                                <p class="text-xs font-medium leading-relaxed text-gray-700">
+                                                    {{ $notif->isi }}</p>
+                                                <span
+                                                    class="self-end text-[9px] font-bold text-gray-400">{{ $notif->created_at ? $notif->created_at->diffForHumans() : '-' }}</span>
+                                            </div>
+                                        @empty
+                                            <div class="flex flex-col items-center gap-2 py-6 text-center">
+                                                <i class="ph ph-bell-slash text-2xl text-gray-300"></i>
+                                                <p class="text-xs font-medium text-gray-400">Tidak ada notifikasi baru
+                                                </p>
+                                            </div>
+                                        @endforelse
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="{{ route('vendor_profile') }}">
+                                <img src="/gambar/profileup.png" alt="Profil"
+                                    class="hover:border-primary hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" />
+                            </a>
+                            <div class="hidden h-10 w-px bg-gray-200 md:block"></div>
+                            <span
+                                class="hidden text-[17px] font-medium text-gray-700 md:block">{{ $vendor?->nama_perusahaan ?? 'Vendor' }}</span>
+                        @endif
                     @endif
-                @endif
-            </div>
-        </header>
+                </div>
+            </header>
         @endif
 
         <!-- Page Content -->

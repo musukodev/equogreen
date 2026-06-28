@@ -28,6 +28,11 @@
         .totals td { padding: 8px; }
         .totals .bg-gray { background-color: #e5e7eb; font-weight: bold; color: #000; }
         .clear { clear: both; }
+        
+        .signatures-table { width: 100%; margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px; }
+        .signatures-table td { width: 50%; text-align: center; vertical-align: top; font-size: 11px; }
+        .signature-space { height: 70px; }
+        .signature-line { width: 180px; border-top: 1px solid #666; margin: 0 auto; padding-top: 5px; }
     </style>
 </head>
 <body>
@@ -106,6 +111,24 @@
         </table>
         <div class="clear"></div>
     </div>
+
+    <!-- Signature Section -->
+    <table class="signatures-table" cellspacing="0" cellpadding="0">
+        <tr>
+            <td>
+                <p style="color: #666; margin: 0 0 5px 0;">Disetujui Oleh,</p>
+                <p style="font-weight: bold; color: #000; margin: 0;">{{ $vendor->nama_perusahaan }}</p>
+                <div class="signature-space"></div>
+                <div class="signature-line" style="color: #666;">( Tanda Tangan & Stempel )</div>
+            </td>
+            <td>
+                <p style="color: #666; margin: 0 0 5px 0;">Dibuat Oleh,</p>
+                <p style="font-weight: bold; color: #000; margin: 0;">PT Ecogreen Oleochemicals</p>
+                <div class="signature-space"></div>
+                <div class="signature-line" style="font-weight: bold; color: #000;">{{ $procurementName }}</div>
+            </td>
+        </tr>
+    </table>
 
 </body>
 </html>

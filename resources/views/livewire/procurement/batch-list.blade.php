@@ -6,7 +6,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search"
+            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari..."
                 class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 bg-white text-sm text-gray-700 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 shadow-sm" />
         </div>
     </div>
@@ -30,7 +30,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
             </svg>
             <p class="text-lg">Belum ada folder batch.</p>
-            <p class="text-sm">Silahkan tambahkan folder baru.</p>
+            <p class="text-sm">Silakan tambahkan folder baru.</p>
         </div>
         @endforelse
     </section>

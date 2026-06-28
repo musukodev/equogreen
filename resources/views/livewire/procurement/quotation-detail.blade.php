@@ -23,7 +23,7 @@
                     <a href="{{ $downloadUrl }}" download="{{ $fileName }}"
                        class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition shadow-md">
                         <i class="ph ph-download-simple text-lg font-bold"></i>
-                        <span>Download Excel</span>
+                        <span>Unduh Excel</span>
                     </a>
                     @endif
                     <button wire:click="closeModal"

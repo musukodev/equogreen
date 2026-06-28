@@ -11,6 +11,14 @@ use Livewire\Attributes\Title;
 #[Title('Daftar Vendor - Equogreen')]
 class Notifikasi extends Component
 {
+    public function deleteVendor($idVendor)
+    {
+        $vendor = Vendor::findOrFail($idVendor);
+        $vendor->delete();
+
+        session()->flash('success', 'Akun vendor berhasil dihapus secara permanen dari sistem.');
+    }
+
     public function render()
     {
         $vendors = Vendor::where('status', 'approved')->get();

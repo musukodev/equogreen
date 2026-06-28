@@ -2,7 +2,7 @@
     <!-- Search Bar -->
     <div class="flex flex-col gap-6 p-6 lg:p-8">
         <div class="relative">
-            <input type="text" placeholder="Search"
+            <input type="text" placeholder="Cari..."
                 class="focus:border-primary w-full rounded-xl border border-gray-300 bg-white px-6 py-4 text-base font-medium text-gray-700 shadow-sm outline-none transition-all duration-200 placeholder:text-gray-400" />
         </div>
 
