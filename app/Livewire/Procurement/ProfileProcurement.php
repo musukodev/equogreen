@@ -15,6 +15,7 @@ class ProfileProcurement extends Component
     public $nama_procurement;
     public $email;
     public $no_hp;
+    public $username;
 
     // Password properties
     public $current_password;
@@ -23,7 +24,9 @@ class ProfileProcurement extends Component
 
     public function mount()
     {
-        $procurement = Auth::user()->procurement;
+        $user = Auth::user();
+        $this->username = $user->username;
+        $procurement = $user->procurement;
         if ($procurement) {
             $this->nama_procurement = $procurement->nama_procurement;
             $this->email = $procurement->email;
@@ -33,18 +36,26 @@ class ProfileProcurement extends Component
 
     public function updateProfile()
     {
+        $user = Auth::user();
         $this->validate([
             'nama_procurement' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'no_hp' => 'required|string|max:20',
+            'username' => 'required|string|max:100|unique:akun,username,' . $user->id_akun . ',id_akun',
+        ], [
+            'username.unique' => 'Username ini sudah digunakan oleh pengguna lain.',
         ]);
 
-        $procurement = Auth::user()->procurement;
+        $procurement = $user->procurement;
         if ($procurement) {
             $procurement->update([
                 'nama_procurement' => $this->nama_procurement,
                 'email' => $this->email,
                 'no_hp' => \App\Models\User::normalizePhone($this->no_hp),
+            ]);
+
+            $user->update([
+                'username' => $this->username
             ]);
 
             // Ubah password jika diisi

@@ -4,7 +4,7 @@
 
 <p>Akun Anda sudah divalidasi dan terdaftar di Equogreen.</p>
 
-<p>Username: {{ Str::slug($vendor->nama_perusahaan, '-') }},</p>
+<p>Username: {{ Str::slug($vendor->nama_perusahaan, '-') }}</p>
 <p>Password sementara: <strong>{{ $temporaryPassword }}</strong></p>
 
 <p>Silakan login dan segera ganti password Anda.</p>

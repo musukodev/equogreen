@@ -13,6 +13,14 @@ class POController extends Controller
 {
     private function getPOData($id_vendor, $id_penawaran)
     {
+        // Keamanan Tambahan: Jika login sebagai vendor, pastikan hanya bisa membuka PO miliknya sendiri
+        $user = auth()->user();
+        if ($user && strtolower($user->role) === 'vendor') {
+            if ($user->id_vendor != $id_vendor) {
+                abort(403, 'Anda tidak diizinkan mengakses berkas PO vendor lain.');
+            }
+        }
+
         $vendor = Vendor::findOrFail($id_vendor);
         
         $quotations = Quotation::with('penawaran.batch.procurement')
@@ -53,7 +61,7 @@ class POController extends Controller
 
     public function sendEmail($id_vendor, $id_penawaran)
     {
-        if (auth()->check() && strtolower(auth()->user()->role) !== 'procurement') {
+        if (auth()->check() && !in_array(strtolower(auth()->user()->role), ['procurement', 'superadmin'])) {
             abort(403, 'Hanya Procurement yang diizinkan mengirim PO melalui email.');
         }
 

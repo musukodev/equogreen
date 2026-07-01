@@ -16,6 +16,8 @@ class BatchBarang extends Component
     public $showModal = false;
     public $showSuccessModal = false;
     public $successMessage = '';
+    public $editMode = false;
+    public $editingId = null;
 
     // Form inputs
     public $start_date;
@@ -32,6 +34,30 @@ class BatchBarang extends Component
         if (Auth::user()->role === 'Superadmin') {
             $this->procurementList = \App\Models\Procurement::all();
         }
+    }
+
+    public function openAddModal()
+    {
+        $this->reset(['start_date', 'start_time', 'end_date', 'end_time', 'id_procurement_terpilih', 'editingId']);
+        $this->resetValidation();
+        $this->editMode = false;
+        $this->showModal = true;
+    }
+
+    public function editBatch($id)
+    {
+        $this->resetValidation();
+        $this->editingId = $id;
+        $batch = Batch::findOrFail($id);
+
+        $this->start_date = date('Y-m-d', strtotime($batch->waktu_mulai));
+        $this->start_time = date('H:i', strtotime($batch->waktu_mulai));
+        $this->end_date = date('Y-m-d', strtotime($batch->waktu_selesai));
+        $this->end_time = date('H:i', strtotime($batch->waktu_selesai));
+        $this->id_procurement_terpilih = $batch->id_procurement;
+
+        $this->editMode = true;
+        $this->showModal = true;
     }
 
     public function store()
@@ -61,15 +87,32 @@ class BatchBarang extends Component
             return;
         }
 
-        $id_proc = Auth::user()->role === 'Superadmin' 
-            ? $this->id_procurement_terpilih 
-            : Auth::user()->id_procurement;
+        if ($this->editMode) {
+            $batch = Batch::findOrFail($this->editingId);
+            $id_proc = Auth::user()->role === 'Superadmin' 
+                ? $this->id_procurement_terpilih 
+                : Auth::user()->id_procurement;
 
-        Batch::create([
-            'id_procurement' => $id_proc,
-            'waktu_mulai'    => $waktu_mulai,
-            'waktu_selesai'  => $waktu_selesai,
-        ]);
+            $batch->update([
+                'id_procurement' => $id_proc,
+                'waktu_mulai'    => $waktu_mulai,
+                'waktu_selesai'  => $waktu_selesai,
+            ]);
+
+            $this->successMessage = 'Batch berhasil diperbarui.';
+        } else {
+            $id_proc = Auth::user()->role === 'Superadmin' 
+                ? $this->id_procurement_terpilih 
+                : Auth::user()->id_procurement;
+
+            Batch::create([
+                'id_procurement' => $id_proc,
+                'waktu_mulai'    => $waktu_mulai,
+                'waktu_selesai'  => $waktu_selesai,
+            ]);
+
+            $this->successMessage = 'Batch berhasil ditambahkan.';
+        }
 
         $this->showModal = false;
 
@@ -79,8 +122,8 @@ class BatchBarang extends Component
         $this->end_date = null;
         $this->end_time = null;
         $this->id_procurement_terpilih = null;
+        $this->editingId = null;
 
-        $this->successMessage = 'Batch berhasil ditambahkan.';
         $this->showSuccessModal = true;
     }
 

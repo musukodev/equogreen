@@ -15,11 +15,11 @@ class VendorSeeder extends Seeder
     public function run(): void
     {
         $faker = \Faker\Factory::create('id_ID');
-        $categories = ['atk', 'elektronik', 'furniture', 'cleaning', 'supplier'];
+        $categories = ['atk', 'elektronik', 'furniture', 'cleaning', 'supplier umum'];
 
         for ($i = 0; $i < 20; $i++) {
             $kategori = $categories[array_rand($categories)];
-            
+
             $vendor = Vendor::create([
                 'nama_perusahaan'  => $faker->company,
                 'email_perusahaan' => $faker->unique()->companyEmail,
@@ -39,7 +39,7 @@ class VendorSeeder extends Seeder
                 'username' => \Illuminate\Support\Str::slug($vendor->nama_perusahaan, '-'),
                 'password' => bcrypt('password'),
                 'role'     => 'vendor',
-                'id_vendor'=> $vendor->id_vendor,
+                'id_vendor' => $vendor->id_vendor,
             ]);
         }
     }

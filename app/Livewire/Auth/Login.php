@@ -21,18 +21,44 @@ class Login extends Component
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt(['username' => $this->username, 'password' => $this->password])) {
+        // 1. Tentukan apakah input username berupa email atau username biasa
+        $loginField = filter_var($this->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $credentials = ['password' => $this->password];
+
+        if ($loginField === 'email') {
+            // Cari akun user (tabel 'akun') yang memiliki relasi email terdaftar
+            // Baik di tabel 'procurement' (kolom email) atau 'vendor' (kolom email_perusahaan)
+            $user = \App\Models\User::whereHas('procurement', function ($query) {
+                $query->where('email', $this->username);
+            })->orWhereHas('vendor', function ($query) {
+                $query->where('email_perusahaan', $this->username);
+            })->first();
+
+            if ($user && \Illuminate\Support\Facades\Hash::check($this->password, $user->password)) {
+                Auth::login($user);
+                $loginSuccess = true;
+            } else {
+                $loginSuccess = false;
+            }
+        } else {
+            // Login standard menggunakan username
+            $credentials['username'] = $this->username;
+            $loginSuccess = Auth::attempt($credentials);
+        }
+
+        if ($loginSuccess) {
             session()->regenerate();
             $user = Auth::user();
 
-            if (strtolower($user->role) === 'procurement') {
+            $role = strtolower($user->role);
+            if ($role === 'procurement' || $role === 'superadmin') {
                 return redirect()->intended(route('procurement-dashboard'));
             }
 
             return redirect()->intended(route('vendor-dashboard'));
         }
 
-        $this->addError('username', 'Username atau password salah.');
+        $this->addError('username', 'Username, email, atau password salah.');
     }
 
     public function render()

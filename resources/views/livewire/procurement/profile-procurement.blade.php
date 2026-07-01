@@ -35,19 +35,20 @@
                         @error('nama_procurement') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </div>
 
-                    <!-- ID Procurement -->
+                    <!-- Username -->
                     <div class="flex flex-col gap-2">
-                        <label for="id_procurement" class="text-[15px] font-semibold text-gray-700">
-                            ID Procurement
+                        <label for="username" class="text-[15px] font-semibold text-gray-700">
+                            Username
                         </label>
                         <input
-                            id="id_procurement"
+                            id="username"
                             type="text"
-                            value="{{ auth()->user()->procurement?->id_procurement }}"
-                            readonly
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-500 text-[15px] outline-none cursor-not-allowed"
-                            placeholder="ID Procurement"
+                            wire:model="username"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-700 text-[15px] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                            placeholder="Username"
+                            required
                         />
+                        @error('username') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </div>
 
                     <!-- Email Procurement -->

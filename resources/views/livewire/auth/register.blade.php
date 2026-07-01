@@ -262,7 +262,7 @@
                                         <option value="elektronik">Elektronik</option>
                                         <option value="furniture">Furniture</option>
                                         <option value="cleaning">Cleaning Supply</option>
-                                        <option value="supplier">Supplier Umum</option>
+                                        <option value="supplier umum">Supplier Umum</option>
                                     </select>
                                     <div
                                         class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-gray-500">

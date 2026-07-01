@@ -35,6 +35,22 @@
                         @error('nama_perusahaan') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </div>
 
+                    <!-- Username -->
+                    <div class="flex flex-col gap-2">
+                        <label for="username" class="text-[15px] font-semibold text-gray-700">
+                            Username
+                        </label>
+                        <input
+                            id="username"
+                            type="text"
+                            wire:model="username"
+                            class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-700 text-[15px] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                            placeholder="Username"
+                            required
+                        />
+                        @error('username') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                    </div>
+
                     <!-- Email Perusahaan -->
                     <div class="flex flex-col gap-2">
                         <label for="email_perusahaan" class="text-[15px] font-semibold text-gray-700">

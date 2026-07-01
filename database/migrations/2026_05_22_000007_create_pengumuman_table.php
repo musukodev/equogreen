@@ -13,6 +13,7 @@ return new class extends Migration
             $table->integer('id_vendor')->unsigned()->nullable();
             $table->integer('id_procurement')->unsigned()->nullable();
             $table->text('isi')->nullable();
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
             
             $table->foreign('id_vendor', 'fk_pengumuman_vendor')->references('id_vendor')->on('vendor')->onDelete('cascade');

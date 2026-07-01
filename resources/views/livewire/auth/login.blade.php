@@ -202,16 +202,16 @@
                 <form class="md:space-y-4.5 space-y-4" wire:submit="login">
                     @csrf
 
-                    <!-- Email -->
+                    <!-- Email / Username -->
                     <div>
-                        <label for="username" class="mb-1.5 block text-sm font-medium text-gray-700">Username</label>
+                        <label for="username" class="mb-1.5 block text-sm font-medium text-gray-700">Username atau Email</label>
                         <div class="relative">
                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 md:pl-4">
                                 <i class="ph ph-envelope text-lg text-gray-400 md:text-xl"></i>
                             </div>
                             <input type="text" wire:model="username"
                                 class="@error('username') border-red-500 @enderror h-[44px] w-full rounded-xl border border-gray-200 bg-white/70 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600/20 md:h-[48px] md:pl-11"
-                                placeholder="Masukkan username Anda" required autofocus>
+                                placeholder="Masukkan username atau email Anda" required autofocus>
                         </div>
                     </div>
 

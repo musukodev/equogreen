@@ -204,75 +204,9 @@
                 <!-- Profile Section -->
                 <div class="flex items-center gap-3">
                     @if (auth()->check())
+                        <livewire:notification-bell />
+
                         @if (in_array(strtolower(auth()->user()->role), ['procurement', 'superadmin']))
-                            @php
-                                $role = strtolower(auth()->user()->role);
-                                $idProc = auth()->user()->id_procurement;
-
-                                if ($role === 'superadmin') {
-                                    // Superadmin melihat semua notifikasi untuk procurement (id_vendor = null)
-                                    $procNotifications = \App\Models\Pengumuman::whereNull('id_vendor')
-                                        ->orderBy('created_at', 'desc')
-                                        ->get();
-                                } else {
-                                    // Procurement biasa melihat notifikasi global (null) & yang ditugaskan ke dirinya
-                                    $procNotifications = \App\Models\Pengumuman::whereNull('id_vendor')
-                                        ->where(function ($q) use ($idProc) {
-                                            $q->whereNull('id_procurement')->orWhere('id_procurement', $idProc);
-                                        })
-                                        ->orderBy('created_at', 'desc')
-                                        ->get();
-                                }
-                            @endphp
-
-                            <div class="relative" x-data="{ openNotifications: false }">
-                                <button @click="openNotifications = !openNotifications"
-                                    class="hover:border-primary flex h-12 w-12 items-center justify-center rounded-full border-2 border-gray-200 bg-[#f0f5ff] transition-all duration-200">
-                                    <img src="/gambar/bell-black.png" alt="Notifikasi"
-                                        class="h-6 w-6 object-contain" />
-                                    @if (count($procNotifications) > 0)
-                                        <span
-                                            class="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-500 text-[10px] font-extrabold text-white">
-                                            {{ count($procNotifications) }}
-                                        </span>
-                                    @endif
-                                </button>
-
-                                <!-- Dropdown List Notifikasi Procurement -->
-                                <div x-show="openNotifications" @click.away="openNotifications = false"
-                                    x-transition:enter="transition ease-out duration-100"
-                                    x-transition:enter-start="transform opacity-0 scale-95"
-                                    x-transition:enter-end="transform opacity-100 scale-100"
-                                    x-transition:leave="transition ease-in duration-75"
-                                    x-transition:leave-start="transform opacity-100 scale-100"
-                                    x-transition:leave-end="transform opacity-0 scale-95"
-                                    class="absolute right-0 z-50 mt-2 flex w-96 flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-xl"
-                                    style="display: none;" x-cloak>
-                                    <h4
-                                        class="flex items-center justify-between border-b pb-2 text-sm font-bold text-gray-800">
-                                        <span>Notifikasi</span>
-                                        <span class="text-xs font-normal text-gray-400">Terbaru</span>
-                                    </h4>
-                                    <div class="flex max-h-60 flex-col gap-2.5 overflow-y-auto pr-1">
-                                        @forelse($procNotifications as $notif)
-                                            <div
-                                                class="flex flex-col gap-1 rounded-xl border border-gray-100 bg-gray-50 p-3 text-left transition duration-150 hover:bg-gray-100">
-                                                <p class="text-xs font-medium leading-relaxed text-gray-700">
-                                                    {{ $notif->isi }}</p>
-                                                <span
-                                                    class="self-end text-[9px] font-bold text-gray-400">{{ $notif->created_at ? $notif->created_at->diffForHumans() : '-' }}</span>
-                                            </div>
-                                        @empty
-                                            <div class="flex flex-col items-center gap-2 py-6 text-center">
-                                                <i class="ph ph-bell-slash text-2xl text-gray-300"></i>
-                                                <p class="text-xs font-medium text-gray-400">Tidak ada notifikasi baru
-                                                </p>
-                                            </div>
-                                        @endforelse
-                                    </div>
-                                </div>
-                            </div>
-
                             <a href="{{ route('profile_procurement') }}">
                                 <img src="/gambar/profileup.png" alt="Profil"
                                     class="hover:border-primary hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" />
@@ -284,60 +218,7 @@
                         @elseif(strtolower(auth()->user()->role) === 'vendor')
                             @php
                                 $vendor = auth()->user()->vendor;
-                                $notifications = \App\Models\Pengumuman::whereNotNull('id_vendor')
-                                    ->where('id_vendor', $vendor?->id_vendor)
-                                    ->orderBy('created_at', 'desc')
-                                    ->get();
                             @endphp
-
-                            <div class="relative" x-data="{ openNotifications: false }">
-                                <button @click="openNotifications = !openNotifications"
-                                    class="hover:border-primary flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-[#f0f5ff] transition-all duration-200">
-                                    <img src="/gambar/bell-black.png" alt="Notifikasi"
-                                        class="h-6 w-6 object-contain" />
-                                    @if (count($notifications) > 0)
-                                        <span
-                                            class="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-500 text-[10px] font-extrabold text-white">
-                                            {{ count($notifications) }}
-                                        </span>
-                                    @endif
-                                </button>
-
-                                <!-- Dropdown List Notifikasi Vendor -->
-                                <div x-show="openNotifications" @click.away="openNotifications = false"
-                                    x-transition:enter="transition ease-out duration-100"
-                                    x-transition:enter-start="transform opacity-0 scale-95"
-                                    x-transition:enter-end="transform opacity-100 scale-100"
-                                    x-transition:leave="transition ease-in duration-75"
-                                    x-transition:leave-start="transform opacity-100 scale-100"
-                                    x-transition:leave-end="transform opacity-0 scale-95"
-                                    class="absolute right-0 z-50 mt-2 flex w-96 flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-xl"
-                                    style="display: none;" x-cloak>
-                                    <h4
-                                        class="flex items-center justify-between border-b pb-2 text-sm font-bold text-gray-800">
-                                        <span>Notifikasi</span>
-                                        <span class="text-xs font-normal text-gray-400">Terbaru</span>
-                                    </h4>
-                                    <div class="flex max-h-60 flex-col gap-2.5 overflow-y-auto pr-1">
-                                        @forelse($notifications as $notif)
-                                            <div
-                                                class="flex flex-col gap-1 rounded-xl border border-gray-100 bg-gray-50 p-3 text-left transition duration-150 hover:bg-gray-100">
-                                                <p class="text-xs font-medium leading-relaxed text-gray-700">
-                                                    {{ $notif->isi }}</p>
-                                                <span
-                                                    class="self-end text-[9px] font-bold text-gray-400">{{ $notif->created_at ? $notif->created_at->diffForHumans() : '-' }}</span>
-                                            </div>
-                                        @empty
-                                            <div class="flex flex-col items-center gap-2 py-6 text-center">
-                                                <i class="ph ph-bell-slash text-2xl text-gray-300"></i>
-                                                <p class="text-xs font-medium text-gray-400">Tidak ada notifikasi baru
-                                                </p>
-                                            </div>
-                                        @endforelse
-                                    </div>
-                                </div>
-                            </div>
-
                             <a href="{{ route('vendor_profile') }}">
                                 <img src="/gambar/profileup.png" alt="Profil"
                                     class="hover:border-primary hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" />

@@ -19,6 +19,7 @@ class ProfileVendor extends Component
     public $alamat;
     public $penanggung_jawab;
     public $deskripsi;
+    public $username;
 
     // Password properties
     public $current_password;
@@ -27,7 +28,9 @@ class ProfileVendor extends Component
 
     public function mount()
     {
-        $vendor = Auth::user()->vendor;
+        $user = Auth::user();
+        $this->username = $user->username;
+        $vendor = $user->vendor;
         if ($vendor) {
             $this->nama_perusahaan = $vendor->nama_perusahaan;
             $this->email_perusahaan = $vendor->email_perusahaan;
@@ -40,6 +43,7 @@ class ProfileVendor extends Component
 
     public function updateProfile()
     {
+        $user = Auth::user();
         $this->validate([
             'nama_perusahaan' => 'required|string|max:255',
             'email_perusahaan' => 'required|email|max:255',
@@ -47,9 +51,12 @@ class ProfileVendor extends Component
             'alamat' => 'required|string|max:500',
             'penanggung_jawab' => 'required|string|max:255',
             'deskripsi' => 'nullable|string|max:1000',
+            'username' => 'required|string|max:100|unique:akun,username,' . $user->id_akun . ',id_akun',
+        ], [
+            'username.unique' => 'Username ini sudah digunakan oleh pengguna lain.',
         ]);
 
-        $vendor = Auth::user()->vendor;
+        $vendor = $user->vendor;
         if ($vendor) {
             $vendor->update([
                 'nama_perusahaan' => $this->nama_perusahaan,
@@ -58,6 +65,10 @@ class ProfileVendor extends Component
                 'alamat' => $this->alamat,
                 'penanggung_jawab' => $this->penanggung_jawab,
                 'deskripsi' => $this->deskripsi,
+            ]);
+
+            $user->update([
+                'username' => $this->username
             ]);
 
             // Ubah password jika diisi

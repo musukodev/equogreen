@@ -13,6 +13,7 @@ class Pengumuman extends Model
         'id_vendor',
         'id_procurement',
         'isi',
+        'is_read',
     ];
 
     public function vendor()

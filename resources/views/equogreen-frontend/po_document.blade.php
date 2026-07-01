@@ -137,12 +137,27 @@
     </div>
 
     <!-- Actions -->
+    @php
+        $backRoute = 'login';
+        if (auth()->check()) {
+            $role = strtolower(auth()->user()->role);
+            if ($role === 'procurement' || $role === 'superadmin') {
+                $backRoute = 'procurement-dashboard';
+            } elseif ($role === 'vendor') {
+                $backRoute = 'vendor-dashboard';
+            }
+        }
+    @endphp
     <div class="max-w-4xl mx-auto flex justify-center gap-4 mb-16">
+        <a href="{{ route($backRoute) }}" 
+           class="px-6 py-2.5 bg-gray-200 text-gray-800 font-medium rounded hover:bg-gray-300 transition shadow-sm">
+            Kembali ke Dashboard
+        </a>
         <a href="{{ route('po.pdf', ['id_vendor' => $quotations->first()->id_vendor, 'id_penawaran' => $quotations->first()->id_penawaran]) }}" 
            class="px-6 py-2.5 bg-black text-white font-medium rounded hover:bg-gray-800 transition shadow-sm">
             Unduh sebagai PDF
         </a>
-        @if(auth()->check() && strtolower(auth()->user()->role) === 'procurement')
+        @if(auth()->check() && in_array(strtolower(auth()->user()->role), ['procurement', 'superadmin']))
         <form action="{{ route('po.email', ['id_vendor' => $quotations->first()->id_vendor, 'id_penawaran' => $quotations->first()->id_penawaran]) }}" method="POST">
             @csrf
             <button type="submit" 

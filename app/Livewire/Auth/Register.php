@@ -80,7 +80,7 @@ class Register extends Component
             'email_perusahaan' => 'required|email|max:255|unique:vendor',
             'no_hp' => 'required|string|max:20',
             'alamat' => 'required|string|max:500',
-            'kategori_vendor' => 'required|string|max:255',
+            'kategori_vendor' => 'required|string|in:atk,elektronik,furniture,cleaning,supplier umum',
             'penanggung_jawab' => 'required|string|max:255',
             'deskripsi' => 'required|string|max:1000',
             'provinsi' => 'required|string|max:255',
@@ -96,6 +96,7 @@ class Register extends Component
             'no_hp.required' => 'Nomor handphone perusahaan wajib diisi.',
             'alamat.required' => 'Alamat perusahaan wajib diisi.',
             'kategori_vendor.required' => 'Kategori vendor wajib diisi.',
+            'kategori_vendor.in' => 'Kategori vendor yang dipilih tidak valid.',
             'penanggung_jawab.required' => 'Nama penanggung jawab wajib diisi.',
             'deskripsi.required' => 'Deskripsi perusahaan wajib diisi.',
             'provinsi.required' => 'Provinsi wajib diisi.',
@@ -147,12 +148,17 @@ class Register extends Component
             \Illuminate\Support\Facades\Mail::to($adminEmails)->send(new \App\Mail\AdminNewVendorAlertMail($vendor));
         }
 
-        // 3. Simpan notifikasi in-app untuk semua Procurement (global)
-        \App\Models\Pengumuman::create([
-            'id_vendor' => null,
-            'id_procurement' => null, // null berarti untuk semua admin procurement
-            'isi' => "Vendor baru telah mendaftar: {$vendor->nama_perusahaan} (Kategori: " . strtoupper($vendor->kategori_vendor) . "). Silakan lakukan validasi."
-        ]);
+        // 3. Simpan notifikasi in-app untuk semua akun Procurement & Superadmin yang aktif
+        $allAdmins = \App\Models\User::whereIn('role', ['Procurement', 'Superadmin'])->get();
+        foreach ($allAdmins as $admin) {
+            if ($admin->id_procurement) {
+                \App\Models\Pengumuman::create([
+                    'id_vendor' => null,
+                    'id_procurement' => $admin->id_procurement,
+                    'isi' => "Vendor baru telah mendaftar: {$vendor->nama_perusahaan} (Kategori: " . strtoupper($vendor->kategori_vendor) . "). Silakan lakukan validasi."
+                ]);
+            }
+        }
 
         session()->flash('success', 'Pendaftaran berhasil! Akun Anda sedang ditinjau. Mohon tunggu konfirmasi admin melalui email.');
         return redirect()->route('registrasi');

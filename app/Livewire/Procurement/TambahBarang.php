@@ -157,6 +157,26 @@ class TambahBarang extends Component
                         ]);
                     }
                 }
+
+                // 1. Simpan notifikasi in-app untuk masing-masing vendor yang dipilih
+                $pesan = "Anda menerima permintaan penawaran baru (RFQ) untuk Batch " . $this->batch_id . ". Silakan unggah berkas quotation Anda.";
+                foreach ($this->selected_vendors as $vendorId) {
+                    \App\Models\Pengumuman::create([
+                        'id_vendor' => $vendorId,
+                        'id_procurement' => null,
+                        'isi' => $pesan,
+                        'is_read' => false
+                    ]);
+
+                    // 2. Kirim email notifikasi RFQ baru ke masing-masing vendor
+                    $vendor = \App\Models\Vendor::find($vendorId);
+                    if ($vendor && $vendor->email_perusahaan) {
+                        \Illuminate\Support\Facades\Mail::to($vendor->email_perusahaan)->send(
+                            new \App\Mail\VendorNewRFQMail($vendor, $this->batch_id, $this->items)
+                        );
+                    }
+                }
+
                 session()->flash('success', 'Barang berhasil ditambahkan!');
             }
 
