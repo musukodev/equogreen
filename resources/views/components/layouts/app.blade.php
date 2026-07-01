@@ -4,6 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <title>{{ $title ?? 'Equogreen' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +15,7 @@
     @livewireStyles
 </head>
 
-<body class="bg-brand-bg flex h-screen overflow-hidden font-sans text-gray-800 antialiased">
+<body class="flex h-screen overflow-hidden bg-brand-bg font-sans text-gray-800 antialiased">
 
     <!-- Sidebar Overlay -->
     <div id="sidebarOverlay" class="fixed inset-0 z-40 hidden bg-black/50 lg:hidden" onclick="toggleSidebar()"></div>
@@ -35,7 +36,7 @@
             @if (auth()->check() && in_array(strtolower(auth()->user()->role), ['procurement', 'superadmin']))
                 <!-- Procurement Links -->
                 <a href="{{ route('procurement-dashboard') }}"
-                    class="{{ request()->routeIs('procurement-dashboard') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
+                    class="{{ request()->routeIs('procurement-dashboard') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:bg-primary hover:text-white">
                     <img src="/gambar/dashboard-layout.png" alt="Dashboard"
                         class="h-7 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
                     Dashboard
@@ -45,7 +46,7 @@
                 @if (strtolower(auth()->user()->role) === 'superadmin')
                     <!-- Kelola Admin (Superadmin Only) -->
                     <a href="{{ route('procurement-kelola-admin') }}"
-                        class="{{ request()->routeIs('procurement-kelola-admin') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
+                        class="{{ request()->routeIs('procurement-kelola-admin') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:bg-primary hover:text-white">
                         <i
                             class="ph-bold ph-shield-check {{ request()->routeIs('procurement-kelola-admin') ? 'text-primary' : 'text-gray-400' }} text-2xl group-hover:text-white"></i>
                         Kelola Admin
@@ -54,7 +55,7 @@
                 @endif
 
                 <a href="{{ route('procurement-batch_barang') }}"
-                    class="{{ request()->routeIs('procurement-batch_barang') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
+                    class="{{ request()->routeIs('procurement-batch_barang') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:bg-primary hover:text-white">
                     <img src="/gambar/search-database.png" alt="Periksa Barang"
                         class="h-7 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
                     Batch Barang
@@ -62,7 +63,7 @@
                 <div class="my-1 border-b border-gray-100"></div>
 
                 <a href="{{ route('procurement-notifikasi') }}"
-                    class="{{ request()->routeIs('procurement-notifikasi') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
+                    class="{{ request()->routeIs('procurement-notifikasi') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:bg-primary hover:text-white">
                     <img src="/gambar/vendor-sidebar.png" alt="Daftar Vendor"
                         class="h-7 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
                     Daftar Vendor
@@ -70,7 +71,7 @@
                 <div class="my-1 border-b border-gray-100"></div>
 
                 <a href="{{ route('procurement-validasi-vendor') }}"
-                    class="{{ request()->routeIs('procurement-validasi-vendor') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
+                    class="{{ request()->routeIs('procurement-validasi-vendor') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:bg-primary hover:text-white">
                     <img src="/gambar/validasi.png" alt="Validasi Vendor"
                         class="h-7 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
                     Validasi Vendor
@@ -78,7 +79,7 @@
                 <div class="my-1 border-b border-gray-100"></div>
 
                 <a href="{{ route('procurement-riwayat-po') }}"
-                    class="{{ request()->routeIs('procurement-riwayat-po') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
+                    class="{{ request()->routeIs('procurement-riwayat-po') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:bg-primary hover:text-white">
                     <img src="/gambar/riwayat.png" alt="Riwayat PO"
                         class="h-7 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
                     Riwayat PO
@@ -87,7 +88,7 @@
             @elseif(auth()->check() && strtolower(auth()->user()->role) === 'vendor')
                 <!-- Vendor Links -->
                 <a href="{{ route('vendor-dashboard') }}"
-                    class="{{ request()->routeIs('vendor-dashboard') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
+                    class="{{ request()->routeIs('vendor-dashboard') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:bg-primary hover:text-white">
                     <img src="/gambar/dashboard-layout.png" alt="Dashboard"
                         class="h-7 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
                     Dashboard
@@ -95,7 +96,7 @@
                 <div class="my-1 border-b border-gray-100"></div>
 
                 <a href="{{ route('vendor-riwayat') }}"
-                    class="{{ request()->routeIs('vendor-riwayat') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} hover:bg-primary group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:text-white">
+                    class="{{ request()->routeIs('vendor-riwayat') ? 'bg-[#eef3ff] text-primary text-gray-700' : 'text-gray-600' }} group flex items-center gap-3 rounded-xl px-4 py-3 text-[17px] font-bold transition-all duration-200 hover:bg-primary hover:text-white">
                     <img src="/gambar/riwayat.png" alt="Riwayat"
                         class="h-7 w-7 object-contain group-hover:brightness-0 group-hover:invert" />
                     Riwayat
@@ -126,7 +127,7 @@
                 <div class="flex items-center gap-4">
                     <!-- Mobile Hamburger -->
                     <button onclick="toggleSidebar()"
-                        class="hover:bg-primary hover:border-primary group flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white lg:hidden">
+                        class="group flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white lg:hidden">
                         <img src="/gambar/garis3.png" alt="Menu"
                             class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
                     </button>
@@ -134,7 +135,7 @@
                     @if (isset($backUrl))
                         <!-- Back Button -->
                         <a href="{{ $backUrl }}"
-                            class="hover:bg-primary hover:border-primary flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white"
+                            class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white"
                             wire:navigate>
                             <img src="/gambar/back-arrow.png" alt="Back"
                                 class="h-6 w-6 object-contain brightness-0" />
@@ -142,7 +143,7 @@
                     @elseif(isset($backRoute))
                         <!-- Back Button -->
                         <a href="{{ route($backRoute) }}"
-                            class="hover:bg-primary hover:border-primary flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:text-white"
+                            class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white"
                             wire:navigate>
                             <img src="/gambar/back-arrow.png" alt="Back"
                                 class="h-6 w-6 object-contain brightness-0" />
@@ -167,7 +168,7 @@
                         @if (in_array(strtolower(auth()->user()->role), ['procurement', 'superadmin']))
                             <a href="{{ route('profile_procurement') }}">
                                 <img src="/gambar/profileup.png" alt="Profil"
-                                    class="hover:border-primary hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" />
+                                    class="h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200 hover:border-primary hover:border-primary" />
                             </a>
                             <div class="hidden h-10 w-px bg-gray-200 md:block"></div>
                             <span class="hidden text-[17px] font-medium text-gray-700 md:block">
@@ -179,7 +180,7 @@
                             @endphp
                             <a href="{{ route('vendor_profile') }}">
                                 <img src="/gambar/profileup.png" alt="Profil"
-                                    class="hover:border-primary hover:border-primary h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200" />
+                                    class="h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200 hover:border-primary hover:border-primary" />
                             </a>
                             <div class="hidden h-10 w-px bg-gray-200 md:block"></div>
                             <span
