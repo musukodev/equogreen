@@ -48,13 +48,13 @@ class POController extends Controller
     public function show($id_vendor, $id_penawaran)
     {
         $data = $this->getPOData($id_vendor, $id_penawaran);
-        return view('equogreen-frontend.po_document', $data);
+        return view('po_document', $data);
     }
 
     public function downloadPdf($id_vendor, $id_penawaran)
     {
         $data = $this->getPOData($id_vendor, $id_penawaran);
-        $pdf = Pdf::loadView('equogreen-frontend.po_pdf', $data);
+        $pdf = Pdf::loadView('po_pdf', $data);
         
         return $pdf->download('PO_' . $data['vendor']->nama_perusahaan . '_' . date('Ymd') . '.pdf');
     }
@@ -66,7 +66,7 @@ class POController extends Controller
         }
 
         $data = $this->getPOData($id_vendor, $id_penawaran);
-        $pdf = Pdf::loadView('equogreen-frontend.po_pdf', $data);
+        $pdf = Pdf::loadView('po_pdf', $data);
         
         try {
             Mail::to($data['vendor']->email_perusahaan)->send(new PurchaseOrderMail($data, $pdf->output()));

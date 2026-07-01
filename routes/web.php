@@ -10,7 +10,7 @@ require __DIR__ . '/auth.php';
 
 // Root / Landing
 Route::get('/', function () {
-    return view('equogreen-frontend.landing');
+    return view('landing');
 });
 
 // Registrasi vendor (tidak perlu login)

@@ -17,7 +17,7 @@ class QuotationFastExcelController extends Controller
     // Menampilkan form upload
     public function index()
     {
-        return view('equogreen-frontend.buat_quotation');
+        return view('livewire.vendor.buat-quotation');
     }
 
     // Memproses file excel yang diupload

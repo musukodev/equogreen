@@ -5,49 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
     <title>{{ $title ?? 'Equogreen' }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#4039c9',
-                        accent: '#002eff',
-                        brand: {
-                            bg: '#f1f5fa',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': {
-                                opacity: '0'
-                            },
-                            '100%': {
-                                opacity: '1'
-                            },
-                        },
-                        modalSlideUp: {
-                            'from': {
-                                opacity: '0',
-                                transform: 'translateY(24px) scale(0.96)'
-                            },
-                            'to': {
-                                opacity: '1',
-                                transform: 'translateY(0) scale(1)'
-                            },
-                        }
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.25s ease-out forwards',
-                        'modal-slide-up': 'modalSlideUp 0.3s ease-out forwards',
-                    }
-                }
-            }
-        }
-    </script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
