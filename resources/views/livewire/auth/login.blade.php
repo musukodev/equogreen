@@ -81,9 +81,9 @@
     <!-- Full-screen split layout -->
     <div class="relative z-10 flex min-h-screen w-full flex-col md:flex-row">
 
-        <!-- Left panel (full on desktop, stacked on mobile) -->
+        <!-- Left panel (hidden on mobile, visible on tablet+) -->
         <div
-            class="relative flex w-full flex-col overflow-hidden bg-blue-700 p-6 text-white md:min-h-screen md:w-[45%] md:p-8 lg:p-10 xl:p-12">
+            class="relative hidden w-full flex-col overflow-hidden bg-blue-700 p-6 text-white md:flex md:min-h-screen md:w-[45%] md:p-8 lg:p-10 xl:p-12">
 
             <!-- Background decorations -->
             <div class="pointer-events-none absolute inset-0 opacity-10"
@@ -173,15 +173,22 @@
 
         <!-- RIGHT COLUMN — Login Form -->
         <div
-            class="relative flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden bg-transparent p-6 sm:p-10 md:min-h-screen md:w-[55%] md:p-12 lg:px-14">
+            class="relative flex min-h-screen w-full flex-1 items-center justify-center overflow-hidden bg-transparent px-5 py-8 sm:p-10 md:min-h-screen md:w-[55%] md:p-12 lg:px-14">
 
             <!-- Form Card -->
             <div class="animate-fade-in-up relative w-full max-w-[460px] rounded-3xl border border-white/80 bg-white/90 p-6 opacity-0 shadow-[0_15px_50px_rgba(29,78,216,0.08)] backdrop-blur-md sm:p-8 md:p-10"
                 style="animation-delay: 350ms;">
 
+                <!-- Mobile-only Logo Header -->
+                <div class="mb-5 flex items-center gap-2.5 md:hidden">
+                    <img src="{{ asset('gambar/logo.png') }}" alt="Equogreen Logo"
+                        class="h-9 w-auto object-contain">
+                    <span class="text-xl font-bold tracking-wide text-blue-700">Equogreen</span>
+                </div>
+
                 <!-- Heading -->
                 <div class="mb-6 pt-0 md:mb-7">
-                    <h2 class="mb-2 text-2xl font-bold leading-tight text-gray-900 md:text-[2rem]">
+                    <h2 class="mb-1.5 text-xl font-bold leading-tight text-gray-900 sm:text-2xl md:text-[2rem]">
                         Selamat datang
                     </h2>
                     <p class="text-sm text-gray-500 md:text-base">Masuk untuk lanjut ke dashboard</p>

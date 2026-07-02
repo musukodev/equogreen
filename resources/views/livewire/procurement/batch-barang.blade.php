@@ -85,38 +85,38 @@
         <!-- Modal Tambah Batch -->
         @if ($showModal)
             <div
-                class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 backdrop-blur-sm transition-all duration-300">
+                class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black bg-opacity-50 px-4 py-6 backdrop-blur-sm transition-all duration-300 sm:items-center sm:py-4">
                 <div
-                    class="animate-modal-slide-up bg-brand-bg w-full max-w-[600px] overflow-hidden rounded-lg border border-gray-400 shadow-xl">
+                    class="animate-modal-slide-up bg-brand-bg w-full max-w-[600px] rounded-lg border border-gray-400 shadow-xl">
                     <!-- Modal Header -->
-                    <div class="flex items-start justify-between bg-white px-6 py-4">
+                    <div class="flex items-start justify-between bg-white px-4 py-3 sm:px-6 sm:py-4">
                         <div>
-                            <h2 class="text-[17px] font-bold leading-tight text-black">Batch Deadline</h2>
-                            <p class="mt-1 text-[13px] text-gray-700">Atur tenggat waktu batch pada halaman ini</p>
+                            <h2 class="text-[15px] font-bold leading-tight text-black sm:text-[17px]">Batch Deadline</h2>
+                            <p class="mt-0.5 text-[12px] text-gray-700 sm:mt-1 sm:text-[13px]">Atur tenggat waktu batch pada halaman ini</p>
                         </div>
                         <button wire:click="$set('showModal', false)"
-                            class="mt-0.5 flex h-8 w-8 items-center justify-center rounded bg-[#ff4a4a] text-white shadow-sm transition hover:bg-red-600">
+                            class="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-[#ff4a4a] text-white shadow-sm transition hover:bg-red-600">
                             <i class="fa-solid fa-xmark text-lg"></i>
                         </button>
                     </div>
 
                     <!-- Modal Body -->
-                    <form wire:submit="store" class="border-t border-gray-400 bg-white p-6 pb-8">
+                    <form wire:submit="store" class="border-t border-gray-400 bg-white p-4 pb-6 sm:p-6 sm:pb-8">
                         <!-- Badge -->
-                        <div class="mb-5 flex items-center justify-between gap-4">
+                        <div class="mb-4 flex items-center justify-between gap-4 sm:mb-5">
                             <span
-                                class="inline-block rounded border border-black bg-white px-4 py-1.5 text-[15px] font-bold leading-none text-black">
+                                class="inline-block rounded border border-black bg-white px-3 py-1 text-[13px] font-bold leading-none text-black sm:px-4 sm:py-1.5 sm:text-[15px]">
                                 {{ $editMode ? 'Ubah Batch' : 'Batch Baru' }}
                             </span>
                         </div>
 
                         @if (auth()->user()->role === 'Superadmin')
                             <!-- Dropdown Pilihan Procurement (Superadmin Only) -->
-                            <div class="mb-5 flex flex-col gap-1.5">
+                            <div class="mb-4 flex flex-col gap-1.5 sm:mb-5">
                                 <label class="text-sm font-semibold text-gray-700">Tugaskan ke Procurement</label>
                                 <div class="relative">
                                     <select wire:model="id_procurement_terpilih"
-                                        class="focus:border-primary focus:ring-primary/20 h-10 w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-700 transition-colors focus:outline-none focus:ring-2"
+                                        class="focus:border-primary focus:ring-primary/20 h-11 w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 text-sm text-gray-700 transition-colors focus:outline-none focus:ring-2 sm:h-10"
                                         required>
                                         <option value="">Pilih Admin Procurement</option>
                                         @foreach ($procurementList as $proc)
@@ -137,21 +137,19 @@
 
                         <!-- Time Input Card 2 (Dates) -->
                         <div
-                            class="mb-4 flex w-full flex-col rounded border border-[#4142cf] bg-[#4142cf] shadow-sm md:flex-row">
+                            class="mb-4 flex w-full flex-col overflow-hidden rounded border border-[#4142cf] bg-[#4142cf] shadow-sm md:flex-row">
                             <!-- Icon Side -->
                             <div
-                                class="relative flex h-full min-h-[80px] w-[80px] flex-shrink-0 items-center justify-center border-r border-[#696ce6]">
-                                <i class="fa-regular fa-calendar text-[32px] font-light text-white"></i>
-                                <i
-                                    class="fa-solid fa-clock absolute bottom-[22px] right-[20px] rounded-full border border-[#4142cf] bg-[#4142cf] text-[12px] text-white"></i>
+                                class="flex items-center justify-center border-b border-[#696ce6] px-4 py-3 md:min-h-[80px] md:w-[80px] md:border-b-0 md:border-r md:px-0 md:py-0">
+                                <i class="fa-regular fa-calendar text-2xl text-white md:text-[32px]"></i>
                             </div>
                             <!-- Input Side -->
-                            <div class="flex-1 p-4 px-5">
-                                <div class="flex flex-col gap-4 sm:flex-row">
+                            <div class="flex-1 p-4 sm:px-5">
+                                <div class="flex flex-col gap-3 sm:flex-row sm:gap-4">
                                     <div class="flex-1">
                                         <label class="mb-1.5 block text-[13px] text-white">Start Date</label>
                                         <input type="date" wire:model="start_date" required
-                                            class="h-[34px] w-full rounded-md bg-white px-3 py-1.5 text-[13px] text-black shadow-sm outline-none">
+                                            class="h-11 w-full rounded-md bg-white px-3 py-1.5 text-sm text-black shadow-sm outline-none sm:h-[34px] sm:text-[13px]">
                                         @error('start_date')
                                             <span class="text-[10px] text-red-300">{{ $message }}</span>
                                         @enderror
@@ -159,7 +157,7 @@
                                     <div class="flex-1">
                                         <label class="mb-1.5 block text-[13px] text-white">End Date</label>
                                         <input type="date" wire:model="end_date" required
-                                            class="h-[34px] w-full rounded-md bg-white px-3 py-1.5 text-[13px] text-black shadow-sm outline-none">
+                                            class="h-11 w-full rounded-md bg-white px-3 py-1.5 text-sm text-black shadow-sm outline-none sm:h-[34px] sm:text-[13px]">
                                         @error('end_date')
                                             <span class="text-[10px] text-red-300">{{ $message }}</span>
                                         @enderror
@@ -170,21 +168,19 @@
 
                         <!-- Time Input Card 1 (Times) -->
                         <div
-                            class="mb-6 flex w-full flex-col rounded border border-[#4142cf] bg-[#4142cf] shadow-sm md:flex-row">
+                            class="mb-5 flex w-full flex-col overflow-hidden rounded border border-[#4142cf] bg-[#4142cf] shadow-sm sm:mb-6 md:flex-row">
                             <!-- Icon Side -->
                             <div
-                                class="relative flex h-full min-h-[80px] w-[80px] flex-shrink-0 items-center justify-center border-r border-[#696ce6]">
-                                <i class="fa-regular fa-clock text-[32px] font-light text-white"></i>
-                                <i
-                                    class="fa-solid fa-clock absolute bottom-[22px] right-[20px] rounded-full border border-[#4142cf] bg-[#4142cf] text-[12px] text-white"></i>
+                                class="flex items-center justify-center border-b border-[#696ce6] px-4 py-3 md:min-h-[80px] md:w-[80px] md:border-b-0 md:border-r md:px-0 md:py-0">
+                                <i class="fa-regular fa-clock text-2xl text-white md:text-[32px]"></i>
                             </div>
                             <!-- Input Side -->
-                            <div class="flex-1 p-4 px-5">
-                                <div class="flex flex-col gap-4 sm:flex-row">
+                            <div class="flex-1 p-4 sm:px-5">
+                                <div class="flex flex-col gap-3 sm:flex-row sm:gap-4">
                                     <div class="flex-1">
                                         <label class="mb-1.5 block text-[13px] text-white">Start Time</label>
                                         <input type="time" wire:model="start_time" required
-                                            class="h-[34px] w-full rounded-md bg-white px-3 py-1.5 text-black shadow-sm outline-none">
+                                            class="h-11 w-full rounded-md bg-white px-3 py-1.5 text-sm text-black shadow-sm outline-none sm:h-[34px]">
                                         @error('start_time')
                                             <span class="text-[10px] text-red-300">{{ $message }}</span>
                                         @enderror
@@ -192,7 +188,7 @@
                                     <div class="flex-1">
                                         <label class="mb-1.5 block text-[13px] text-white">End Time</label>
                                         <input type="time" wire:model="end_time" required
-                                            class="h-[34px] w-full rounded-md bg-white px-3 py-1.5 text-black shadow-sm outline-none">
+                                            class="h-11 w-full rounded-md bg-white px-3 py-1.5 text-sm text-black shadow-sm outline-none sm:h-[34px]">
                                         @error('end_time')
                                             <span class="text-[10px] text-red-300">{{ $message }}</span>
                                         @enderror
@@ -203,7 +199,7 @@
 
                         <!-- Submit Button -->
                         <button type="submit"
-                            class="relative w-full rounded bg-[#1e40ff] py-2.5 text-[15px] font-normal text-white shadow transition hover:bg-blue-700">
+                            class="relative w-full rounded bg-[#1e40ff] py-3 text-sm font-semibold text-white shadow transition hover:bg-blue-700 sm:py-2.5 sm:text-[15px] sm:font-normal">
                             <span wire:loading.remove wire:target="store">Simpan</span>
                             <span wire:loading wire:target="store">Menyimpan...</span>
                         </button>

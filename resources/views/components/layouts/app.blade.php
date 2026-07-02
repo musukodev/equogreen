@@ -7,22 +7,17 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <title>{{ $title ?? 'Equogreen' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     @livewireStyles
 </head>
 
-<body class="flex h-screen overflow-hidden bg-brand-bg font-sans text-gray-800 antialiased">
+<body class="flex h-screen overflow-hidden bg-brand-bg font-sans text-gray-800 antialiased" style="height: 100dvh;">
 
     <!-- Sidebar Overlay -->
     <div id="sidebarOverlay" class="fixed inset-0 z-40 hidden bg-black/50 lg:hidden" onclick="toggleSidebar()"></div>
 
     <!-- ===== SIDEBAR ===== -->
     <aside id="sidebar"
-        class="fixed inset-y-0 left-0 z-50 flex min-h-screen w-[280px] flex-shrink-0 -translate-x-full transform flex-col bg-white shadow-md transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0">
+        class="fixed inset-y-0 left-0 z-50 flex w-[260px] flex-shrink-0 -translate-x-full transform flex-col bg-white shadow-md transition-transform duration-300 ease-in-out lg:relative lg:w-[280px] lg:translate-x-0">
 
         <!-- Logo -->
         <div class="flex items-center gap-3 border-b border-gray-100 px-6 pb-6 pt-8">
@@ -121,57 +116,93 @@
 
     <!-- ===== MAIN CONTENT SLOT ===== -->
     <div class="flex h-full min-w-0 flex-1 flex-col overflow-hidden">
+
+        <!-- Mobile Top Bar (always visible on < lg when no headerTitle) -->
+        @if (!isset($headerTitle))
+            <div
+                class="flex flex-shrink-0 items-center justify-between border-b border-gray-100 bg-white px-4 py-3 lg:hidden">
+                <button onclick="toggleSidebar()"
+                    class="group flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white">
+                    <img src="/gambar/garis3.png" alt="Menu"
+                        class="h-5 w-5 object-contain group-hover:brightness-0 group-hover:invert" />
+                </button>
+                <div class="flex items-center gap-2">
+                    <img src="/gambar/logo.png" alt="Logo" class="h-8 w-8 rounded-full object-cover" />
+                    <span class="text-base font-bold text-gray-800">Equogreen</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    @if (auth()->check())
+                        <livewire:notification-bell />
+                        @if (in_array(strtolower(auth()->user()->role), ['procurement', 'superadmin']))
+                            <a href="{{ route('profile_procurement') }}">
+                                <img src="/gambar/profileup.png" alt="Profil"
+                                    class="h-9 w-9 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200 hover:border-primary" />
+                            </a>
+                        @elseif(strtolower(auth()->user()->role) === 'vendor')
+                            <a href="{{ route('vendor_profile') }}">
+                                <img src="/gambar/profileup.png" alt="Profil"
+                                    class="h-9 w-9 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200 hover:border-primary" />
+                            </a>
+                        @endif
+                    @endif
+                </div>
+            </div>
+        @endif
+
         <!-- Top Header Global -->
         @if (isset($headerTitle))
-            <header class="flex flex-shrink-0 items-center justify-between p-6 pb-0 lg:p-8">
-                <div class="flex items-center gap-4">
+            <header
+                class="flex flex-shrink-0 items-center justify-between px-4 pb-4 pt-4 sm:px-5 sm:pt-5 lg:px-8 lg:pt-8">
+                <div class="mr-4 flex min-w-0 flex-1 items-center gap-3 lg:gap-4">
                     <!-- Mobile Hamburger -->
                     <button onclick="toggleSidebar()"
                         class="group flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white lg:hidden">
                         <img src="/gambar/garis3.png" alt="Menu"
-                            class="h-6 w-6 object-contain group-hover:brightness-0 group-hover:invert" />
+                            class="h-5 w-5 object-contain group-hover:brightness-0 group-hover:invert" />
                     </button>
 
                     @if (isset($backUrl))
                         <!-- Back Button -->
                         <a href="{{ $backUrl }}"
-                            class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white"
+                            class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white lg:h-10 lg:w-10"
                             wire:navigate>
                             <img src="/gambar/back-arrow.png" alt="Back"
-                                class="h-6 w-6 object-contain brightness-0" />
+                                class="h-5 w-5 object-contain brightness-0 lg:h-6 lg:w-6" />
                         </a>
                     @elseif(isset($backRoute))
                         <!-- Back Button -->
                         <a href="{{ route($backRoute) }}"
-                            class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white"
+                            class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white lg:h-10 lg:w-10"
                             wire:navigate>
                             <img src="/gambar/back-arrow.png" alt="Back"
-                                class="h-6 w-6 object-contain brightness-0" />
+                                class="h-5 w-5 object-contain brightness-0 lg:h-6 lg:w-6" />
                         </a>
                     @endif
 
-                    <div>
-                        <h1 class="text-2xl font-bold leading-none text-[#111827] md:text-[36px]">{{ $headerTitle }}
+                    <div class="min-w-0">
+                        <h1 class="truncate text-xl font-bold leading-none text-[#111827] sm:text-2xl lg:text-[32px]">
+                            {{ $headerTitle }}
                         </h1>
                         @if (isset($headerDescription))
-                            <p class="mt-1.5 text-xs text-gray-400 md:text-base md:text-gray-500">
+                            <p
+                                class="mt-1 whitespace-normal break-words text-xs text-gray-400 sm:mt-1.5 md:text-sm lg:text-base lg:text-gray-500">
                                 {{ $headerDescription }}</p>
                         @endif
                     </div>
                 </div>
 
                 <!-- Profile Section -->
-                <div class="flex items-center gap-3">
+                <div class="flex flex-shrink-0 items-center gap-2 md:gap-3">
                     @if (auth()->check())
                         <livewire:notification-bell />
 
                         @if (in_array(strtolower(auth()->user()->role), ['procurement', 'superadmin']))
                             <a href="{{ route('profile_procurement') }}">
                                 <img src="/gambar/profileup.png" alt="Profil"
-                                    class="h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200 hover:border-primary hover:border-primary" />
+                                    class="h-9 w-9 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200 hover:border-primary md:h-11 md:w-11 lg:h-12 lg:w-12" />
                             </a>
-                            <div class="hidden h-10 w-px bg-gray-200 md:block"></div>
-                            <span class="hidden text-[17px] font-medium text-gray-700 md:block">
+                            <div class="hidden h-10 w-px bg-gray-200 lg:block"></div>
+                            <span class="hidden text-[15px] font-medium text-gray-700 lg:block xl:text-[17px]">
                                 {{ auth()->user()->procurement?->nama_procurement ?? 'Procurement' }}
                             </span>
                         @elseif(strtolower(auth()->user()->role) === 'vendor')
@@ -180,11 +211,11 @@
                             @endphp
                             <a href="{{ route('vendor_profile') }}">
                                 <img src="/gambar/profileup.png" alt="Profil"
-                                    class="h-12 w-12 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200 hover:border-primary hover:border-primary" />
+                                    class="h-9 w-9 cursor-pointer rounded-full border-2 border-gray-200 object-cover transition-all duration-200 hover:border-primary md:h-11 md:w-11 lg:h-12 lg:w-12" />
                             </a>
-                            <div class="hidden h-10 w-px bg-gray-200 md:block"></div>
+                            <div class="hidden h-10 w-px bg-gray-200 lg:block"></div>
                             <span
-                                class="hidden text-[17px] font-medium text-gray-700 md:block">{{ $vendor?->nama_perusahaan ?? 'Vendor' }}</span>
+                                class="hidden text-[15px] font-medium text-gray-700 lg:block xl:text-[17px]">{{ $vendor?->nama_perusahaan ?? 'Vendor' }}</span>
                         @endif
                     @endif
                 </div>

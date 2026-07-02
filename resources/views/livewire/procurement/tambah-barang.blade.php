@@ -12,11 +12,11 @@
             class="relative flex w-full flex-col rounded-xl border border-gray-400 bg-white p-6 shadow-sm md:p-8">
 
             <!-- Top Dropdown Area -->
-            <div class="mb-8">
+            <div class="mb-6">
                 <p class="mb-2 font-semibold">Pilih Kategori:</p>
-                <div class="relative w-72">
+                <div class="relative w-auto sm:w-60">
                     <select wire:model.live="kategori_terpilih"
-                        class="focus:border-primary focus:ring-primary/20 w-full cursor-pointer appearance-none rounded-xl border border-gray-800 bg-white px-4 py-3 pr-10 text-base font-medium text-gray-800 outline-none transition-all duration-200 focus:ring-2">
+                        class="flex w-full cursor-pointer items-center justify-between rounded-xl border border-gray-800 bg-white px-4 py-3 text-base font-medium text-gray-800 outline-none transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/20">
                         <option value="atk">ATK</option>
                         <option value="elektronik">Elektronik</option>
                         <option value="furniture">Furniture</option>
@@ -51,7 +51,7 @@
 
                     <!-- Dropdown Button -->
                     <button type="button" @click="open = !open"
-                        class="focus:border-primary focus:ring-primary/20 flex w-full cursor-pointer items-center justify-between rounded-xl border border-gray-800 bg-white px-4 py-3 text-base font-medium text-gray-800 outline-none transition-all duration-200 focus:ring-2">
+                        class="flex w-full cursor-pointer items-center justify-between rounded-xl border border-gray-800 bg-white px-4 py-3 text-base font-medium text-gray-800 outline-none transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/20">
                         <span class="truncate">
                             <span x-show="selectedVendors.length > 0">
                                 <span x-text="selectedVendors.length"></span> Vendor Terpilih
@@ -80,7 +80,7 @@
                         <!-- Search Input -->
                         <div class="relative">
                             <input type="text" x-model="search" placeholder="Cari vendor..."
-                                class="focus:border-primary focus:ring-primary w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1">
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
                             <span
                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
                                 <i class="fa-solid fa-magnifying-glass text-xs"></i>
@@ -107,7 +107,7 @@
                                     <input type="checkbox" x-model="selectedVendors"
                                         :value="vendor.id_vendor.toString()"
                                         class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                    <span class="group-hover:text-primary text-sm text-gray-800 transition-colors"
+                                    <span class="text-sm text-gray-800 transition-colors group-hover:text-primary"
                                         x-text="vendor.nama_perusahaan"></span>
                                 </label>
                             </template>
